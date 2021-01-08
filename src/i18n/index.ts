@@ -3,19 +3,21 @@ import { initReactI18next } from 'react-i18next';
 import common from './en/common.json';
 import errors from './en/errors.json';
 import layout from './en/layout.json';
+import unauthorized from './en/pages/unauthorized.json';
 
 export const resources: Resource = {
     en: {
         common,
         errors,
         layout,
+        unauthorized,
     },
 };
 
 export function init() {
     return i18next.use(initReactI18next).init({
         lng: 'en',
-        ns: ['common', 'errors', 'layout'],
+        ns: ['common', 'errors', 'layout', 'unauthorized'],
         debug: true,
         resources,
         react: {

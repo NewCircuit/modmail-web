@@ -10,10 +10,12 @@ import {
 } from '@material-ui/core';
 import MoodBadIcon from '@material-ui/icons/MoodBad';
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { UserState } from '../../state';
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        // transition: 'ease all 1s',
         display: 'flex',
         height: '100%',
         alignItems: 'start',
@@ -60,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
 type Props = any;
 export default function UnauthorizedPage(props: Props) {
     const classes = useStyles();
+    const { t } = useTranslation('unauthorized');
     const { authenticate } = UserState.useContainer();
     const history = useHistory();
     const onAuthorize = (evt: React.SyntheticEvent) => {
@@ -77,12 +80,9 @@ export default function UnauthorizedPage(props: Props) {
                 </div>
                 <div className={classes.content}>
                     <Typography className={classes.title} variant={'h3'}>
-                        Discord Authenticated Required
+                        {t('title')}
                     </Typography>
-                    <Typography variant={'body1'}>
-                        In order to use this web app, you must first login with Discord
-                        and authorize access to your account.
-                    </Typography>
+                    <Typography variant={'body1'}>{t('description')}</Typography>
 
                     <Button
                         onClick={onAuthorize}
@@ -90,7 +90,7 @@ export default function UnauthorizedPage(props: Props) {
                         className={classes.btn}
                         color={'primary'}
                     >
-                        Authorize Account
+                        {t('button')}
                     </Button>
                 </div>
             </Paper>

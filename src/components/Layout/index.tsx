@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     container: {
-        transition: 'ease margin-left .225s',
+        transition: 'ease margin-left .5s',
         marginLeft: 0,
         marginTop: toolbarHeight,
         height: `calc(100vh - ${toolbarHeight}px)`,
