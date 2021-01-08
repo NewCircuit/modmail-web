@@ -1,8 +1,8 @@
-import { colors, lighten } from '@material-ui/core';
+import { colors, darken } from '@material-ui/core';
 
 const white = '#FFFFFF';
 const black = '#000000';
-const darkBackground = '#191919';
+const darkBackground = darken('#191919', 0.3);
 const pdpReddish = '#bc0707';
 
 export default {
@@ -51,7 +51,7 @@ export default {
     },
     background: {
         default: darkBackground, // '#F4F6F8',
-        paper: lighten(darkBackground, 0.1),
+        paper: darken(darkBackground, 0.1),
     },
     icon: colors.blueGrey[600],
     divider: colors.grey[200],

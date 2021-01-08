@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
         '& p, & h6': {
             color: theme.palette.getContrastText(theme.palette.background.paper),
         },
+        padding: '0 1.5rem',
         margin: '0 auto 2rem',
     },
     btn: {
