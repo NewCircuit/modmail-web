@@ -8,12 +8,12 @@ export default function executeSplash(args?: FG.SplashArgs): Promise<boolean> {
             typeof args.selector === 'undefined' ||
             args.selector === ''
         ) {
-            reject(new Error(i18next.t('splash.noSelector', { ns: 'errors' })));
+            reject(new Error('You must specify a selector to use splash'));
         } else {
             const { selector, isReturning } = args;
             const target: HTMLElement | null = document.querySelector(selector);
             if (target === null) {
-                reject(new Error(i18next.t('splash.selectorNotFound', { ns: 'errors' })));
+                reject(new Error('The selector you entered could not be found in DOM'));
                 return;
             }
             const splash = target.querySelector('.splash');

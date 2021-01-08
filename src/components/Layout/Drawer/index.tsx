@@ -46,7 +46,10 @@ export default function LayoutDrawer(props: Props) {
         <Drawer
             open={open}
             classes={{
-                paper: clsx(classes?.paper, defaultClasses.paper),
+                paper: clsx(classes?.paper, defaultClasses.paper, {
+                    [defaultClasses.modal]: !isDesktop,
+                }),
+                paperAnchorDockedLeft: defaultClasses.anchorLeft,
             }}
             className={clsx(className, defaultClasses.drawer)}
             variant={isDesktop ? 'persistent' : 'temporary'}

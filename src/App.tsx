@@ -1,5 +1,4 @@
 import React, { RefObject, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { createBrowserHistory } from 'history';
 import './theme/scss/global.scss';
@@ -14,7 +13,6 @@ const browserHistory = createBrowserHistory();
 
 function App(props: FG.AppProps): JSX.Element {
     const { onReady } = props;
-    const { t } = useTranslation('common');
     const layoutRef: RefObject<Layout> = React.createRef();
     useEffect(onReady, []);
     useEffect(() => {
@@ -26,9 +24,11 @@ function App(props: FG.AppProps): JSX.Element {
             <CssBaseline />
             <UserState.Provider>
                 <Router history={browserHistory}>
-                    <LayoutHOC layoutRef={layoutRef}>
-                        <Pages />
-                    </LayoutHOC>
+                    <React.Suspense fallback={'loading'}>
+                        <LayoutHOC layoutRef={layoutRef}>
+                            <Pages />
+                        </LayoutHOC>
+                    </React.Suspense>
                 </Router>
             </UserState.Provider>
         </ThemeProvider>

@@ -19,7 +19,7 @@ function onReady(): void {
 }
 
 (async function launch() {
-    await initTextHandler();
+    initTextHandler();
     serviceWorker.unregister();
     const target = document.getElementById('root');
     if (target) {

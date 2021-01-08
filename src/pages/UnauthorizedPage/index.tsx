@@ -92,6 +92,14 @@ export default function UnauthorizedPage(props: Props) {
                     >
                         {t('button')}
                     </Button>
+
+                    <Button
+                        style={{ display: 'block', marginTop: '1rem' }}
+                        href={'/oauth?code=341lj34kj3n2f&test=yes&bool&ofc=yes&ofc=no'}
+                        target={'_blank'}
+                    >
+                        OAuth Authorization Demo
+                    </Button>
                 </div>
             </Paper>
         </Container>

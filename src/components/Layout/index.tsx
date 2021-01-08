@@ -120,7 +120,7 @@ export class Layout extends React.Component<Props, State> {
                             <MenuIcon />
                         </IconButton>
                         <Typography className={classes.title} variant={'h6'} noWrap>
-                            {t('title')}
+                            {t('appName')}
                         </Typography>
                         <div style={{ marginLeft: 'auto' }}>
                             <Button
