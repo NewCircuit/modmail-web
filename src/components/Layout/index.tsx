@@ -1,15 +1,13 @@
-import React, { RefObject, useEffect, useState } from 'react';
+import React, { ForwardedRef, RefObject } from 'react';
 import {
     AppBar,
     Button,
     IconButton,
     makeStyles,
-    Theme,
     Toolbar,
     Typography,
     useMediaQuery,
     useTheme,
-    withStyles,
 } from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
 import clsx from 'clsx';
@@ -19,12 +17,13 @@ import { Route, Switch } from 'react-router-dom';
 import Drawer from './Drawer';
 import CommonDrawerItems from './CommonDrawerItems';
 import { UserState } from '../../state';
+import { Theme } from '../../theme';
 
 type Props = {
-    ref?: RefObject<Layout>;
+    ref: ForwardedRef<Layout>;
     i18n: TFunction;
     classes: { [s: string]: string };
-    theme: any;
+    theme: Theme;
     isDesktop: boolean;
     user: FG.State.UserState;
     children: React.ReactNode;
@@ -160,26 +159,28 @@ export class Layout extends React.Component<Props, State> {
     }
 }
 
-type Props2 = {
+type LayoutHOCProps = {
     layoutRef?: RefObject<Layout>;
     children: React.ReactChild;
 };
-export default function LayoutHOC(props: Props2) {
+export default function LayoutHOC(props: LayoutHOCProps) {
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const classes = useStyles();
     const userState = UserState.useContainer();
-    const { t } = useTranslation(['layout', 'errors']);
-    const ForwardedLayout = React.forwardRef((p: Props2, ref: any) => (
-        <Layout
-            ref={ref}
-            {...p}
-            i18n={t}
-            user={userState}
-            classes={classes}
-            theme={theme}
-            isDesktop={isDesktop}
-        />
-    ));
+    const { t } = useTranslation();
+    const ForwardedLayout = React.forwardRef(
+        (forwardedProps: LayoutHOCProps, ref: ForwardedRef<Layout>) => (
+            <Layout
+                ref={ref}
+                {...forwardedProps}
+                i18n={t}
+                user={userState}
+                classes={classes}
+                theme={theme}
+                isDesktop={isDesktop}
+            />
+        )
+    );
     return <ForwardedLayout ref={props.layoutRef} {...props} />;
 }

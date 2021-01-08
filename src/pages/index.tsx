@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, Redirect, Switch, Route, useHistory } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useLocation, Switch, Route, useHistory } from 'react-router-dom';
 import { UserState } from '../state';
 import { unauthorizedRoutes } from './routes';
 

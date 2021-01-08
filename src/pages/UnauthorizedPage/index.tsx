@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     Container,
     Icon,
     makeStyles,
     Paper,
-    lighten,
     Typography,
     Button,
 } from '@material-ui/core';
@@ -60,13 +59,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-type Props = any;
-export default function UnauthorizedPage(props: Props) {
+export default function UnauthorizedPage() {
     const classes = useStyles();
-    const { t } = useTranslation('unauthorized');
+    const { t } = useTranslation('pages');
     const { authenticate } = UserState.useContainer();
     const history = useHistory();
-    const onAuthorize = (evt: React.SyntheticEvent) => {
+    const onAuthorize = () => {
         authenticate();
         history.push('/');
     };
@@ -81,9 +79,11 @@ export default function UnauthorizedPage(props: Props) {
                 </div>
                 <div className={classes.content}>
                     <Typography className={classes.title} variant={'h3'}>
-                        {t('title')}
+                        {t('unauthorized.title', { ns: 'pages' })}
                     </Typography>
-                    <Typography variant={'body1'}>{t('description')}</Typography>
+                    <Typography variant={'body1'}>
+                        {t('unauthorized.description', { ns: 'pages' })}
+                    </Typography>
 
                     <Button
                         onClick={onAuthorize}
@@ -91,7 +91,7 @@ export default function UnauthorizedPage(props: Props) {
                         className={classes.btn}
                         color={'primary'}
                     >
-                        {t('button')}
+                        {t('unauthorized.button', { ns: 'pages' })}
                     </Button>
 
                     <Button

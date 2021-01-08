@@ -14,10 +14,9 @@ const browserHistory = createBrowserHistory();
 function App(props: FG.AppProps): JSX.Element {
     const { onReady } = props;
     const layoutRef: RefObject<Layout> = React.createRef();
-    useEffect(onReady, []);
     useEffect(() => {
-        console.log(layoutRef);
-    });
+        if (onReady) onReady();
+    }, []);
 
     return (
         <ThemeProvider theme={theme}>
