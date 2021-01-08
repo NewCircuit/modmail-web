@@ -1,0 +1,7 @@
+{
+  "unauthorized": {
+    "title": "Discord Authenticated Required",
+    "description": "In order to use this web app, you must first login with Discord and authorize access to your account.",
+    "button": "Authorize Account"
+  }
+}
