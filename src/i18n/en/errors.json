@@ -1,0 +1,6 @@
+{
+  "splash": {
+    "noSelector": "You must specify a selector to use splash",
+    "selectorNotFound": "The selected you entered could not be found in DOM."
+  }
+}

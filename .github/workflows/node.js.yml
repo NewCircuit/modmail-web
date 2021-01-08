@@ -1,0 +1,58 @@
+name: Node.js CI
+
+# I generally only run CI Events when I tag something for release
+# Main reason being is generally when I use CI, its for building production files, saving the bundle in a release,
+# and then on the server or wherever, I'll have another service ready to receive the update, and automatically update
+# production code with recently validated, production ready code.
+on:
+  push:
+    tags:
+      - 'release-*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        env:
+          cache-name: node_modules-cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+            restore-keys: |
+              ${{ runner.os }}-build-${{ env.cache-name }}-
+              ${{ runner.os }}-build-
+              ${{ runner.os }}-
+
+      - name: install deps and build
+          run: yarn install --frozen-lockfile
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+      - run: yarn build --if-present
+
+
+# To save a production zip/artifact to the release associated with the CI job
+# uncomment below
+
+#      - name: Archive Production Artifact
+#        uses: montudor/action-zip@v0.1.0
+#        with:
+#          args: zip -qq -r build.zip build
+#
+#      - name: Create Release
+#          uses: ncipollo/release-action@v1
+#          with:
+#            artifacts: 'build.zip'
+#            token: ${{ secrets.GITHUB_TOKEN }}
