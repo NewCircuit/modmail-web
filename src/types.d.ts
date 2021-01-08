@@ -1,6 +1,6 @@
 declare namespace FG {
     type AppProps = {
-        onReady: () => void;
+        onReady?: () => void;
     };
 
     type SplashArgs = {
@@ -11,4 +11,4 @@ declare namespace FG {
 
 declare namespace FG.State {
     type UserState = any;
-};
+}
