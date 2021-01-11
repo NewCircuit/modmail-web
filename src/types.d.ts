@@ -10,5 +10,9 @@ declare namespace FG {
 }
 
 declare namespace FG.State {
-    type UserState = any;
+    type UserState = {
+        authenticated: boolean;
+        authenticate: () => void;
+        logout: () => void;
+    };
 }
