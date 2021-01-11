@@ -3,11 +3,12 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { createBrowserHistory } from 'history';
 import './theme/scss/global.scss';
 import { Router } from 'react-router-dom';
-import { CssBaseline } from '@material-ui/core';
+import { CircularProgress, CssBaseline } from '@material-ui/core';
 import theme from './theme';
 import LayoutHOC, { Layout } from './components/Layout';
 import Pages from './pages';
 import { UserState } from './state';
+import LocalizedBackdrop from './components/LocalizedBackdrop';
 
 const browserHistory = createBrowserHistory();
 
@@ -18,18 +19,26 @@ function App(props: FG.AppProps): JSX.Element {
         if (onReady) onReady();
     }, []);
 
+    const fallback = (
+        <LocalizedBackdrop open>
+            <CircularProgress variant={'indeterminate'} />
+        </LocalizedBackdrop>
+    );
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <UserState.Provider>
-                <Router history={browserHistory}>
-                    <React.Suspense fallback={'loading'}>
-                        <LayoutHOC layoutRef={layoutRef}>
-                            <Pages />
-                        </LayoutHOC>
-                    </React.Suspense>
-                </Router>
-            </UserState.Provider>
+            <React.Suspense fallback={fallback}>
+                <UserState.Provider>
+                    <Router history={browserHistory}>
+                        <React.Suspense fallback={fallback}>
+                            <LayoutHOC layoutRef={layoutRef}>
+                                <Pages />
+                            </LayoutHOC>
+                        </React.Suspense>
+                    </Router>
+                </UserState.Provider>
+            </React.Suspense>
         </ThemeProvider>
     );
 }

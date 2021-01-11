@@ -1,31 +1,38 @@
 import React, { useEffect } from 'react';
 import { useLocation, Switch, Route, useHistory } from 'react-router-dom';
+import { CircularProgress } from '@material-ui/core';
 import { UserState } from '../state';
-import { unauthorizedRoutes } from './routes';
+import LocalizedBackdrop from '../components/LocalizedBackdrop';
 
+const DashboardPage = React.lazy(() => import('./DashboardPage'));
 const UnauthorizedPage = React.lazy(() => import('./UnauthorizedPage'));
 const OAuthPage = React.lazy(() => import('./OAuthPage'));
 
-export default function Pages() {
+export default function Pages(): JSX.Element {
     const { authenticated } = UserState.useContainer();
     const location = useLocation();
     const history = useHistory();
     useEffect(() => {
         console.log('Path Changed! ', location.pathname);
-        if (authenticated) {
-            // TODO
-        } else if (
-            unauthorizedRoutes.findIndex((k) => location.pathname?.indexOf(k) >= 0) === -1
-        ) {
-            history.push('/unauthorized');
-        }
+        if (!authenticated) history.push('/unauthorized');
     }, [location.pathname]);
+
+    const fallback = (
+        <LocalizedBackdrop open>
+            <CircularProgress variant={'indeterminate'} />
+        </LocalizedBackdrop>
+    );
 
     return (
         <Switch>
-            <React.Suspense fallback={'Loading...'}>
+            <React.Suspense fallback={fallback}>
                 <Route exact path={'/unauthorized'} component={UnauthorizedPage} />
                 <Route exact path={'/oauth'} component={OAuthPage} />
+                {authenticated && (
+                    <React.Fragment>
+                        <Route exact path={'/'} component={DashboardPage} />
+                    </React.Fragment>
+                )}
             </React.Suspense>
         </Switch>
     );
