@@ -53,12 +53,15 @@ const useStyles = makeStyles((theme) => ({
         width: drawerWidth,
     },
     heading: {
+        minHeight: toolbarHeight,
         height: toolbarHeight,
     },
     drawer: {
         // paddingTop: toolbarHeight,
         width: drawerWidth,
+        overflowX: 'hidden',
         [theme.breakpoints.up('sm')]: {
+            height: `calc(100% - ${toolbarHeight}px)`,
             marginTop: toolbarHeight,
             paddingTop: 0,
             width: drawerWidthDesktop,
@@ -142,9 +145,7 @@ export class Layout extends React.Component<Props, State> {
                         open={typeof drawerOpen === 'undefined' ? false : drawerOpen}
                         toggle={onHandleMenuClick}
                     >
-                        <Switch>
-                            <Route path={'/'} component={CommonDrawerItems} />
-                        </Switch>
+                        <CommonDrawerItems />
                     </Drawer>
                 )}
                 <div

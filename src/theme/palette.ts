@@ -3,16 +3,17 @@ import { colors, darken } from '@material-ui/core';
 const white = '#FFFFFF';
 const black = '#000000';
 const darkBackground = darken('#191919', 0.3);
-const pdpReddish = '#bc0707';
+const pdpRedMain = '#bc0707';
+const pdpRedDark = '#400000';
 
 export default {
     black,
     white,
     primary: {
         contrastText: white,
-        dark: pdpReddish,
-        main: pdpReddish,
-        light: pdpReddish,
+        dark: pdpRedDark,
+        main: pdpRedMain,
+        light: pdpRedMain,
     },
     secondary: {
         contrastText: white,
@@ -54,5 +55,5 @@ export default {
         paper: darken(darkBackground, 0.1),
     },
     icon: colors.blueGrey[600],
-    divider: colors.grey[200],
+    divider: colors.grey[800],
 };
