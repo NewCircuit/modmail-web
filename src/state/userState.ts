@@ -1,21 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createContainer } from 'unstated-next';
+import Cookies from '../util/Cookies';
 
 type State = FG.State.UserState;
 
 function userState(): State {
-    const [authenticated, setAuthenticated] = useState(
-        sessionStorage.getItem('test') === '1'
-    );
+    const [authenticated, setAuthenticated] = useState(Cookies.exists('auth-cookie'));
+    useEffect(() => {
+        console.log(authenticated);
+    }, []);
+
+    function logout() {
+        setAuthenticated(false);
+        Cookies.set('auth-cookie', '', -1);
+    }
 
     function authenticate() {
-        setAuthenticated(!authenticated);
-        sessionStorage.setItem('test', !authenticated ? '1' : '0');
+        if (authenticated) {
+            logout();
+            return;
+        }
+        alert('TODO push to oauth URL');
+        Cookies.set('auth-cookie', 'dummy', 1);
+        setAuthenticated(true);
     }
 
     return {
         authenticated,
         authenticate,
+        logout,
         todo: 'help me!',
     };
 }
