@@ -1,5 +1,11 @@
 {
   "appName": "Modmail",
+  "drawer": {
+    "tabs": {
+      "categories": "Categories",
+      "threads": "Threads"
+    }
+  },
   "errors": {
     "splash": {
       "noSelector": "You must specify a selector to use splash",
