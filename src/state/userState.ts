@@ -29,7 +29,6 @@ function userState(): State {
         authenticated,
         authenticate,
         logout,
-        todo: 'help me!',
     };
 }
 

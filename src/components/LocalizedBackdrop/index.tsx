@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Backdrop, Fade } from '@material-ui/core';
+import { Fade } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import clsx from 'clsx';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: {
         position: 'absolute',
         left: 0,
@@ -27,7 +27,7 @@ type BackdropProps = {
     open?: boolean;
     onClick?: (evt: React.SyntheticEvent<HTMLDivElement>) => any;
 };
-export default function LocalizedBackdrop(props: BackdropProps) {
+export default function LocalizedBackdrop(props: BackdropProps): JSX.Element {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     useEffect(() => {

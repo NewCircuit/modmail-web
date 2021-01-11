@@ -1,5 +1,4 @@
 import anime from 'animejs';
-import i18next from 'i18next';
 
 export default function executeSplash(args?: FG.SplashArgs): Promise<boolean> {
     return new Promise((resolve, reject) => {
@@ -106,7 +105,7 @@ export default function executeSplash(args?: FG.SplashArgs): Promise<boolean> {
                     opacity: 0,
                     easing: 'easeOutExpo',
                     duration: 1000,
-                    complete: (anim) => {
+                    complete: () => {
                         target.style.pointerEvents = 'none';
                         resolve(true);
                     },

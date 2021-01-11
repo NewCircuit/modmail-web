@@ -1,4 +1,3 @@
-import { AppBarClassKey } from '@material-ui/core/AppBar';
 import palette from '../palette';
 
 const x = {
