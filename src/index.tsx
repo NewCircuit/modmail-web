@@ -4,6 +4,7 @@ import App from './App';
 import { init as initTextHandler } from './i18n';
 import * as serviceWorker from './serviceWorker';
 import executeSplash from './components/Splash';
+import reportWebVitals from './reportWebVitals';
 
 function destroyPreloader() {
     const preloader = document.getElementById('splash-container');
@@ -17,6 +18,19 @@ function destroyPreloader() {
 function onReady(): void {
     destroyPreloader();
 }
+
+// TODO add service worker registration
+// TODO Still need to fully implement though
+// serviceWorker.register({
+//     onSuccess: onServiceworkerSuccess,
+//     onUpdate: onServiceworkerUpdate,
+// });
+// function onServiceworkerSuccess(args: ServiceWorkerRegistration) {
+//     console.log('onServiceworkerSuccess', args);
+// }
+// function onServiceworkerUpdate(args: ServiceWorkerRegistration) {
+//     console.log('onServiceworkerUpdate', args);
+// }
 
 (async function launch() {
     initTextHandler();
@@ -32,4 +46,5 @@ function onReady(): void {
             ReactDOM.render(<App onReady={onReady} />, target);
         }
     }
+    reportWebVitals();
 })();
