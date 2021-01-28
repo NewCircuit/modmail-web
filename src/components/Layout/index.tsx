@@ -14,6 +14,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { FG } from 'types';
+import { Link } from 'react-router-dom';
 import Drawer from './Drawer';
 import CommonDrawerItems from './CommonDrawerItems';
 import { UserState } from '../../state';
@@ -39,9 +40,25 @@ const drawerWidthDesktop = 300;
 
 const useStyles = makeStyles((theme) => ({
     title: {
+        'a&:after': {
+            content: '""',
+            position: 'absolute',
+            bottom: -8,
+            left: 0,
+            width: 0,
+            height: 4,
+            borderRadius: 2,
+            backgroundColor: theme.palette.text.primary,
+            transition: 'width .25s ease',
+        },
+        '&:hover:after': {
+            width: '100%',
+        },
+        position: 'relative',
         fontSize: '2em',
         color: theme.palette.primary.contrastText,
         marginLeft: '.5rem',
+        textDecoration: 'none',
     },
     toolbar: {
         height: toolbarHeight,
@@ -121,9 +138,15 @@ export class Layout extends React.Component<Props, State> {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography className={classes.title} variant={'h6'} noWrap>
-                            {t('appName')}
-                        </Typography>
+                        {user.authenticated ? (
+                            <Link to={'/'} className={classes.title}>
+                                {t('appName')}
+                            </Link>
+                        ) : (
+                            <Typography className={classes.title} variant={'h6'}>
+                                {t('appName')}
+                            </Typography>
+                        )}
                         <div style={{ marginLeft: 'auto' }}>
                             <Button
                                 onClick={
