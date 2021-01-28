@@ -4,7 +4,9 @@
   "urls": {
     "base": "https://modmail.pewdiemc.com/api",
     "oauth": "$t(urls.base)/oauth",
-    "authenticate": "$t(urls.base)/self"
+    "authenticate": "$t(urls.base)/self",
+    "categories": "$t(urls.base)/categories",
+    "threads": "$t(urls.base)/categories/{{category}}/threads"
   },
   "drawer": {
     "tabs": {

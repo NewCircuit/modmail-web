@@ -5,7 +5,6 @@ import { NavigationState } from '../../../state';
 
 export default function ThreadDrawer() {
     const { threads } = NavigationState.useContainer();
-    const thread = threads.items[0];
     useEffect(() => {
         console.log('ThreadsDrawer');
     }, []);

@@ -27,7 +27,7 @@ function Authenticator(props: Props) {
             }
         }
     }, [authenticated, processing]);
-
+    if (typeof authenticated === 'undefined') return <div />;
     return children;
 }
 

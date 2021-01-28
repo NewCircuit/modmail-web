@@ -37,6 +37,7 @@ declare namespace FG.State {
         redirect: () => void;
         logout: () => void;
     };
+
     type NavigationState = {
         threads: {
             items?: Array<Thread>;
