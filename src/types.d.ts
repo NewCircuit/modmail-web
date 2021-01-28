@@ -1,4 +1,4 @@
-import { Thread, ModmailUser } from 'modmail-types';
+import { Thread, ModmailUser, Category } from 'modmail-types';
 
 type TempModmailUser = ModmailUser & {
     username: string;
@@ -23,6 +23,10 @@ declare namespace FG {
 
 declare namespace FG.Api {
     type SelfResponse = TempModmailUser;
+
+    type CategoriesResponse = Category[];
+
+    type ThreadsResponse = Thread[];
 }
 
 declare namespace FG.State {
@@ -35,7 +39,12 @@ declare namespace FG.State {
     };
     type NavigationState = {
         threads: {
-            items: Array<Thread>;
+            items?: Array<Thread>;
+            fetch: (category: string) => Promise<Thread[]>;
+        };
+        categories: {
+            items?: Array<Category>;
+            fetch: () => Promise<Category[]>;
         };
     };
 }

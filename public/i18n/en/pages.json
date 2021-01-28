@@ -3,5 +3,12 @@
     "title": "Discord Authenticated Required",
     "description": "In order to use this web app, you must first login with Discord and authorize access to your account.",
     "button": "Authorize Account"
+  },
+  "dashboard": {
+    "category": {
+      "title": "Select a Category",
+      "noItemsTitle": "No Categories",
+      "noItemsDesc": "There are currently no categories available. Please make them through the Modmail bot and then refresh this page."
+    }
   }
 }
