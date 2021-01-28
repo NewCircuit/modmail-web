@@ -14,7 +14,8 @@ export default function Pages(): JSX.Element {
     const history = useHistory();
     useEffect(() => {
         console.log('Path Changed! ', location.pathname);
-        if (!authenticated) history.push('/unauthorized');
+        if (typeof authenticated === 'boolean' && !authenticated)
+            history.push('/unauthorized');
     }, [location.pathname]);
 
     const fallback = (
@@ -27,7 +28,7 @@ export default function Pages(): JSX.Element {
         <Switch>
             <React.Suspense fallback={fallback}>
                 <Route exact path={'/unauthorized'} component={UnauthorizedPage} />
-                <Route exact path={'/oauth'} component={OAuthPage} />
+                <Route exact path={'/oauth/callback'} component={OAuthPage} />
                 {authenticated && (
                     <React.Fragment>
                         <Route exact path={'/'} component={DashboardPage} />

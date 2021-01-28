@@ -16,7 +16,17 @@ function destroyPreloader() {
     }
 }
 function onReady(): void {
-    destroyPreloader();
+    executeSplash({
+        selector: '#splash-container',
+        isReturning: sessionStorage.getItem('returning') !== null,
+    })
+        .then((splashed) => {
+            if (splashed) {
+                sessionStorage.setItem('returning', '1');
+            }
+            destroyPreloader();
+        })
+        .catch(alert);
 }
 
 // TODO add service worker registration
@@ -37,14 +47,7 @@ function onReady(): void {
     serviceWorker.unregister();
     const target = document.getElementById('root');
     if (target) {
-        const splashed = await executeSplash({
-            selector: '#splash-container',
-            isReturning: sessionStorage.getItem('returning') !== null,
-        }).catch(alert);
-        if (splashed) {
-            sessionStorage.setItem('returning', '1');
-            ReactDOM.render(<App onReady={onReady} />, target);
-        }
+        ReactDOM.render(<App onReady={onReady} />, target);
     }
     reportWebVitals();
 })();

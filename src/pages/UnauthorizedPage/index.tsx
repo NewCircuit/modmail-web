@@ -6,6 +6,7 @@ import {
     Paper,
     Typography,
     Button,
+    Link,
 } from '@material-ui/core';
 import MoodBadIcon from '@material-ui/icons/MoodBad';
 import { useHistory } from 'react-router-dom';
@@ -62,12 +63,7 @@ const useStyles = makeStyles((theme) => ({
 export default function UnauthorizedPage() {
     const classes = useStyles();
     const { t } = useTranslation('pages');
-    const { authenticate } = UserState.useContainer();
-    const history = useHistory();
-    const onAuthorize = () => {
-        authenticate();
-        history.push('/');
-    };
+    const { redirect } = UserState.useContainer();
 
     return (
         <Container className={classes.root}>
@@ -86,20 +82,12 @@ export default function UnauthorizedPage() {
                     </Typography>
 
                     <Button
-                        onClick={onAuthorize}
+                        href={t('urls.oauth', { ns: 'translation' })}
                         variant={'contained'}
                         className={classes.btn}
                         color={'primary'}
                     >
                         {t('unauthorized.button', { ns: 'pages' })}
-                    </Button>
-
-                    <Button
-                        style={{ display: 'block', marginTop: '1rem' }}
-                        href={'/oauth?code=341lj34kj3n2f&test=yes&bool&ofc=yes&ofc=no'}
-                        target={'_blank'}
-                    >
-                        OAuth Authorization Demo
                     </Button>
                 </div>
             </Paper>
