@@ -1,4 +1,5 @@
 import anime from 'animejs';
+import { FG } from '../../types';
 
 export default function executeSplash(args?: FG.SplashArgs): Promise<boolean> {
     return new Promise((resolve, reject) => {

@@ -13,6 +13,7 @@ import { Menu as MenuIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
+import { FG } from 'types';
 import Drawer from './Drawer';
 import CommonDrawerItems from './CommonDrawerItems';
 import { UserState } from '../../state';
