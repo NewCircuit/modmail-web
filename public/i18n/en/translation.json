@@ -1,9 +1,24 @@
 {
   "appName": "Modmail",
+  "cookie": "connect.sid",
+  "urls": {
+    "base": "https://api.pewdiemc.com/api",
+    "oauth": "$t(urls.base)/oauth",
+    "authenticate": "$t(urls.base)/self"
+  },
   "drawer": {
     "tabs": {
       "categories": "Categories",
       "threads": "Threads"
+    },
+    "threadListItem": {
+      "newLabel": "New!",
+      "respondedByLabel": "Last Response By",
+      "respondedDateLabel": "Last Response Date",
+      "new": "This thread has new messages!",
+      "replied": "This thread has been replied to.",
+      "important": "This thread requires attention.",
+      "question": "This thread requires attention."
     }
   },
   "errors": {
