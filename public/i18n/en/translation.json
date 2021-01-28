@@ -14,7 +14,7 @@
     "threadListItem": {
       "newLabel": "New!",
       "respondedByLabel": "Last Response By",
-      "respondedDateLabel": "Last Response Date",
+      "createdDateLabel": "Thread Created At",
       "new": "This thread has new messages!",
       "replied": "This thread has been replied to.",
       "important": "This thread requires attention.",

@@ -12,12 +12,9 @@ export default function ThreadDrawer() {
     return (
         <Slide in direction={'right'}>
             <div>
-                <ThreadListItem thread={thread} replied />
-                <ThreadListItem thread={thread} />
-                <ThreadListItem thread={thread} replied />
-                <ThreadListItem thread={thread} />
-                <ThreadListItem thread={thread} replied />
-                <ThreadListItem thread={thread} />
+                {threads.items?.map((thread, idx) => (
+                    <ThreadListItem replied={idx % 2 === 1} thread={thread} key={idx} />
+                ))}
             </div>
         </Slide>
     );

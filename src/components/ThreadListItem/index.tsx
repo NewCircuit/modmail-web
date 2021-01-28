@@ -16,6 +16,7 @@ import MailIcon from '@material-ui/icons/MailOutlined';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { Thread } from 'modmail-types';
+import { getTimestampFromSnowflake } from '../../util';
 
 type Props = {
     thread?: Thread;
@@ -110,7 +111,9 @@ function ThreadListItem(props: Props) {
     const classes = useStyles();
     const RepliedIcon = replied ? RepliedToIcon : NotRepliedToIcon;
     const latestMessage =
-        thread && thread?.messages.length > 0 ? thread.messages[0] : undefined;
+        thread && thread?.messages?.length > 0 ? thread.messages[0] : undefined;
+    const timestamp =
+        getTimestampFromSnowflake(thread?.id)?.toFormat('MM/dd/yyyy hh:mm a') || 'N/A';
 
     return (
         <div className={classes.root}>
@@ -168,9 +171,9 @@ function ThreadListItem(props: Props) {
                 </div>
                 <div className={classes.panelContainer}>
                     <Typography className={classes.label}>
-                        {t('drawer.threadListItem.respondedDateLabel') as string}
+                        {t('drawer.threadListItem.createdDateLabel') as string}
                     </Typography>
-                    <Typography className={classes.value}>01/05/2021 08:00 PM</Typography>
+                    <Typography className={classes.value}>{timestamp}</Typography>
                 </div>
             </div>
         </div>
