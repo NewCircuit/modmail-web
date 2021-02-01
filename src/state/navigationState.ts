@@ -43,9 +43,6 @@ function navigationState(defaultProps: any): State {
     const { t } = useTranslation();
     const [categories, setCategories] = useState<Optional<Category[]>>(undefined);
     const [threads, setThreads] = useState<Optional<Thread[]>>(undefined);
-    const [threadsCancelToken, setThreadsCancelToken] = useState<Optional<Canceler>>(
-        undefined
-    );
 
     useEffect(() => {
         console.log({ defaultProps });
@@ -126,15 +123,8 @@ function navigationState(defaultProps: any): State {
 
     function fetchThreads(category: string): Promise<Thread[]> {
         console.log('Fetch Threads Now!');
-        if (threadsCancelToken) {
-            threadsCancelToken('new request made.');
-        }
-        const cancelTokenSource = axios.CancelToken.source();
-        setThreadsCancelToken(cancelTokenSource.cancel);
         return axios
-            .get(t('urls.threads', { category }), {
-                cancelToken: cancelTokenSource.token,
-            })
+            .get(t('urls.threads', { category }))
             .then((response: AxiosResponse<FG.Api.ThreadsResponse>) => {
                 console.log(response);
                 if (response.status === 200) {
@@ -184,7 +174,6 @@ function navigationState(defaultProps: any): State {
             items: threads,
             fetch: fetchThreads,
             fetchOne: fetchOneThread,
-            cancel: threadsCancelToken,
         },
         categories: {
             items: categories,

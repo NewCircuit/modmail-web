@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
             height: 600,
         },
     },
+    alert: {
+        marginTop: '.5rem',
+    },
 }));
 
 function itemRenderer(Component: Child, itemProps: any) {
@@ -62,6 +65,7 @@ function ThreadsContainer(props: Props): JSX.Element {
     if (typeof threads === 'undefined' || threads.length === 0)
         return (
             <Alert
+                className={classes.alert}
                 color={'error'}
                 alertTitle={empty?.title}
                 alertDesc={empty?.description}

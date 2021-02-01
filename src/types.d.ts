@@ -52,13 +52,15 @@ declare namespace FG.State {
             items?: Array<Thread>;
             fetch: (category: string) => Promise<Thread[]>;
             fetchOne: (category: string, thread: string) => Promise<Nullable<Thread>>;
-            cancel?: Canceler;
+            // TODO add ability to cancel fetch requests
+            // cancel?: (message: string) => void;
         };
         categories: {
             items?: Array<Category>;
             fetch: () => Promise<Category[]>;
             fetchOne: (category: string) => Promise<Nullable<Category>>;
-            cancel?: Canceler;
+            // TODO add ability to cancel fetch requests
+            // cancel?: (message: string) => void;
             findById: (category: string) => Nullable<Category>;
         };
     };
