@@ -17,6 +17,12 @@ const useStyles = makeStyles(() => ({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    faded: {
+        background: `linear-gradient(180deg, ${fade('#000', 0.3)} 0%, ${fade(
+            '#000',
+            0.0
+        )} 100%)`,
+    },
     open: {
         opacity: 0.2,
     },
@@ -25,6 +31,7 @@ const useStyles = makeStyles(() => ({
 type BackdropProps = {
     children: JSX.Element;
     open?: boolean;
+    fadeOut?: boolean;
     onClick?: (evt: React.SyntheticEvent<HTMLDivElement>) => any;
 };
 export default function LocalizedBackdrop(props: BackdropProps): JSX.Element {
@@ -38,7 +45,12 @@ export default function LocalizedBackdrop(props: BackdropProps): JSX.Element {
     if (!open) return <React.Fragment />;
     return (
         <Fade in={props.open}>
-            <div onClick={props.onClick} className={clsx(classes.root, classes.open)}>
+            <div
+                onClick={props.onClick}
+                className={clsx(classes.root, classes.open, {
+                    [classes.faded]: props.fadeOut,
+                })}
+            >
                 {props.children}
             </div>
         </Fade>
@@ -47,4 +59,5 @@ export default function LocalizedBackdrop(props: BackdropProps): JSX.Element {
 
 LocalizedBackdrop.defaultProps = {
     open: false,
+    fadeOut: false,
 };
