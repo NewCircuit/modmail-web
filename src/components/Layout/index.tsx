@@ -87,7 +87,6 @@ const useStyles = makeStyles((theme) => ({
     container: {
         transition: 'ease margin-left .5s',
         marginLeft: 0,
-        marginTop: toolbarHeight,
         height: `calc(100vh - ${toolbarHeight}px)`,
     },
     open: {
@@ -176,6 +175,7 @@ export class Layout extends React.Component<Props, State> {
                         [classes.open]: drawerOpen && isDesktop && user.authenticated,
                     })}
                 >
+                    <div className={classes.toolbar} />
                     {children}
                 </div>
             </>

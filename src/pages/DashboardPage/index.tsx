@@ -8,21 +8,26 @@ import {
     Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Category } from 'modmail-types';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { NavigationState } from '../../state';
 import PaperCategory from '../../components/PaperCategory';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
+import Alert from '../../components/Alert';
 
 const useStyles = makeStyles((theme) => ({
     categoryRoot: {
         position: 'relative',
         minHeight: 150,
     },
+    title: {
+        margin: '1rem 1rem 0',
+        padding: '.5rem',
+    },
     alert: {
-        margin: '1rem 1rem',
+        margin: '.5rem 1rem',
         padding: '.5rem',
     },
     colorPrimary: {
@@ -38,10 +43,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function DashboardPage() {
+export default function DashboardPage(): JSX.Element {
     const { t } = useTranslation('pages');
+    const { categories } = NavigationState.useContainer();
     const classes = useStyles();
-    const { categories, threads } = NavigationState.useContainer();
+    const history = useHistory();
 
     const isCategoriesLoaded = typeof categories.items !== 'undefined';
     const isCategoriesEmpty =
@@ -59,22 +65,20 @@ export default function DashboardPage() {
 
     const onCategorySelected = (evt: React.SyntheticEvent, category: Category) => {
         console.log({ evt, category });
-        threads.fetch(category.id);
+        history.push(`/category/${category.id}`);
     };
 
-    const renderBody = () => {
+    const renderGridItems = () => {
         if (isCategoriesLoaded) {
             if (isCategoriesEmpty) {
                 return (
                     <Grid xs={12} item>
-                        <Paper className={clsx(classes.alert, classes.colorPrimary)}>
-                            <Typography variant={'h2'}>
-                                {t('dashboard.category.noItemsTitle')}
-                            </Typography>
-                            <Typography variant={'subtitle1'}>
-                                {t('dashboard.category.noItemsDesc')}
-                            </Typography>
-                        </Paper>
+                        <Alert
+                            className={classes.alert}
+                            color={'error'}
+                            alertTitle={t('dashboard.category.noItemsTitle')}
+                            alertDesc={t('dashboard.category.noItemsDesc')}
+                        />
                     </Grid>
                 );
             }
@@ -96,25 +100,19 @@ export default function DashboardPage() {
                 </LocalizedBackdrop>
             </div>
         );
-        return (
-            <Grid item sm={12}>
-                Loading...
-            </Grid>
-        );
     };
 
     return (
         <Container maxWidth={'xl'} disableGutters>
             <div className={classes.categoryRoot}>
                 <Grid container>
-                    <Grid xs={12} item component={Paper} className={classes.alert}>
+                    <Grid xs={12} item component={Paper} className={classes.title}>
                         <Typography variant={'h2'}>
                             {t('dashboard.category.title')}
                         </Typography>
                     </Grid>
                 </Grid>
-                <hr className={classes.divider} />
-                <Grid container>{renderBody()}</Grid>
+                <Grid container>{renderGridItems()}</Grid>
             </div>
         </Container>
     );
