@@ -1,11 +1,10 @@
-import React, { ReactChild, ReactChildren, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { ReactNode, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { UserState } from '../state';
 
 type Props = {
     setReady: () => void;
-    children: JSX.Element;
+    children: ReactNode | string;
 };
 
 function Authenticator(props: Props) {

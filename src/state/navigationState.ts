@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { createContainer } from 'unstated-next';
 import { Category, Thread } from 'modmail-types';
-import axios, { AxiosResponse, Canceler } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { FG, Nullable, Optional } from '../types';
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FG } from 'types';
 import { createContainer } from 'unstated-next';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ function userState(): State {
     const { t } = useTranslation();
     const [authenticated, setAuthenticated] = useState<boolean | undefined>(undefined);
     const [processing, setProcessing] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [userData, setUserData] = useState<FG.Api.SelfResponse | undefined>();
 
     function logout() {

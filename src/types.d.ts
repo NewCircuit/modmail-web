@@ -1,5 +1,4 @@
 import { Thread, ModmailUser, Category } from 'modmail-types';
-import { Canceler } from 'axios';
 
 export type Nullable<T> = T | null;
 export type Optional<T> = T | undefined;

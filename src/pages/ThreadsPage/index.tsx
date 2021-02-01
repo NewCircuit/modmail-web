@@ -13,7 +13,7 @@ type ThreadsPageParams = {
     categoryId: string;
 };
 
-const useStyle = makeStyles((theme) => ({
+const useStyle = makeStyles(() => ({
     root: {
         position: 'relative',
         minHeight: '80vh',
@@ -23,7 +23,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 function ThreadsPage(): JSX.Element {
-    const { t, i18n } = useTranslation('pages');
+    const { t } = useTranslation('pages');
     const classes = useStyle();
     const { categoryId } = useParams<ThreadsPageParams>();
     const history = useHistory();

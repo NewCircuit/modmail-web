@@ -31,6 +31,7 @@
   "plugins": ["react", "@typescript-eslint", "prettier"],
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-ignore": "off",
     "import/no-unresolved": "off",
     "import/extensions": "off",

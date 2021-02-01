@@ -1,10 +1,8 @@
 import React from 'react';
 import { Breadcrumbs as BreadcrumbsBase, Link, Typography } from '@material-ui/core';
 
-type Props = any;
-
 // TODO make this functional
-export default function Breadcrumbs(props: Props) {
+export default function Breadcrumbs() {
     return (
         <BreadcrumbsBase>
             <Link href={'#'}>Home</Link>

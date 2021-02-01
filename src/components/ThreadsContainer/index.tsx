@@ -1,13 +1,6 @@
-import React, { ComponentType, RefObject, useEffect, useRef } from 'react';
+import React, { ComponentType, RefObject, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-    List,
-    ListItem,
-    ListItemAvatar,
-    Paper,
-    ListItemText,
-    Avatar,
-} from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { Thread } from 'modmail-types';

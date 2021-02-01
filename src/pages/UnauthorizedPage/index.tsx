@@ -6,12 +6,9 @@ import {
     Paper,
     Typography,
     Button,
-    Link,
 } from '@material-ui/core';
 import MoodBadIcon from '@material-ui/icons/MoodBad';
-import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { UserState } from '../../state';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -63,7 +60,6 @@ const useStyles = makeStyles((theme) => ({
 export default function UnauthorizedPage() {
     const classes = useStyles();
     const { t } = useTranslation('pages');
-    const { redirect } = UserState.useContainer();
 
     return (
         <Container className={classes.root}>
