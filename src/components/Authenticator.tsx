@@ -1,10 +1,10 @@
-import React, { ReactNode, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { UserState } from '../state';
 
 type Props = {
     setReady: () => void;
-    children: ReactNode | string;
+    children: JSX.Element;
 };
 
 function Authenticator(props: Props) {
