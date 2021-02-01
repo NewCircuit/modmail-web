@@ -18,9 +18,14 @@ import { useTranslation } from 'react-i18next';
 import { Thread } from 'modmail-types';
 import { getTimestampFromSnowflake } from '../../util';
 
-type Props = {
+type Props = React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+> & {
     thread?: Thread;
+    full?: boolean;
     replied?: boolean;
+    onClick?: (evt: React.SyntheticEvent<HTMLDivElement>, thread?: Thread) => never;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -43,17 +48,31 @@ const useStyles = makeStyles((theme) => ({
         padding: '.5rem .25rem',
         width: 200,
     },
+    fullLeftPanel: {
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '.5rem',
+        alignItems: 'center',
+        [theme.breakpoints.up('sm')]: {},
+    },
+    fullRightPanel: {
+        padding: '.5rem',
+        flexGrow: 1,
+    },
     avatar: {
         backgroundColor: 'transparent',
         color: theme.palette.primary.light,
         border: `2px solid ${theme.palette.primary.main}`,
         marginBottom: '.25rem',
-        // height: 30,
-        // width: 30,
-        // [theme.breakpoints.up('sm')]: {
-        //     height: 40,
-        //     width: 40,
-        // },
+    },
+    fullAvatar: {
+        [theme.breakpoints.up('sm')]: {
+            marginTop: '.5rem',
+            width: 65,
+            height: 65,
+            borderWidth: 4,
+            fontSize: '2.5em',
+        },
     },
     modifiers: {
         display: 'flex',
@@ -61,6 +80,11 @@ const useStyles = makeStyles((theme) => ({
     modifier: {
         opacity: 0.2,
         fontSize: '1.75em',
+    },
+    fullModifier: {
+        opacity: 0.2,
+        fontSize: '2em',
+        marginRight: '.25rem',
     },
     active: {
         opacity: 1,
@@ -78,6 +102,12 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '1.3em',
         overflow: 'hidden',
         color: theme.palette.text.primary,
+    },
+    fullName: {
+        [theme.breakpoints.up('sm')]: {
+            fontSize: '1.75em',
+            margin: '.25rem 0',
+        },
     },
     newModifier: {
         marginLeft: 'auto',
@@ -104,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ThreadListItem(props: Props) {
-    const { replied, thread } = props;
+    const { replied, thread, full, onClick, ...otherProps } = props;
     const { t } = useTranslation();
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
@@ -115,17 +145,28 @@ function ThreadListItem(props: Props) {
     const timestamp =
         getTimestampFromSnowflake(thread?.id)?.toFormat('MM/dd/yyyy hh:mm a') || 'N/A';
 
+    const onHandleClick = (evt: React.SyntheticEvent<HTMLDivElement>) => {
+        if (onClick) onClick(evt, thread);
+    };
+
     return (
-        <div className={classes.root}>
-            <div className={classes.leftPanel}>
+        <div className={classes.root} onClick={onHandleClick} {...otherProps}>
+            <div
+                className={clsx({
+                    [classes.leftPanel]: !full,
+                    [classes.fullLeftPanel]: full,
+                })}
+            >
                 <Avatar
-                    className={classes.avatar}
+                    className={clsx(classes.avatar, {
+                        [classes.fullAvatar]: full,
+                    })}
                     variant={'circular'}
                     title={latestMessage?.sender}
                 >
                     {latestMessage?.sender.substr(0, 2).toUpperCase()}
                 </Avatar>
-                {isDesktop && (
+                {!full && isDesktop && (
                     <div className={classes.modifiers}>
                         <Tooltip
                             title={
@@ -149,9 +190,20 @@ function ThreadListItem(props: Props) {
                     </div>
                 )}
             </div>
-            <div className={classes.rightPanel}>
+            <div
+                className={clsx({
+                    [classes.rightPanel]: !full,
+                    [classes.fullRightPanel]: full,
+                })}
+            >
                 <div className={clsx(classes.panelContainer, classes.flex)}>
-                    <Typography className={classes.name}>{thread?.channel}</Typography>
+                    <Typography
+                        className={clsx(classes.name, {
+                            [classes.fullName]: full,
+                        })}
+                    >
+                        {thread?.channel}
+                    </Typography>
                     {!replied && (
                         <div className={classes.newModifier}>
                             <MailIcon />
@@ -175,6 +227,29 @@ function ThreadListItem(props: Props) {
                     </Typography>
                     <Typography className={classes.value}>{timestamp}</Typography>
                 </div>
+                {full && (
+                    <div className={classes.panelContainer}>
+                        <Tooltip
+                            title={
+                                t(
+                                    `drawer.threadListItem.${replied ? 'replied' : 'new'}`
+                                ) as string
+                            }
+                        >
+                            <RepliedIcon
+                                className={clsx(classes.fullModifier, {
+                                    [classes.active]: !replied,
+                                })}
+                            />
+                        </Tooltip>
+                        <Tooltip title={t('drawer.threadListItem.important') as string}>
+                            <ExclamationIcon className={clsx(classes.fullModifier)} />
+                        </Tooltip>
+                        <Tooltip title={t('drawer.threadListItem.question') as string}>
+                            <QuestionIcon className={clsx(classes.fullModifier)} />
+                        </Tooltip>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -182,7 +257,8 @@ function ThreadListItem(props: Props) {
 
 ThreadListItem.defaultProps = {
     replied: false,
+    full: false,
     thread: {},
-};
+} as never;
 
 export default ThreadListItem;
