@@ -6,7 +6,9 @@
     "oauth": "$t(urls.base)/oauth",
     "authenticate": "$t(urls.base)/self",
     "categories": "$t(urls.base)/categories",
-    "threads": "$t(urls.base)/categories/{{category}}/threads"
+    "categoriesOne": "$t(urls.base)/categories/{{category}}",
+    "threads": "$t(urls.base)/categories/{{category}}/threads",
+    "threadsOne": "$t(urls.base)/categories/{{category}}/threads/{{thread}}"
   },
   "drawer": {
     "tabs": {

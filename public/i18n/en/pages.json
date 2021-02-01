@@ -10,5 +10,11 @@
       "noItemsTitle": "No Categories",
       "noItemsDesc": "There are currently no categories available. Please make them through the Modmail bot and then refresh this page."
     }
+  },
+  "category": {
+    "title": "Select a Thread",
+    "title2": "List of all threads in the <b><u>{{category}}</u></b> category.",
+    "noThreadsTitle": "No threads",
+    "noThreadsDesc": "There are currently no threads in the {{category, emphasis}} category."
   }
 }

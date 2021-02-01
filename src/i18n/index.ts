@@ -14,7 +14,7 @@ export function init() {
                 loadPath: 'i18n/{{lng}}/{{ns}}.json',
             },
             react: {
-                // transKeepBasicHtmlNodesFor: ['b', 'br', 'u', 'span'], // TODO add these as needed
+                transKeepBasicHtmlNodesFor: ['b', 'br', 'u', 'span'], // TODO add these as needed
             },
             interpolation: {
                 format(value, format) {

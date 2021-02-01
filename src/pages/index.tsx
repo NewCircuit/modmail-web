@@ -7,6 +7,7 @@ import LocalizedBackdrop from '../components/LocalizedBackdrop';
 const DashboardPage = React.lazy(() => import('./DashboardPage'));
 const UnauthorizedPage = React.lazy(() => import('./UnauthorizedPage'));
 const OAuthPage = React.lazy(() => import('./OAuthPage'));
+const ThreadsPage = React.lazy(() => import('./ThreadsPage'));
 
 export default function Pages(): JSX.Element {
     const { authenticated } = UserState.useContainer();
@@ -32,6 +33,11 @@ export default function Pages(): JSX.Element {
                 {authenticated && (
                     <React.Fragment>
                         <Route exact path={'/'} component={DashboardPage} />
+                        <Route
+                            exact
+                            path={`/category/:categoryId`}
+                            component={ThreadsPage}
+                        />
                     </React.Fragment>
                 )}
             </React.Suspense>

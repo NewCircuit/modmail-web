@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { createContainer } from 'unstated-next';
 import { Category, Thread } from 'modmail-types';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, Canceler } from 'axios';
 import { useTranslation } from 'react-i18next';
-import { FG } from '../types';
+import { FG, Nullable, Optional } from '../types';
 
 type State = FG.State.NavigationState;
 
@@ -41,12 +41,22 @@ const TEST_THREADS: Thread[] = [TEST_THREAD, TEST_THREAD, TEST_THREAD, TEST_THRE
 
 function navigationState(defaultProps: any): State {
     const { t } = useTranslation();
-    const [categories, setCategories] = useState<Category[] | undefined>(undefined);
-    const [threads, setThreads] = useState<Thread[] | undefined>(undefined);
+    const [categories, setCategories] = useState<Optional<Category[]>>(undefined);
+    const [threads, setThreads] = useState<Optional<Thread[]>>(undefined);
+    const [threadsCancelToken, setThreadsCancelToken] = useState<Optional<Canceler>>(
+        undefined
+    );
 
     useEffect(() => {
         console.log({ defaultProps });
     });
+
+    function findCategoryById(id: string): Nullable<Category> {
+        if (categories instanceof Array) {
+            return categories.find((cat) => cat.id === id) || null;
+        }
+        return null;
+    }
 
     // TODO remove TEMP Function
     function fetchCategories2(): Promise<Category[]> {
@@ -80,6 +90,31 @@ function navigationState(defaultProps: any): State {
     }
 
     // TODO remove TEMP Function
+    function fetchOneCategory2(category: string): Promise<Nullable<Category>> {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(TEST_CATEGORIES.find((cat) => cat.id === category) || null);
+            }, 2000);
+        });
+    }
+
+    function fetchOneCategory(category: string): Promise<Nullable<Category>> {
+        return axios
+            .get(t('urls.categoryOne', { category }))
+            .then((response: AxiosResponse<FG.Api.CategoryOneResponse>) => {
+                console.log(response);
+                if (response.status === 200) {
+                    return response.data;
+                }
+                return null;
+            })
+            .catch((err) => {
+                console.error(err);
+                return null;
+            });
+    }
+
+    // TODO remove TEMP Function
     function fetchThreads2(category: string): Promise<Thread[]> {
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -89,10 +124,17 @@ function navigationState(defaultProps: any): State {
         });
     }
 
-    function fetchThreads(category: string) {
+    function fetchThreads(category: string): Promise<Thread[]> {
         console.log('Fetch Threads Now!');
+        if (threadsCancelToken) {
+            threadsCancelToken('new request made.');
+        }
+        const cancelTokenSource = axios.CancelToken.source();
+        setThreadsCancelToken(cancelTokenSource.cancel);
         return axios
-            .get(t('urls.threads', { category }))
+            .get(t('urls.threads', { category }), {
+                cancelToken: cancelTokenSource.token,
+            })
             .then((response: AxiosResponse<FG.Api.ThreadsResponse>) => {
                 console.log(response);
                 if (response.status === 200) {
@@ -109,14 +151,46 @@ function navigationState(defaultProps: any): State {
             });
     }
 
+    // TODO remove TEMP Function
+    function fetchOneThread2(
+        category: string,
+        thread: string
+    ): Promise<Nullable<Thread>> {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(TEST_THREADS.find((th) => th.id === thread) || null);
+            }, 2000);
+        });
+    }
+
+    function fetchOneThread(category: string, thread: string) {
+        return axios
+            .get(t('urls.threadOne', { category, thread }))
+            .then((response: AxiosResponse<FG.Api.ThreadsOneResponse>) => {
+                console.log(response);
+                if (response.status === 200) {
+                    return response.data;
+                }
+                return null;
+            })
+            .catch((err) => {
+                console.error(err);
+                return null;
+            });
+    }
+
     return {
         threads: {
             items: threads,
             fetch: fetchThreads,
+            fetchOne: fetchOneThread,
+            cancel: threadsCancelToken,
         },
         categories: {
             items: categories,
             fetch: fetchCategories,
+            fetchOne: fetchOneCategory,
+            findById: findCategoryById,
         },
     };
 }
