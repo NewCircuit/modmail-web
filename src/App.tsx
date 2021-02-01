@@ -40,8 +40,8 @@ function App(props: FG.AppProps): JSX.Element {
             <CssBaseline />
             <React.Suspense fallback={fallback}>
                 <UserState.Provider>
-                    <NavigationState.Provider>
-                        <Router history={browserHistory}>
+                    <Router history={browserHistory}>
+                        <NavigationState.Provider>
                             <Authenticator setReady={setReady}>
                                 <React.Suspense fallback={fallback}>
                                     <LayoutHOC layoutRef={layoutRef}>
@@ -49,8 +49,8 @@ function App(props: FG.AppProps): JSX.Element {
                                     </LayoutHOC>
                                 </React.Suspense>
                             </Authenticator>
-                        </Router>
-                    </NavigationState.Provider>
+                        </NavigationState.Provider>
+                    </Router>
                 </UserState.Provider>
             </React.Suspense>
         </ThemeProvider>

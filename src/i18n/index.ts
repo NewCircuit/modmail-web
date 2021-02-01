@@ -11,7 +11,7 @@ export function init() {
             fallbackLng: false,
             lng: 'en',
             backend: {
-                loadPath: 'i18n/{{lng}}/{{ns}}.json',
+                loadPath: '/i18n/{{lng}}/{{ns}}.json',
             },
             react: {
                 transKeepBasicHtmlNodesFor: ['b', 'br', 'u', 'span'], // TODO add these as needed
