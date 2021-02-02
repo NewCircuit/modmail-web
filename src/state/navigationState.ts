@@ -170,11 +170,23 @@ function navigationState(defaultProps: any): State {
             });
     }
 
+    function findThreadById(categoryId: string, threadId: string) {
+        if (threads instanceof Array) {
+            return (
+                threads.find(
+                    (thread) => thread.category === categoryId && thread.id === threadId
+                ) || null
+            );
+        }
+        return null;
+    }
+
     return {
         threads: {
             items: threads,
             fetch: fetchThreads,
             fetchOne: fetchOneThread,
+            findById: findThreadById,
         },
         categories: {
             items: categories,

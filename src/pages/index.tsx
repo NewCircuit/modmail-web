@@ -8,6 +8,7 @@ const DashboardPage = React.lazy(() => import('./DashboardPage'));
 const UnauthorizedPage = React.lazy(() => import('./UnauthorizedPage'));
 const OAuthPage = React.lazy(() => import('./OAuthPage'));
 const ThreadsPage = React.lazy(() => import('./ThreadsPage'));
+const ThreadPage = React.lazy(() => import('./ThreadPage'));
 
 export default function Pages(): JSX.Element {
     const { authenticated } = UserState.useContainer();
@@ -37,6 +38,11 @@ export default function Pages(): JSX.Element {
                             exact
                             path={`/category/:categoryId`}
                             component={ThreadsPage}
+                        />
+                        <Route
+                            exact
+                            path={`/category/:categoryId/:threadId`}
+                            component={ThreadPage}
                         />
                     </React.Fragment>
                 )}
