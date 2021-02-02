@@ -18,14 +18,16 @@ import { useTranslation } from 'react-i18next';
 import { Thread } from 'modmail-types';
 import { getTimestampFromSnowflake } from '../../util';
 
-type Props = React.DetailedHTMLProps<
+type DivElem = React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
-> & {
+>;
+
+type Props = Omit<DivElem, 'onClick'> & {
     thread?: Thread;
     full?: boolean;
     replied?: boolean;
-    onClick?: (evt: React.SyntheticEvent<HTMLDivElement>, thread?: Thread) => never;
+    onClick?: (evt: React.SyntheticEvent<HTMLDivElement>, thread?: Thread) => void;
 };
 
 const useStyles = makeStyles((theme) => ({
