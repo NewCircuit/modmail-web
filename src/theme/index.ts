@@ -15,6 +15,12 @@ const theme: Theme = createMuiTheme({
     },
 });
 
+export const APPBAR_HEIGHT = 64;
+export const DRAWER_WIDTH = {
+    mobile: 240,
+    desktop: 300,
+};
+
 export interface Theme extends _Theme {
     palette: Palette;
 }

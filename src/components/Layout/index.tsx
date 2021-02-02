@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 import Drawer from './Drawer';
 import CommonDrawerItems from './CommonDrawerItems';
 import { UserState } from '../../state';
-import { Theme } from '../../theme';
+import { APPBAR_HEIGHT, DRAWER_WIDTH, Theme } from '../../theme';
 
 type Props = {
     ref: ForwardedRef<Layout>;
@@ -34,9 +34,9 @@ type State = {
     drawerOpen: boolean;
 };
 
-const toolbarHeight = 64;
-const drawerWidth = 240;
-const drawerWidthDesktop = 300;
+const toolbarHeight = APPBAR_HEIGHT;
+const drawerWidth = DRAWER_WIDTH.mobile;
+const drawerWidthDesktop = DRAWER_WIDTH.desktop;
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -87,7 +87,8 @@ const useStyles = makeStyles((theme) => ({
     container: {
         transition: 'ease margin-left .5s',
         marginLeft: 0,
-        height: `calc(100vh - ${toolbarHeight}px)`,
+        height: `100vh`,
+        position: 'relative',
     },
     open: {
         marginLeft: drawerWidthDesktop,
