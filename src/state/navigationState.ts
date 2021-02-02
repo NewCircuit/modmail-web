@@ -82,7 +82,7 @@ function navigationState(defaultProps: any): State {
 
     function fetchOneThread(category: string, thread: string) {
         return axios
-            .get(t('urls.threadOne', { category, thread }))
+            .get(t('urls.threadsOne', { category, thread }))
             .then((response: AxiosResponse<FG.Api.ThreadsOneResponse>) => {
                 console.log(response);
                 if (response.status === 200) {
