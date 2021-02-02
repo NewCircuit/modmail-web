@@ -89,6 +89,7 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: 0,
         height: `100vh`,
         position: 'relative',
+        overflowX: 'hidden',
     },
     open: {
         marginLeft: drawerWidthDesktop,

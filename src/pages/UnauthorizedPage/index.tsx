@@ -9,12 +9,13 @@ import {
 } from '@material-ui/core';
 import MoodBadIcon from '@material-ui/icons/MoodBad';
 import { useTranslation } from 'react-i18next';
+import { Theme, APPBAR_HEIGHT } from '../../theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
     root: {
         // transition: 'ease all 1s',
         display: 'flex',
-        height: '100%',
+        height: `calc(100% - ${APPBAR_HEIGHT}px)`,
         alignItems: 'start',
         [theme.breakpoints.up('sm')]: {
             display: 'flex',
