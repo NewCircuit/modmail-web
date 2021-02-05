@@ -1,5 +1,16 @@
 import { Thread, ModmailUser, Category } from 'modmail-types';
 
+type Role = 'admin' | 'mod' | '';
+
+export type MemberState = {
+    avatarURL: string;
+    discriminator: string;
+    id: string;
+    username: string;
+    role: Role;
+    nickname: string;
+};
+
 export type Nullable<T> = T | null;
 export type Optional<T> = T | undefined;
 export type RequiredArgs<T = {}> = {
@@ -35,9 +46,18 @@ declare namespace FG.Api {
 
     type ThreadsOneResponse = Thread;
     type ThreadsResponse = Thread[];
+
+    type MemberResponse = MemberState;
+    type MembersResponse = MemberState[];
 }
 
 declare namespace FG.State {
+    type MembersState = {
+        members: MemberState[] | null;
+        fetchMember: (category: string, id: string) => Promise<Nullable<MemberState>>;
+        fetchMembers: (category: string) => Promise<MemberState[]>;
+    };
+
     type UserState = {
         authenticated?: boolean;
         processing: boolean;

@@ -8,7 +8,9 @@
     "categories": "$t(urls.base)/categories",
     "categoriesOne": "$t(urls.base)/categories/{{category}}",
     "threads": "$t(urls.base)/categories/{{category}}/threads",
-    "threadsOne": "$t(urls.base)/categories/{{category}}/threads/{{thread}}"
+    "threadsOne": "$t(urls.base)/categories/{{category}}/threads/{{thread}}",
+    "fetchMember": "$t(urls.base)/categories/{{category}}/members/{{member}}",
+    "fetchMembers": "$t(urls.base)/categories/{{category}}/members"
   },
   "drawer": {
     "tabs": {

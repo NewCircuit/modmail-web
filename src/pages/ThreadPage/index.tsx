@@ -4,7 +4,7 @@ import MessageContainer from 'components/MessageContainer';
 import { useParams } from 'react-router-dom';
 import { Thread } from 'modmail-types';
 import { Theme, APPBAR_HEIGHT } from '../../theme';
-import { NavigationState } from '../../state';
+import { MembersState, NavigationState } from '../../state';
 import Message from '../../components/Message';
 
 type Params = {
@@ -27,7 +27,16 @@ function ThreadPage() {
     const [thread, setThread] = useState<Thread | null>(null);
     const { categoryId, threadId } = useParams<Params>();
     const { threads } = NavigationState.useContainer();
+    const { fetchMember, members, fetchMembers } = MembersState.useContainer();
     const pageRef: RefObject<HTMLDivElement> = React.createRef();
+
+    useEffect(() => {
+        if (members === null) {
+            fetchMembers(categoryId);
+        } else {
+            console.log(members);
+        }
+    }, [members]);
 
     // This is a failsafe to load the specific thread if this is a direct load or a refresh
     useEffect(() => {
@@ -48,10 +57,15 @@ function ThreadPage() {
         }
     }, [categoryId, threadId, threads.items]);
 
+    const handleFetchMember = (id?: string) =>
+        fetchMember.call(null, categoryId, id || '');
+
     return (
         <div ref={pageRef} className={classes.root}>
             <MessageContainer pageRef={pageRef} messages={thread?.messages || []}>
-                {(message, index) => <Message key={index} {...message} />}
+                {(message, index) => (
+                    <Message fetchMember={handleFetchMember} key={index} {...message} />
+                )}
             </MessageContainer>
         </div>
     );

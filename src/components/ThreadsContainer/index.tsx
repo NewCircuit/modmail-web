@@ -5,11 +5,13 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { Thread } from 'modmail-types';
 import Alert from '../Alert';
-import { RequiredArgs } from '../../types';
+import { MemberState, Nullable, RequiredArgs } from '../../types';
 
 type Child = ComponentType<RequiredArgs<{ thread: Thread }>>;
 type Props = {
     threads?: Thread[];
+    members?: MemberState[] | null;
+    fetchMember: (id: string) => Promise<Nullable<MemberState>>;
     itemProps?: any;
     empty?: {
         title?: React.ReactNode;
@@ -32,22 +34,27 @@ const useStyles = makeStyles((theme) => ({
         marginTop: '.5rem',
     },
 }));
+type FetchMember = (id: string) => Promise<Nullable<MemberState>>;
 
-function itemRenderer(Component: Child, itemProps: any) {
+function itemRenderer(Component: Child, fetchMember: FetchMember, itemProps: any) {
     return function Item(props: ListChildComponentProps) {
         const threads: Thread[] = props.data;
         const currentThread = threads[props.index];
 
         return (
             <div style={props.style}>
-                <Component {...itemProps} thread={currentThread} />
+                <Component
+                    {...itemProps}
+                    fetchMember={fetchMember}
+                    thread={currentThread}
+                />
             </div>
         );
     };
 }
 
 function ThreadsContainer(props: Props): JSX.Element {
-    const { threads, children, empty, itemProps } = props;
+    const { threads, children, empty, fetchMember, itemProps } = props;
     const classes = useStyles();
     const containerRef: RefObject<HTMLUListElement> = React.createRef();
 
@@ -65,7 +72,7 @@ function ThreadsContainer(props: Props): JSX.Element {
             />
         );
 
-    const renderer = itemRenderer(children, itemProps);
+    const renderer = itemRenderer(children, fetchMember, itemProps);
     return (
         <Paper className={classes.root} elevation={1}>
             <AutoSizer>

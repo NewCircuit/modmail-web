@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
+    Skeleton,
     TimelineConnector,
     TimelineContent,
     TimelineDot,
@@ -12,9 +13,11 @@ import { Avatar, Paper, Typography } from '@material-ui/core';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import { Message as ModmailMessage } from 'modmail-types';
 import MarkdownView from 'react-showdown';
-import { getTimestampFromSnowflake } from '../../util';
+import { getNameFromMemberState, getTimestampFromSnowflake } from '../../util';
+import { MemberState, Nullable } from '../../types';
 
 type Props = ModmailMessage & {
+    fetchMember?: (id?: string) => Promise<Nullable<MemberState>>;
     isDesktop?: boolean;
     isLastMessage?: boolean;
 };
@@ -43,7 +46,7 @@ const useStyle = makeStyles((theme) => ({
         },
     },
     sender: {
-        marginBottom: '1rem',
+        marginBottom: '.5rem',
     },
     mobileDate: {
         margin: '0 !important',
@@ -76,12 +79,20 @@ function Message(props: Props) {
         threadID,
         isDesktop,
         isLastMessage,
+        fetchMember,
     } = props;
     const classes = useStyle();
+    const [member, setMember] = useState<Nullable<MemberState>>(null);
 
     const dateSent = getTimestampFromSnowflake(modmailID);
     const date = dateSent?.toFormat('MM/dd/yyyy');
     const time = dateSent?.toFormat('hh:mm a');
+
+    useEffect(() => {
+        if (fetchMember) {
+            fetchMember(sender).then((memberData) => setMember(memberData));
+        }
+    }, [member, fetchMember]);
 
     console.log(props);
     return (
@@ -102,17 +113,25 @@ function Message(props: Props) {
             )}
             <TimelineSeparator>
                 <TimelineDot className={classes.timelineDot}>
-                    <Avatar className={classes.avatar}>
-                        {sender.substr(0, 2).toUpperCase()}
+                    <Avatar className={classes.avatar} src={member?.avatarURL}>
+                        {!member && (
+                            <Skeleton variant={'circle'} height={40} width={40} />
+                        )}
                     </Avatar>
                 </TimelineDot>
                 {!isLastMessage && <TimelineConnector />}
             </TimelineSeparator>
             <TimelineContent className={classes.content}>
                 <Paper elevation={3} className={classes.paper}>
-                    <Typography variant={'body2'} className={classes.sender}>
-                        {sender}
-                    </Typography>
+                    <div className={classes.sender}>
+                        {member ? (
+                            <Typography variant={'body2'} style={{ margin: 0 }}>
+                                {getNameFromMemberState(member)}
+                            </Typography>
+                        ) : (
+                            <Skeleton width={250} height={18} />
+                        )}
+                    </div>
                     <MarkdownView
                         flavor={'vanilla'}
                         markdown={content}

@@ -3,11 +3,13 @@ import { Slide } from '@material-ui/core';
 import { Thread } from 'modmail-types';
 import { useHistory } from 'react-router-dom';
 import ThreadListItem from '../../ThreadListItem';
-import { NavigationState } from '../../../state';
+import { MembersState, NavigationState } from '../../../state';
+import { MemberState, Nullable } from '../../../types';
 
 export default function ThreadDrawer() {
     const history = useHistory();
     const { threads } = NavigationState.useContainer();
+    const { fetchMember } = MembersState.useContainer();
     useEffect(() => {
         console.log('ThreadsDrawer');
     }, []);
@@ -18,11 +20,16 @@ export default function ThreadDrawer() {
         }
     };
 
+    const handleFetchMember = (category: string) => (
+        id?: string
+    ): Promise<Nullable<MemberState>> => fetchMember.call(null, category, id || '');
+
     return (
         <Slide in direction={'right'}>
             <div>
                 {threads.items?.map((thread, idx) => (
                     <ThreadListItem
+                        fetchMember={handleFetchMember(thread.category)}
                         onClick={onThreadClicked}
                         replied={idx % 2 === 1}
                         thread={thread}

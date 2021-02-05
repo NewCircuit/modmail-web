@@ -4,10 +4,11 @@ import { useHistory, useParams } from 'react-router-dom';
 import { CircularProgress, Container, Paper, Typography } from '@material-ui/core';
 import { useTranslation, Trans } from 'react-i18next';
 import { Category, Thread } from 'modmail-types';
-import { NavigationState } from '../../state';
+import { MembersState, NavigationState } from '../../state';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 import ThreadsContainer from '../../components/ThreadsContainer';
 import ThreadListItem from '../../components/ThreadListItem';
+import { MemberState, Nullable } from '../../types';
 
 type ThreadsPageParams = {
     categoryId: string;
@@ -28,8 +29,17 @@ function ThreadsPage(): JSX.Element {
     const { categoryId } = useParams<ThreadsPageParams>();
     const history = useHistory();
     const { threads, categories } = NavigationState.useContainer();
+    const { members, fetchMembers, fetchMember } = MembersState.useContainer();
     const [category, setCategory] = useState<Category | null>(null);
     const isThreadsLoaded = threads.items instanceof Array;
+
+    useEffect(() => {
+        if (members === null) {
+            fetchMembers(categoryId);
+        } else {
+            console.log(members);
+        }
+    }, [members]);
 
     useEffect(() => {
         setCategory(categories.findById(categoryId));
@@ -41,6 +51,9 @@ function ThreadsPage(): JSX.Element {
             threads.fetch(categoryId);
         }
     }, [threads.items]);
+
+    const handleFetchMember = (id?: string): Promise<Nullable<MemberState>> =>
+        id ? fetchMember.call(null, categoryId, id) : Promise.resolve(null);
 
     const onThreadClicked = (evt: React.SyntheticEvent, thread: Thread) => {
         console.log({ evt, thread });
@@ -69,6 +82,8 @@ function ThreadsPage(): JSX.Element {
             {isThreadsLoaded ? (
                 <ThreadsContainer
                     threads={threads.items}
+                    members={members}
+                    fetchMember={handleFetchMember}
                     itemProps={{
                         full: true,
                         style: { height: 150 },

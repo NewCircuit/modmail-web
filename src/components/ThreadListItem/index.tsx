@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     Avatar,
@@ -16,7 +16,9 @@ import MailIcon from '@material-ui/icons/MailOutlined';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { Thread } from 'modmail-types';
-import { getTimestampFromSnowflake } from '../../util';
+import { Skeleton } from '@material-ui/lab';
+import { getNameFromMemberState, getTimestampFromSnowflake } from '../../util';
+import { MemberState } from '../../types';
 
 type DivElem = React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
@@ -25,9 +27,15 @@ type DivElem = React.DetailedHTMLProps<
 
 type Props = Omit<DivElem, 'onClick'> & {
     thread?: Thread;
+    fetchMember?: (id?: string) => Promise<MemberState | null>;
     full?: boolean;
     replied?: boolean;
     onClick?: (evt: React.SyntheticEvent<HTMLDivElement>, thread?: Thread) => void;
+};
+
+const avatarDimensions = {
+    mobile: 40,
+    desktop: 65,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -65,13 +73,15 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: 'transparent',
         color: theme.palette.primary.light,
         border: `2px solid ${theme.palette.primary.main}`,
+        width: avatarDimensions.mobile,
+        height: avatarDimensions.mobile,
         marginBottom: '.25rem',
     },
     fullAvatar: {
         [theme.breakpoints.up('sm')]: {
             marginTop: '.5rem',
-            width: 65,
-            height: 65,
+            width: avatarDimensions.desktop,
+            height: avatarDimensions.desktop,
             borderWidth: 4,
             fontSize: '2.5em',
         },
@@ -136,20 +146,44 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ThreadListItem(props: Props) {
-    const { replied, thread, full, onClick, ...otherProps } = props;
+    const { replied, thread, fetchMember, full, onClick, ...otherProps } = props;
     const { t } = useTranslation();
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const classes = useStyles();
+    const [authorState, setAuthorState] = useState<MemberState | null>(null);
+    const [lastResponseState, setLastResponseState] = useState<MemberState | null>(null);
+
     const RepliedIcon = replied ? RepliedToIcon : NotRepliedToIcon;
-    const latestMessage =
-        thread && thread?.messages?.length > 0 ? thread.messages[0] : undefined;
+
     const timestamp =
         getTimestampFromSnowflake(thread?.id)?.toFormat('MM/dd/yyyy hh:mm a') || 'N/A';
 
     const onHandleClick = (evt: React.SyntheticEvent<HTMLDivElement>) => {
         if (onClick) onClick(evt, thread);
     };
+
+    useEffect(() => {
+        if (!authorState && fetchMember && thread) {
+            fetchMember(thread.author.id).then((response) => {
+                if (response) {
+                    setAuthorState(response);
+                }
+            });
+        }
+    }, [authorState, fetchMember, thread]);
+
+    useEffect(() => {
+        if (!lastResponseState && fetchMember && thread && thread.messages.length > 0) {
+            fetchMember(thread.messages[thread.messages.length - 1].sender).then(
+                (response) => {
+                    if (response) {
+                        setLastResponseState(response);
+                    }
+                }
+            );
+        }
+    }, [lastResponseState, fetchMember, thread]);
 
     return (
         <div className={classes.root} onClick={onHandleClick} {...otherProps}>
@@ -164,9 +198,20 @@ function ThreadListItem(props: Props) {
                         [classes.fullAvatar]: full,
                     })}
                     variant={'circular'}
-                    title={latestMessage?.sender}
+                    src={authorState?.avatarURL}
+                    title={getNameFromMemberState(authorState)}
                 >
-                    {latestMessage?.sender.substr(0, 2).toUpperCase()}
+                    {!authorState && (
+                        <Skeleton
+                            variant={'circle'}
+                            height={
+                                avatarDimensions[isDesktop && full ? 'desktop' : 'mobile']
+                            }
+                            width={
+                                avatarDimensions[isDesktop && full ? 'desktop' : 'mobile']
+                            }
+                        />
+                    )}
                 </Avatar>
                 {!full && isDesktop && (
                     <div className={classes.modifiers}>
@@ -199,13 +244,18 @@ function ThreadListItem(props: Props) {
                 })}
             >
                 <div className={clsx(classes.panelContainer, classes.flex)}>
-                    <Typography
-                        className={clsx(classes.name, {
-                            [classes.fullName]: full,
-                        })}
-                    >
-                        {thread?.channel}
-                    </Typography>
+                    {/* TODO implement channel name instead of author name */}
+                    {authorState ? (
+                        <Typography
+                            className={clsx(classes.name, {
+                                [classes.fullName]: full,
+                            })}
+                        >
+                            {getNameFromMemberState(authorState)}
+                        </Typography>
+                    ) : (
+                        <Skeleton height={isDesktop && full ? 29 : 24} width={'100%'} />
+                    )}
                     {!replied && (
                         <div className={classes.newModifier}>
                             <MailIcon />
@@ -219,9 +269,13 @@ function ThreadListItem(props: Props) {
                     <Typography className={classes.label}>
                         {t('drawer.threadListItem.respondedByLabel') as string}
                     </Typography>
-                    <Typography className={classes.value}>
-                        {latestMessage?.sender}
-                    </Typography>
+                    {authorState ? (
+                        <Typography className={classes.value}>
+                            {getNameFromMemberState(lastResponseState)}
+                        </Typography>
+                    ) : (
+                        <Skeleton height={21} width={'100%'} />
+                    )}
                 </div>
                 <div className={classes.panelContainer}>
                     <Typography className={classes.label}>

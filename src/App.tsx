@@ -8,7 +8,7 @@ import Authenticator from 'components/Authenticator';
 import theme from './theme';
 import LayoutHOC, { Layout } from './components/Layout';
 import Pages from './pages';
-import { UserState, NavigationState } from './state';
+import { UserState, NavigationState, MembersState } from './state';
 import LocalizedBackdrop from './components/LocalizedBackdrop';
 import { FG } from './types';
 
@@ -40,17 +40,19 @@ function App(props: FG.AppProps): JSX.Element {
             <CssBaseline />
             <React.Suspense fallback={fallback}>
                 <UserState.Provider>
-                    <Router history={browserHistory}>
-                        <NavigationState.Provider>
-                            <Authenticator setReady={setReady}>
-                                <React.Suspense fallback={fallback}>
-                                    <LayoutHOC layoutRef={layoutRef}>
-                                        <Pages />
-                                    </LayoutHOC>
-                                </React.Suspense>
-                            </Authenticator>
-                        </NavigationState.Provider>
-                    </Router>
+                    <MembersState.Provider>
+                        <Router history={browserHistory}>
+                            <NavigationState.Provider>
+                                <Authenticator setReady={setReady}>
+                                    <React.Suspense fallback={fallback}>
+                                        <LayoutHOC layoutRef={layoutRef}>
+                                            <Pages />
+                                        </LayoutHOC>
+                                    </React.Suspense>
+                                </Authenticator>
+                            </NavigationState.Provider>
+                        </Router>
+                    </MembersState.Provider>
                 </UserState.Provider>
             </React.Suspense>
         </ThemeProvider>
