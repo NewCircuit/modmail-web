@@ -25,8 +25,6 @@ clientsClaim();
 // eslint-disable-next-line no-underscore-dangle
 precacheAndRoute(self.__WB_MANIFEST);
 
-console.log({ self });
-
 // Set up App Shell-style routing, so that all navigation requests
 // are fulfilled with your index.html shell. Learn more at
 // https://developers.google.com/web/fundamentals/architecture/app-shell
@@ -68,6 +66,27 @@ registerRoute(
             // Ensure that once this runtime cache reaches a maximum size the
             // least-recently used images are removed.
             new ExpirationPlugin({ maxEntries: 50 }),
+        ],
+    })
+);
+
+// route handler for user api requests
+registerRoute(
+    // Add in any other file extensions or routing criteria as needed.
+    ({ url }) =>
+        url.origin === self.location.origin &&
+        url.pathname.indexOf('api/category') >= 0 &&
+        url.pathname.indexOf('/members') >= 0,
+    // Customize this strategy as needed, e.g., by changing to CacheFirst.
+    new StaleWhileRevalidate({
+        cacheName: 'users',
+        plugins: [
+            // Ensure that once this runtime cache reaches a maximum size the
+            // least-recently used images are removed.
+            new ExpirationPlugin({
+                maxAgeSeconds: 60 * 60 * 24,
+                purgeOnQuotaError: true,
+            }),
         ],
     })
 );
