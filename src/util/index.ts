@@ -8,7 +8,7 @@ export function getTimestampFromSnowflake(snowflake = '0'): DateTime | undefined
 
 export function getNameFromMemberState(member?: MemberState | null) {
     if (member) {
-        return member.nickname || `${member.username}#${member.discriminator}`;
+        return `${member.username}#${member.discriminator}`;
     }
     return '';
 }

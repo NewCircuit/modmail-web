@@ -7,8 +7,8 @@ export type MemberState = {
     discriminator: string;
     id: string;
     username: string;
-    role: Role;
-    nickname: string;
+    // role: Role;
+    // nickname: string;
 };
 
 export type Nullable<T> = T | null;

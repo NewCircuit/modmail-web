@@ -107,16 +107,21 @@ function membersState(): State {
         });
     }
 
-    function fetchMembers(category: string) {
-        return axios
-            .get(t('urls.fetchMembers', { category }))
-            .then((response: AxiosResponse<FG.Api.MembersResponse>) => {
-                if (response.status === 200) {
-                    setMembers(response.data);
-                    return response.data;
-                }
-                return [];
-            });
+    function fetchMembers(category: string): Promise<FG.Api.MembersResponse> {
+        // TEMP fix
+        return new Promise((resolve) => {
+            setMembers([]);
+            return [];
+        });
+        // return axios
+        //     .get(t('urls.fetchMembers', { category }))
+        //     .then((response: AxiosResponse<FG.Api.MembersResponse>) => {
+        //         if (response.status === 200) {
+        //             setMembers(response.data);
+        //             return response.data;
+        //         }
+        //         return [];
+        //     });
     }
     return {
         members,
