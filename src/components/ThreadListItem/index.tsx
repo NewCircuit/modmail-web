@@ -151,6 +151,7 @@ function ThreadListItem(props: Props) {
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const classes = useStyles();
+    const [fetching, setFetching] = useState(false);
     const [authorState, setAuthorState] = useState<MemberState | null>(null);
     const [lastResponseState, setLastResponseState] = useState<MemberState | null>(null);
 
@@ -164,14 +165,16 @@ function ThreadListItem(props: Props) {
     };
 
     useEffect(() => {
-        if (!authorState && fetchMember && thread) {
+        if (!authorState && fetchMember && thread && !fetching) {
+            setFetching(true);
             fetchMember(thread.author.id).then((response) => {
+                setFetching(false);
                 if (response) {
                     setAuthorState(response);
                 }
             });
         }
-    }, [authorState, fetchMember, thread]);
+    }, [authorState, fetchMember, thread, fetching]);
 
     useEffect(() => {
         if (!lastResponseState && fetchMember && thread && thread.messages.length > 0) {

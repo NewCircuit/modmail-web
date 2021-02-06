@@ -82,6 +82,7 @@ function Message(props: Props) {
         fetchMember,
     } = props;
     const classes = useStyle();
+    const [fetching, setFetching] = useState(false);
     const [member, setMember] = useState<Nullable<MemberState>>(null);
 
     const dateSent = getTimestampFromSnowflake(modmailID);
@@ -89,10 +90,14 @@ function Message(props: Props) {
     const time = dateSent?.toFormat('hh:mm a');
 
     useEffect(() => {
-        if (fetchMember) {
-            fetchMember(sender).then((memberData) => setMember(memberData));
+        if (fetchMember && !fetching) {
+            setFetching(true);
+            fetchMember(sender).then((memberData) => {
+                setFetching(false);
+                setMember(memberData);
+            });
         }
-    }, [member, fetchMember]);
+    }, [member, fetchMember, fetching]);
 
     console.log(props);
     return (
