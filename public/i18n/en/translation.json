@@ -2,7 +2,7 @@
   "appName": "Modmail",
   "cookie": "connect.sid",
   "urls": {
-    "base": "https://modmail.pewdiemc.com/api",
+    "base": "/api",
     "oauth": "$t(urls.base)/oauth",
     "authenticate": "$t(urls.base)/self",
     "categories": "$t(urls.base)/categories",
