@@ -10,7 +10,6 @@ import { MemberState, Nullable, RequiredArgs } from '../../types';
 type Child = ComponentType<RequiredArgs<{ thread: Thread }>>;
 type Props = {
     threads?: Thread[];
-    members?: MemberState[] | null;
     fetchMember: (id: string) => Promise<Nullable<MemberState>>;
     itemProps?: any;
     empty?: {
@@ -56,11 +55,6 @@ function itemRenderer(Component: Child, fetchMember: FetchMember, itemProps: any
 function ThreadsContainer(props: Props): JSX.Element {
     const { threads, children, empty, fetchMember, itemProps } = props;
     const classes = useStyles();
-    const containerRef: RefObject<HTMLUListElement> = React.createRef();
-
-    useEffect(() => {
-        console.log(containerRef.current);
-    }, [containerRef]);
 
     if (typeof threads === 'undefined' || threads.length === 0)
         return (

@@ -90,16 +90,15 @@ function Message(props: Props) {
     const time = dateSent?.toFormat('hh:mm a');
 
     useEffect(() => {
-        if (fetchMember && !fetching) {
+        if (member === null && fetchMember && !fetching) {
             setFetching(true);
             fetchMember(sender).then((memberData) => {
                 setFetching(false);
                 setMember(memberData);
             });
         }
-    }, [member, fetchMember, fetching]);
+    }, []);
 
-    console.log(props);
     return (
         <TimelineItem
             classes={{

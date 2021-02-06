@@ -30,13 +30,13 @@ function ThreadPage() {
     const { fetchMember, members, fetchMembers } = MembersState.useContainer();
     const pageRef: RefObject<HTMLDivElement> = React.createRef();
 
-    useEffect(() => {
-        if (members === null) {
-            fetchMembers(categoryId);
-        } else {
-            console.log(members);
-        }
-    }, [members]);
+    // useEffect(() => {
+    //     if (members === null) {
+    //         fetchMembers(categoryId);
+    //     } else {
+    //         console.log(members);
+    //     }
+    // }, [members]);
 
     // This is a failsafe to load the specific thread if this is a direct load or a refresh
     useEffect(() => {
@@ -49,7 +49,6 @@ function ThreadPage() {
 
     // Sets the current thread to view based on URL parameters
     useEffect(() => {
-        console.log(categoryId, threadId, threads);
         const currentThread = threads.findById(categoryId, threadId);
         if (currentThread) {
             if (thread === null || (thread && thread.id !== currentThread.id))

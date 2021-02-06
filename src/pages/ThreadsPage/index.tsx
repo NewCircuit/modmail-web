@@ -29,17 +29,17 @@ function ThreadsPage(): JSX.Element {
     const { categoryId } = useParams<ThreadsPageParams>();
     const history = useHistory();
     const { threads, categories } = NavigationState.useContainer();
-    const { members, fetchMembers, fetchMember } = MembersState.useContainer();
+    const { fetchMember } = MembersState.useContainer();
     const [category, setCategory] = useState<Category | null>(null);
     const isThreadsLoaded = threads.items instanceof Array;
 
-    useEffect(() => {
-        if (members === null) {
-            fetchMembers(categoryId);
-        } else {
-            console.log(members);
-        }
-    }, [members]);
+    // useEffect(() => {
+    //     if (members === null) {
+    //         fetchMembers(categoryId);
+    //     } else {
+    //         console.log(members);
+    //     }
+    // }, [members]);
 
     useEffect(() => {
         setCategory(categories.findById(categoryId));
@@ -82,7 +82,6 @@ function ThreadsPage(): JSX.Element {
             {isThreadsLoaded ? (
                 <ThreadsContainer
                     threads={threads.items}
-                    members={members}
                     fetchMember={handleFetchMember}
                     itemProps={{
                         full: true,
