@@ -6,6 +6,7 @@ import { Thread } from 'modmail-types';
 import { Theme, APPBAR_HEIGHT } from '../../theme';
 import { MembersState, NavigationState } from '../../state';
 import Message from '../../components/Message';
+import { MutatedThread } from '../../types';
 
 type Params = {
     categoryId: string;
@@ -24,10 +25,10 @@ const useStyle = makeStyles((theme: Theme) => ({
 
 function ThreadPage() {
     const classes = useStyle();
-    const [thread, setThread] = useState<Thread | null>(null);
+    const [thread, setThread] = useState<MutatedThread | null>(null);
     const { categoryId, threadId } = useParams<Params>();
     const { threads } = NavigationState.useContainer();
-    const { fetchMember, members, fetchMembers } = MembersState.useContainer();
+    const { getMember, members, fetchMembers } = MembersState.useContainer();
     const pageRef: RefObject<HTMLDivElement> = React.createRef();
 
     // useEffect(() => {
@@ -56,8 +57,7 @@ function ThreadPage() {
         }
     }, [categoryId, threadId, threads.items]);
 
-    const handleFetchMember = (id?: string) =>
-        fetchMember.call(null, categoryId, id || '');
+    const handleFetchMember = (id?: string) => getMember.call(null, categoryId, id || '');
 
     return (
         <div ref={pageRef} className={classes.root}>

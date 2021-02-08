@@ -5,11 +5,11 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { Thread } from 'modmail-types';
 import Alert from '../Alert';
-import { MemberState, Nullable, RequiredArgs } from '../../types';
+import { MemberState, MutatedThread, Nullable, RequiredArgs } from '../../types';
 
-type Child = ComponentType<RequiredArgs<{ thread: Thread }>>;
+type Child = ComponentType<RequiredArgs<{ thread: MutatedThread }>>;
 type Props = {
-    threads?: Thread[];
+    threads?: MutatedThread[];
     fetchMember: (id: string) => Promise<Nullable<MemberState>>;
     itemProps?: any;
     empty?: {
@@ -35,18 +35,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 type FetchMember = (id: string) => Promise<Nullable<MemberState>>;
 
-function itemRenderer(Component: Child, fetchMember: FetchMember, itemProps: any) {
+function itemRenderer(Component: Child, itemProps: any) {
     return function Item(props: ListChildComponentProps) {
         const threads: Thread[] = props.data;
         const currentThread = threads[props.index];
 
         return (
             <div style={props.style}>
-                <Component
-                    {...itemProps}
-                    fetchMember={fetchMember}
-                    thread={currentThread}
-                />
+                <Component {...itemProps} thread={currentThread} />
             </div>
         );
     };
@@ -66,7 +62,7 @@ function ThreadsContainer(props: Props): JSX.Element {
             />
         );
 
-    const renderer = itemRenderer(children, fetchMember, itemProps);
+    const renderer = itemRenderer(children, itemProps);
     return (
         <Paper className={classes.root} elevation={1}>
             <AutoSizer>

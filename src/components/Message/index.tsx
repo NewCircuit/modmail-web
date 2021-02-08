@@ -10,13 +10,12 @@ import {
     TimelineSeparator,
 } from '@material-ui/lab';
 import { Avatar, Paper, Typography } from '@material-ui/core';
-import FastfoodIcon from '@material-ui/icons/Fastfood';
-import { Message as ModmailMessage } from 'modmail-types';
 import MarkdownView from 'react-showdown';
 import { getNameFromMemberState, getTimestampFromSnowflake } from '../../util';
-import { MemberState, Nullable } from '../../types';
+import { MemberState, MutatedMessage, Nullable } from '../../types';
+import Async from '../Async';
 
-type Props = ModmailMessage & {
+type Props = MutatedMessage & {
     fetchMember?: (id?: string) => Promise<Nullable<MemberState>>;
     isDesktop?: boolean;
     isLastMessage?: boolean;
@@ -83,80 +82,82 @@ function Message(props: Props) {
     } = props;
     const classes = useStyle();
     const [fetching, setFetching] = useState(false);
-    const [member, setMember] = useState<Nullable<MemberState>>(null);
+    const [memberPromise, setMemberPromise] = useState<
+        Nullable<Promise<Nullable<MemberState>>>
+    >(null);
 
     const dateSent = getTimestampFromSnowflake(modmailID);
     const date = dateSent?.toFormat('MM/dd/yyyy');
     const time = dateSent?.toFormat('hh:mm a');
 
     useEffect(() => {
-        if (member === null && fetchMember && !fetching) {
-            setFetching(true);
-            fetchMember(sender).then((memberData) => {
-                setFetching(false);
-                setMember(memberData);
-            });
+        if (sender && sender.data && memberPromise === null) {
+            setMemberPromise(sender.data());
         }
-    }, []);
+    }, [sender, memberPromise]);
 
     return (
-        <TimelineItem
-            classes={{
-                missingOppositeContent: classes.missingOppositeContent,
-            }}
-        >
-            {isDesktop && (
-                <TimelineOppositeContent className={classes.oppositeContent}>
-                    <Typography variant="body2" color="textSecondary">
-                        {date}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                        {time}
-                    </Typography>
-                </TimelineOppositeContent>
-            )}
-            <TimelineSeparator>
-                <TimelineDot className={classes.timelineDot}>
-                    <Avatar className={classes.avatar} src={member?.avatarURL}>
-                        {!member && (
-                            <Skeleton variant={'circle'} height={40} width={40} />
-                        )}
-                    </Avatar>
-                </TimelineDot>
-                {!isLastMessage && <TimelineConnector />}
-            </TimelineSeparator>
-            <TimelineContent className={classes.content}>
-                <Paper elevation={3} className={classes.paper}>
-                    <div className={classes.sender}>
-                        {member ? (
-                            <Typography variant={'body2'} style={{ margin: 0 }}>
-                                {getNameFromMemberState(member)}
+        <Async promise={memberPromise}>
+            {(member) => (
+                <TimelineItem
+                    classes={{
+                        missingOppositeContent: classes.missingOppositeContent,
+                    }}
+                >
+                    {isDesktop && (
+                        <TimelineOppositeContent className={classes.oppositeContent}>
+                            <Typography variant="body2" color="textSecondary">
+                                {date}
                             </Typography>
-                        ) : (
-                            <Skeleton width={250} height={18} />
-                        )}
-                    </div>
-                    <MarkdownView
-                        flavor={'vanilla'}
-                        markdown={content}
-                        dangerouslySetInnerHTML
-                        options={{
-                            emoji: true,
-                        }}
-                    />
-
-                    {!isDesktop && (
-                        <Typography
-                            className={classes.mobileDate}
-                            variant={'body2'}
-                            color={'textSecondary'}
-                        >
-                            {date} {time}
-                        </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                                {time}
+                            </Typography>
+                        </TimelineOppositeContent>
                     )}
-                </Paper>
-            </TimelineContent>
-        </TimelineItem>
+                    <TimelineSeparator>
+                        <TimelineDot className={classes.timelineDot}>
+                            <Avatar className={classes.avatar} src={member?.avatarURL}>
+                                {!member && (
+                                    <Skeleton variant={'circle'} height={40} width={40} />
+                                )}
+                            </Avatar>
+                        </TimelineDot>
+                        {!isLastMessage && <TimelineConnector />}
+                    </TimelineSeparator>
+                    <TimelineContent className={classes.content}>
+                        <Paper elevation={3} className={classes.paper}>
+                            <div className={classes.sender}>
+                                {member ? (
+                                    <Typography variant={'body2'} style={{ margin: 0 }}>
+                                        {getNameFromMemberState(member)}
+                                    </Typography>
+                                ) : (
+                                    <Skeleton width={250} height={18} />
+                                )}
+                            </div>
+                            <MarkdownView
+                                flavor={'vanilla'}
+                                markdown={content}
+                                dangerouslySetInnerHTML
+                                options={{
+                                    emoji: true,
+                                }}
+                            />
+
+                            {!isDesktop && (
+                                <Typography
+                                    className={classes.mobileDate}
+                                    variant={'body2'}
+                                    color={'textSecondary'}
+                                >
+                                    {date} {time}
+                                </Typography>
+                            )}
+                        </Paper>
+                    </TimelineContent>
+                </TimelineItem>
+            )}
+        </Async>
     );
 }
 

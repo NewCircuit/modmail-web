@@ -7,6 +7,18 @@ import Cookies from '../util/Cookies';
 
 type State = FG.State.UserState;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const TEST_USER_DATA = JSON.parse(`{
+  "id": "194024167052410880",
+  "username": "XInfinite_",
+  "avatar": "b00c5e66215c97b53ff62a0a14bf4151",
+  "discriminator": "1709",
+  "public_flags": 0,
+  "flags": 0,
+  "locale": "en-US",
+  "mfa_enabled": false
+}`);
+
 function userState(): State {
     const { t } = useTranslation();
     const [authenticated, setAuthenticated] = useState<boolean | undefined>(undefined);
@@ -27,6 +39,20 @@ function userState(): State {
     function authenticate(update = true): Promise<boolean> {
         if (authenticated && !update) return Promise.resolve(true);
         setProcessing(true);
+
+        // TODO remove TEMP Function
+        // return new Promise((resolve) => {
+        //     setTimeout(() => {
+        //         const data = { ...TEST_USER_DATA };
+        //         if (update) {
+        //             setUserData(data);
+        //             setAuthenticated(true);
+        //         }
+        //         setProcessing(false);
+        //         resolve(true);
+        //     }, 1000);
+        // });
+
         return axios
             .get(t('urls.authenticate'))
             .then((response) => {

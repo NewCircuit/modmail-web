@@ -4,9 +4,10 @@ import { Timeline } from '@material-ui/lab';
 import { Message as ModmailMessage } from 'modmail-types';
 import { useMediaQuery, useTheme } from '@material-ui/core';
 import { MessageProps } from '../Message';
+import { MutatedMessage } from '../../types';
 
 type Props = {
-    messages: ModmailMessage[];
+    messages: MutatedMessage[];
     pageRef?: RefObject<HTMLDivElement>;
     children: (child: MessageProps, index: number) => JSX.Element;
 };

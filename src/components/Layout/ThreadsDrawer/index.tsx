@@ -4,17 +4,17 @@ import { Thread } from 'modmail-types';
 import { useHistory } from 'react-router-dom';
 import ThreadListItem from '../../ThreadListItem';
 import { MembersState, NavigationState } from '../../../state';
-import { MemberState, Nullable } from '../../../types';
+import { MemberState, MutatedThread, Nullable } from '../../../types';
 
 export default function ThreadDrawer() {
     const history = useHistory();
     const { threads } = NavigationState.useContainer();
-    const { fetchMember } = MembersState.useContainer();
+    const { getMember } = MembersState.useContainer();
     useEffect(() => {
         console.log('ThreadsDrawer');
     }, []);
 
-    const onThreadClicked = (evt: React.SyntheticEvent, thread?: Thread) => {
+    const onThreadClicked = (evt: React.SyntheticEvent, thread?: MutatedThread) => {
         if (thread) {
             history.push(`/category/${thread.category}/${thread.id}`);
         }
@@ -22,7 +22,7 @@ export default function ThreadDrawer() {
 
     const handleFetchMember = (category: string) => (
         id?: string
-    ): Promise<Nullable<MemberState>> => fetchMember.call(null, category, id || '');
+    ): Promise<Nullable<MemberState>> => getMember.call(null, category, id || '');
 
     return (
         <Slide in direction={'right'}>

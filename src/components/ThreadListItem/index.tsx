@@ -18,7 +18,8 @@ import { useTranslation } from 'react-i18next';
 import { Thread } from 'modmail-types';
 import { Skeleton } from '@material-ui/lab';
 import { getNameFromMemberState, getTimestampFromSnowflake } from '../../util';
-import { MemberState } from '../../types';
+import { MemberState, MutatedThread } from '../../types';
+import Async from '../Async';
 
 type DivElem = React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
@@ -26,11 +27,11 @@ type DivElem = React.DetailedHTMLProps<
 >;
 
 type Props = Omit<DivElem, 'onClick'> & {
-    thread?: Thread;
+    thread?: MutatedThread;
     fetchMember?: (id?: string) => Promise<MemberState | null>;
     full?: boolean;
     replied?: boolean;
-    onClick?: (evt: React.SyntheticEvent<HTMLDivElement>, thread?: Thread) => void;
+    onClick?: (evt: React.SyntheticEvent<HTMLDivElement>, thread?: MutatedThread) => void;
 };
 
 const avatarDimensions = {
@@ -146,14 +147,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ThreadListItem(props: Props) {
-    const { replied, thread, fetchMember, full, onClick, ...otherProps } = props;
+    const { replied, thread, full, onClick, ...otherProps } = props;
     const { t } = useTranslation();
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const classes = useStyles();
     const [fetching, setFetching] = useState(false);
-    const [authorState, setAuthorState] = useState<MemberState | null>(null);
-    const [lastResponseState, setLastResponseState] = useState<MemberState | null>(null);
+    const [authorState, setAuthorState] = useState<Promise<MemberState | null> | null>(
+        null
+    );
+    const [
+        lastResponseState,
+        setLastResponseState,
+    ] = useState<Promise<MemberState | null> | null>(null);
 
     const RepliedIcon = replied ? RepliedToIcon : NotRepliedToIcon;
 
@@ -165,28 +171,16 @@ function ThreadListItem(props: Props) {
     };
 
     useEffect(() => {
-        if (!authorState && fetchMember && thread && !fetching) {
-            setFetching(true);
-            fetchMember(thread.author.id).then((response) => {
-                setFetching(false);
-                if (response) {
-                    setAuthorState(response);
-                }
-            });
+        if (thread && thread.author.data && authorState === null) {
+            setAuthorState(thread.author.data());
         }
-    }, [authorState, fetchMember, thread, fetching]);
+    }, [thread, thread?.author.data, authorState]);
 
     useEffect(() => {
-        if (!lastResponseState && fetchMember && thread && thread.messages.length > 0) {
-            fetchMember(thread.messages[thread.messages.length - 1].sender).then(
-                (response) => {
-                    if (response) {
-                        setLastResponseState(response);
-                    }
-                }
-            );
+        if (thread && thread.messages.length > 0 && lastResponseState === null) {
+            setLastResponseState(thread.messages[0].sender.data());
         }
-    }, [lastResponseState, fetchMember, thread]);
+    }, [thread, thread?.messages, lastResponseState]);
 
     return (
         <div className={classes.root} onClick={onHandleClick} {...otherProps}>
@@ -196,26 +190,34 @@ function ThreadListItem(props: Props) {
                     [classes.fullLeftPanel]: full,
                 })}
             >
-                <Avatar
-                    className={clsx(classes.avatar, {
-                        [classes.fullAvatar]: full,
-                    })}
-                    variant={'circular'}
-                    src={authorState?.avatarURL}
-                    title={getNameFromMemberState(authorState)}
-                >
-                    {!authorState && (
-                        <Skeleton
-                            variant={'circle'}
-                            height={
-                                avatarDimensions[isDesktop && full ? 'desktop' : 'mobile']
-                            }
-                            width={
-                                avatarDimensions[isDesktop && full ? 'desktop' : 'mobile']
-                            }
-                        />
+                <Async promise={authorState}>
+                    {(author: MemberState | null) => (
+                        <Avatar
+                            className={clsx(classes.avatar, {
+                                [classes.fullAvatar]: full,
+                            })}
+                            variant={'circular'}
+                            src={author?.avatarURL}
+                            title={getNameFromMemberState(author)}
+                        >
+                            {!author && (
+                                <Skeleton
+                                    variant={'circle'}
+                                    height={
+                                        avatarDimensions[
+                                            isDesktop && full ? 'desktop' : 'mobile'
+                                        ]
+                                    }
+                                    width={
+                                        avatarDimensions[
+                                            isDesktop && full ? 'desktop' : 'mobile'
+                                        ]
+                                    }
+                                />
+                            )}
+                        </Avatar>
                     )}
-                </Avatar>
+                </Async>
                 {!full && isDesktop && (
                     <div className={classes.modifiers}>
                         <Tooltip
@@ -248,17 +250,25 @@ function ThreadListItem(props: Props) {
             >
                 <div className={clsx(classes.panelContainer, classes.flex)}>
                     {/* TODO implement channel name instead of author name */}
-                    {authorState ? (
-                        <Typography
-                            className={clsx(classes.name, {
-                                [classes.fullName]: full,
-                            })}
-                        >
-                            {getNameFromMemberState(authorState)}
-                        </Typography>
-                    ) : (
-                        <Skeleton height={isDesktop && full ? 29 : 24} width={'100%'} />
-                    )}
+                    <Async promise={authorState}>
+                        {(author: MemberState | null) =>
+                            author ? (
+                                <Typography
+                                    className={clsx(classes.name, {
+                                        [classes.fullName]: full,
+                                    })}
+                                >
+                                    {getNameFromMemberState(author)}
+                                </Typography>
+                            ) : (
+                                <Skeleton
+                                    height={isDesktop && full ? 29 : 24}
+                                    width={'100%'}
+                                />
+                            )
+                        }
+                    </Async>
+
                     {!replied && (
                         <div className={classes.newModifier}>
                             <MailIcon />
@@ -272,13 +282,17 @@ function ThreadListItem(props: Props) {
                     <Typography className={classes.label}>
                         {t('drawer.threadListItem.respondedByLabel') as string}
                     </Typography>
-                    {authorState ? (
-                        <Typography className={classes.value}>
-                            {getNameFromMemberState(lastResponseState)}
-                        </Typography>
-                    ) : (
-                        <Skeleton height={21} width={'100%'} />
-                    )}
+                    <Async promise={lastResponseState}>
+                        {(member) =>
+                            member ? (
+                                <Typography className={classes.value}>
+                                    {getNameFromMemberState(member)}
+                                </Typography>
+                            ) : (
+                                <Skeleton height={21} width={'100%'} />
+                            )
+                        }
+                    </Async>
                 </div>
                 <div className={classes.panelContainer}>
                     <Typography className={classes.label}>

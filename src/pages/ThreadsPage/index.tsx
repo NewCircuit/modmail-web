@@ -29,7 +29,7 @@ function ThreadsPage(): JSX.Element {
     const { categoryId } = useParams<ThreadsPageParams>();
     const history = useHistory();
     const { threads, categories } = NavigationState.useContainer();
-    const { fetchMember } = MembersState.useContainer();
+    const { getMember } = MembersState.useContainer();
     const [category, setCategory] = useState<Category | null>(null);
     const isThreadsLoaded = threads.items instanceof Array;
 
@@ -53,7 +53,7 @@ function ThreadsPage(): JSX.Element {
     }, [threads.items]);
 
     const handleFetchMember = (id?: string): Promise<Nullable<MemberState>> =>
-        id ? fetchMember.call(null, categoryId, id) : Promise.resolve(null);
+        id ? getMember.call(null, categoryId, id) : Promise.resolve(null);
 
     const onThreadClicked = (evt: React.SyntheticEvent, thread: Thread) => {
         console.log({ evt, thread });

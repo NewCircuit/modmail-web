@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { FG, MemberState, Nullable } from 'types';
 import { createContainer } from 'unstated-next';
 import { useTranslation } from 'react-i18next';
@@ -58,106 +58,73 @@ const TEST_MEMBERS = JSON.parse(`[
 ]`);
 
 type Fetchers = {
-    [s: string]: Promise<Nullable<MemberState>>;
+    [s: string]: {
+        index: number;
+        category: string;
+        id: string;
+        resolver?: (member: MemberState) => any;
+        promise?: Promise<Nullable<MemberState>>;
+    };
 };
 
+let num = 0;
 function membersState(): State {
     const { t } = useTranslation();
-    const [fetchers, setFetchers] = useState<Fetchers>({});
     const [members, setMembers] = useState<MemberState[] | null>([]);
+    const fetchers = useRef<Fetchers>({});
 
-    // TODO remove TEMP Function
-    function fetchMember2(category: string, id: string): Promise<Nullable<MemberState>> {
-        if (members === null) return Promise.resolve(null);
+    const fetchMember = (category: string, id: string) => {
+        let promise: Promise<Nullable<MemberState>>;
+        if (typeof fetchers.current[id] !== 'undefined' && fetchers.current[id].promise) {
+            promise = fetchers.current[id].promise as Promise<Nullable<MemberState>>;
+        } else {
+            promise = new Promise((resolve) => {
+                if (typeof fetchers[id] === 'undefined') {
+                    fetchers.current[id] = {
+                        id,
+                        category,
+                        resolver: resolve,
+                        // eslint-disable-next-line no-plusplus
+                        index: ++num,
+                    };
+                }
+                console.log('Promise Executed');
 
-        const exists = members.find((member) => member.id === id);
-        if (exists) {
-            // console.log('Member is already cached...', exists.id);
-            return Promise.resolve(exists);
+                // TODO remove test code
+                // const timeout = Math.floor(Math.random() * 3000) + 500;
+                // setTimeout(() => {
+                //     const exists = TEST_MEMBERS.find((k) => k.id === id);
+                //     if (exists) resolve(exists);
+                //     else resolve(TEST_MEMBERS[0]);
+                // }, timeout);
+
+                axios
+                    .get(t('urls.fetchMember', { category, member: id }))
+                    .then((response: AxiosResponse<FG.Api.MemberResponse>) => {
+                        if (response.status === 200) {
+                            resolve(response.data);
+                        } else {
+                            resolve(null);
+                        }
+                    });
+            });
+            fetchers.current[id].promise = promise;
         }
+        return promise;
+    };
 
-        if (fetchers[id]) {
-            // console.log('Attached already created fetcher promise...');
-            return fetchers[id];
-        }
-
-        const fetcher: Promise<Nullable<MemberState>> = new Promise((resolve) => {
-            console.log('Fetching user', id);
-            setTimeout(() => {
-                const inTest = TEST_MEMBERS.find((member) => member.id === id);
-                if (inTest) {
-                    // console.log('Loading member from test data...', id);
-                    setMembers((nextMembers) => [...(nextMembers || []), inTest]);
-                    resolve(inTest);
+    function getMember(category: string, id: string) {
+        return () =>
+            new Promise((resolveMember) => {
+                const exists = members?.find((mem) => mem.id === id);
+                if (exists) {
+                    resolveMember(exists);
                     return;
                 }
-                // console.log('member not found, using blank', id);
-                const nextMember = { ...TEST_MEMBERS[0], id };
-                setMembers((nextMembers) => [...(nextMembers || []), nextMember]);
-                resolve(nextMember);
-            }, 500);
-        }).then((response) => {
-            setFetchers((nextFetchers) => {
-                // eslint-disable-next-line no-param-reassign
-                delete nextFetchers[id];
-                return nextFetchers;
+
+                fetchMember(category, id).then((response) => resolveMember(response));
             });
-            return response;
-        }) as Promise<Nullable<MemberState>>;
-
-        setFetchers((nextFetchers) => ({ ...nextFetchers, [id]: fetcher }));
-        return fetcher;
     }
-
-    function fetchMember(category: string, id: string): Promise<Nullable<MemberState>> {
-        if (members === null) return Promise.resolve(null);
-
-        const exists = members.find((member) => member.id === id);
-        if (exists) {
-            // console.log('Member is already cached...', exists.id);
-            return Promise.resolve(exists);
-        }
-
-        if (fetchers[id]) {
-            // console.log('Attached already created fetcher promise...');
-            return fetchers[id];
-        }
-
-        const fetcher: Promise<Nullable<MemberState>> = axios
-            .get(t('urls.fetchMember', { category, member: id }))
-            .then((response: AxiosResponse<FG.Api.MemberResponse>) => {
-                if (response.status === 200) {
-                    setMembers((nextMembers) => [...(nextMembers || []), response.data]);
-                    setFetchers((nextFetchers) => {
-                        // eslint-disable-next-line no-param-reassign
-                        delete nextFetchers[id];
-                        return nextFetchers;
-                    });
-                    return response.data;
-                }
-                return null;
-            });
-
-        setFetchers((nextFetchers) => ({ ...nextFetchers, [id]: fetcher }));
-        return fetcher;
-    }
-
-    // function fetchMember2(category: string, id: string): Promise<Nullable<MemberState>> {
-    //     if (members === null) return Promise.resolve(null);
-    //
-    //     const exists = members.find((member) => member.id === id);
-    //     if (exists) return Promise.resolve(exists);
-    //
-    //     return axios
-    //         .get(t('urls.fetchMember', { category, member: id }))
-    //         .then((response: AxiosResponse<FG.Api.MemberResponse>) => {
-    //             if (response.status === 200) {
-    //                 setMembers((nextMembers) => [...(nextMembers || []), response.data]);
-    //                 return response.data;
-    //             }
-    //             return null;
-    //         });
-    // }
 
     function fetchMembers(category: string): Promise<FG.Api.MembersResponse> {
         // TEMP fix
@@ -175,10 +142,11 @@ function membersState(): State {
         //         return [];
         //     });
     }
+
     return {
         members,
         fetchers,
-        fetchMember,
+        getMember,
         fetchMembers,
     } as any;
 }
