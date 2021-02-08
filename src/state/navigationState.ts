@@ -130,14 +130,13 @@ function navigationState(defaultProps: any): State {
                             ...thread,
                             author: {
                                 id: thread.author.id,
-                                data: () => getMember(thread.category, thread.author.id),
+                                data: getMember(thread.category, thread.author.id),
                             },
                             messages: thread.messages.map((message) => ({
                                 ...message,
                                 sender: {
                                     id: message.sender,
-                                    data: () =>
-                                        getMember(thread.category, message.sender),
+                                    data: getMember(thread.category, message.sender),
                                 },
                             })),
                         } as MutatedThread;
@@ -169,13 +168,13 @@ function navigationState(defaultProps: any): State {
                         ...newThread,
                         author: {
                             id: newThread.author.id,
-                            data: () => getMember(category, newThread.author.id),
+                            data: getMember(category, newThread.author.id),
                         },
                         messages: newThread.messages.map((message) => ({
                             ...message,
                             sender: {
                                 id: message.sender,
-                                data: () => getMember(category, message.sender),
+                                data: getMember(category, message.sender),
                             },
                         })),
                     });
@@ -199,13 +198,13 @@ function navigationState(defaultProps: any): State {
                         ...response.data,
                         author: {
                             id: response.data.author.id,
-                            data: () => getMember(category, response.data.author.id),
+                            data: getMember(category, response.data.author.id),
                         },
                         messages: response.data.messages.map((message) => ({
                             ...message,
                             sender: {
                                 id: message.sender,
-                                data: () => getMember(category, message.sender),
+                                data: getMember(category, message.sender),
                             },
                         })),
                     };

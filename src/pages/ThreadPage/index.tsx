@@ -2,7 +2,8 @@ import React, { RefObject, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import MessageContainer from 'components/MessageContainer';
 import { useParams } from 'react-router-dom';
-import { Thread } from 'modmail-types';
+import { VerifiedUser } from '@material-ui/icons';
+import { Trans } from 'react-i18next';
 import { Theme, APPBAR_HEIGHT } from '../../theme';
 import { MembersState, NavigationState } from '../../state';
 import Message from '../../components/Message';
@@ -20,6 +21,16 @@ const useStyle = makeStyles((theme: Theme) => ({
         overflowX: 'hidden',
         display: 'flex',
         flexDirection: 'column',
+    },
+    eof: {
+        textAlign: 'center',
+        marginTop: '1rem',
+        marginBottom: '5rem',
+    },
+    eofIcon: {
+        height: '4em',
+        width: '4em',
+        opacity: 0.3,
     },
 }));
 
@@ -61,11 +72,19 @@ function ThreadPage() {
 
     return (
         <div ref={pageRef} className={classes.root}>
-            <MessageContainer pageRef={pageRef} messages={thread?.messages || []}>
-                {(message, index) => (
-                    <Message fetchMember={handleFetchMember} key={index} {...message} />
-                )}
+            <MessageContainer
+                author={thread?.author.id}
+                pageRef={pageRef}
+                messages={thread?.messages || []}
+            >
+                {(message, index) => <Message key={index} {...message} />}
             </MessageContainer>
+            <div className={classes.eof}>
+                <VerifiedUser className={classes.eofIcon} />
+                <p>
+                    <Trans i18nKey={'thread.eof'} ns={'pages'} />
+                </p>
+            </div>
         </div>
     );
 }

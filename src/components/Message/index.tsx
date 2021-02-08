@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useEffect, useRef, useState } from 'react';
+import { makeStyles, lighten } from '@material-ui/core/styles';
 import {
     Skeleton,
     TimelineConnector,
@@ -9,16 +9,22 @@ import {
     TimelineOppositeContent,
     TimelineSeparator,
 } from '@material-ui/lab';
-import { Avatar, Paper, Typography } from '@material-ui/core';
-import MarkdownView from 'react-showdown';
+import { Avatar, Chip, darken, Paper, Typography } from '@material-ui/core';
+import { Lock, DeleteForever, Create } from '@material-ui/icons';
+import MarkdownView, { ShowdownExtension } from 'react-showdown';
+import clsx from 'clsx';
 import { getNameFromMemberState, getTimestampFromSnowflake } from '../../util';
 import { MemberState, MutatedMessage, Nullable } from '../../types';
 import Async from '../Async';
+import { useDiscordParser } from '../../util/DiscordParser';
+import { MembersState } from '../../state';
 
 type Props = MutatedMessage & {
-    fetchMember?: (id?: string) => Promise<Nullable<MemberState>>;
+    extensions?: ShowdownExtension[];
     isDesktop?: boolean;
     isLastMessage?: boolean;
+    isCreator?: boolean;
+    bodyStyle?: any;
 };
 
 const useStyle = makeStyles((theme) => ({
@@ -36,6 +42,7 @@ const useStyle = makeStyles((theme) => ({
         padding: '.5rem 1rem',
     },
     content: {
+        overflowWrap: 'anywhere',
         flexGrow: 1,
         padding: '.5rem 1rem',
 
@@ -45,7 +52,47 @@ const useStyle = makeStyles((theme) => ({
         },
     },
     sender: {
-        marginBottom: '.5rem',
+        display: 'flex',
+        flexDirection: 'column',
+        marginBottom: '1rem',
+        [theme.breakpoints.up('sm')]: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: '.5rem',
+        },
+    },
+    badges: {
+        '&:not(:empty)': {
+            marginTop: '.5rem',
+            [theme.breakpoints.up('sm')]: {
+                marginTop: 0,
+                marginLeft: 'auto',
+            },
+            '& div': {
+                margin: '.15rem .25rem',
+            },
+        },
+    },
+    internalChip: {
+        background: lighten(theme.palette.background.paper, 0.6),
+        '& svg, & span': {
+            fill: lighten(theme.palette.background.paper, 0.1),
+            color: lighten(theme.palette.background.paper, 0.1),
+        },
+    },
+    deletedChip: {
+        background: darken(theme.palette.error.dark, 0.3),
+        '& svg, & span': {
+            fill: lighten(theme.palette.background.paper, 0.9),
+            color: lighten(theme.palette.background.paper, 0.9),
+        },
+    },
+    creatorChip: {
+        background: lighten(theme.palette.background.paper, 0.15),
+        '& svg, & span': {
+            fill: lighten(theme.palette.background.paper, 0.9),
+            color: lighten(theme.palette.background.paper, 0.9),
+        },
     },
     mobileDate: {
         margin: '0 !important',
@@ -63,6 +110,11 @@ const useStyle = makeStyles((theme) => ({
         border: `2px solid ${theme.palette.primary.main}`,
         boxShadow: theme.shadows[3],
     },
+    mdUser: {
+        background: 'grey',
+        fontWeight: 'bold',
+        padding: '0.05rem .1rem',
+    },
 }));
 
 function Message(props: Props) {
@@ -78,17 +130,61 @@ function Message(props: Props) {
         threadID,
         isDesktop,
         isLastMessage,
-        fetchMember,
+        bodyStyle,
+        isCreator,
     } = props;
     const classes = useStyle();
-    const [fetching, setFetching] = useState(false);
+    const { getMember } = MembersState.useContainer();
     const [memberPromise, setMemberPromise] = useState<
         Nullable<Promise<Nullable<MemberState>>>
     >(null);
+    const attachedMemberPromises = useRef<{
+        [s: string]: Nullable<MemberState>;
+    }>({});
+    const discordParser = useDiscordParser();
 
     const dateSent = getTimestampFromSnowflake(modmailID);
     const date = dateSent?.toFormat('MM/dd/yyyy');
     const time = dateSent?.toFormat('hh:mm a');
+
+    useEffect(() => {
+        discordParser.attachExtensions([
+            {
+                pattern: /<:[a-z0-9]+:\d+>/gim,
+                callback: (matched) => {
+                    const parts = /<:[a-z0-9]+:(\d+)>/gim.exec(matched);
+                    if (parts) {
+                        const url = `https://cdn.discordapp.com/emojis/${parts[1]}.png`;
+                        const size = 32;
+                        return `<img src="${url}?size=${size}" height="${size}" />`;
+                    }
+                    return matched;
+                },
+            },
+            {
+                pattern: /<@!\d+>/gim,
+                callback: (matched) => {
+                    const parts = /<@!(\d+)>/gim.exec(matched);
+                    if (parts) {
+                        const member = attachedMemberPromises.current[parts[0]];
+                        if (member) {
+                            return `<span data-md-react data-id="${member.id}" class="${classes.mdUser}">${member.username}#${member.discriminator}</span>`;
+                        }
+
+                        const promise = getMember('cat', parts[0])();
+                        if (promise) {
+                            promise.then((message) => {
+                                attachedMemberPromises.current[parts[0]] = message;
+                                // setUpdater(updater + 1);
+                            });
+                        }
+                        return matched;
+                    }
+                    return matched;
+                },
+            },
+        ]);
+    }, []);
 
     useEffect(() => {
         if (sender && sender.data && memberPromise === null) {
@@ -124,8 +220,12 @@ function Message(props: Props) {
                         </TimelineDot>
                         {!isLastMessage && <TimelineConnector />}
                     </TimelineSeparator>
-                    <TimelineContent className={classes.content}>
-                        <Paper elevation={3} className={classes.paper}>
+                    <TimelineContent className={clsx(classes.content)}>
+                        <Paper
+                            elevation={3}
+                            className={clsx(classes.paper)}
+                            style={bodyStyle}
+                        >
                             <div className={classes.sender}>
                                 {member ? (
                                     <Typography variant={'body2'} style={{ margin: 0 }}>
@@ -134,14 +234,38 @@ function Message(props: Props) {
                                 ) : (
                                     <Skeleton width={250} height={18} />
                                 )}
+                                <div className={classes.badges}>
+                                    {internal && (
+                                        <Chip
+                                            avatar={<Lock />}
+                                            className={classes.internalChip}
+                                            size={'small'}
+                                            label={'Internal Message'}
+                                        />
+                                    )}
+                                    {isDeleted && (
+                                        <Chip
+                                            avatar={<DeleteForever />}
+                                            className={classes.deletedChip}
+                                            size={'small'}
+                                            label={'Deleted'}
+                                        />
+                                    )}
+                                    {isCreator && (
+                                        <Chip
+                                            avatar={<Create />}
+                                            className={classes.creatorChip}
+                                            size={'small'}
+                                            label={'Creator'}
+                                        />
+                                    )}
+                                </div>
                             </div>
                             <MarkdownView
-                                flavor={'vanilla'}
+                                extensions={discordParser.extensions}
+                                // extensions={discord.getExtensions()}
                                 markdown={content}
                                 dangerouslySetInnerHTML
-                                options={{
-                                    emoji: true,
-                                }}
                             />
 
                             {!isDesktop && (

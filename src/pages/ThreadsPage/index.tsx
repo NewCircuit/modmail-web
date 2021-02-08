@@ -4,11 +4,10 @@ import { useHistory, useParams } from 'react-router-dom';
 import { CircularProgress, Container, Paper, Typography } from '@material-ui/core';
 import { useTranslation, Trans } from 'react-i18next';
 import { Category, Thread } from 'modmail-types';
-import { MembersState, NavigationState } from '../../state';
+import { NavigationState } from '../../state';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 import ThreadsContainer from '../../components/ThreadsContainer';
 import ThreadListItem from '../../components/ThreadListItem';
-import { MemberState, Nullable } from '../../types';
 
 type ThreadsPageParams = {
     categoryId: string;
@@ -29,7 +28,6 @@ function ThreadsPage(): JSX.Element {
     const { categoryId } = useParams<ThreadsPageParams>();
     const history = useHistory();
     const { threads, categories } = NavigationState.useContainer();
-    const { getMember } = MembersState.useContainer();
     const [category, setCategory] = useState<Category | null>(null);
     const isThreadsLoaded = threads.items instanceof Array;
 
@@ -51,9 +49,6 @@ function ThreadsPage(): JSX.Element {
             threads.fetch(categoryId);
         }
     }, [threads.items]);
-
-    const handleFetchMember = (id?: string): Promise<Nullable<MemberState>> =>
-        id ? getMember.call(null, categoryId, id) : Promise.resolve(null);
 
     const onThreadClicked = (evt: React.SyntheticEvent, thread: Thread) => {
         console.log({ evt, thread });
@@ -82,7 +77,6 @@ function ThreadsPage(): JSX.Element {
             {isThreadsLoaded ? (
                 <ThreadsContainer
                     threads={threads.items}
-                    fetchMember={handleFetchMember}
                     itemProps={{
                         full: true,
                         style: { height: 150 },

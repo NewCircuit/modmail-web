@@ -16,5 +16,8 @@
     "title2": "List of all threads in the <b><u>{{category}}</u></b> category.",
     "noThreadsTitle": "No threads",
     "noThreadsDesc": "There are currently no threads in the {{category, emphasis}} category."
+  },
+  "thread": {
+    "eof": "<b>Ouh!</b><br />You've reached the end of the thread!"
   }
 }

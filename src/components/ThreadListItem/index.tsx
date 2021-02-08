@@ -15,7 +15,6 @@ import QuestionIcon from '@material-ui/icons/HelpOutlineOutlined';
 import MailIcon from '@material-ui/icons/MailOutlined';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { Thread } from 'modmail-types';
 import { Skeleton } from '@material-ui/lab';
 import { getNameFromMemberState, getTimestampFromSnowflake } from '../../util';
 import { MemberState, MutatedThread } from '../../types';
@@ -28,7 +27,6 @@ type DivElem = React.DetailedHTMLProps<
 
 type Props = Omit<DivElem, 'onClick'> & {
     thread?: MutatedThread;
-    fetchMember?: (id?: string) => Promise<MemberState | null>;
     full?: boolean;
     replied?: boolean;
     onClick?: (evt: React.SyntheticEvent<HTMLDivElement>, thread?: MutatedThread) => void;

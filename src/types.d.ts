@@ -70,7 +70,7 @@ declare namespace FG.State {
         members: MemberState[] | null;
         // fetchMember: (category: string, id: string) => Promise<Nullable<MemberState>>;
         fetchMembers: (category: string) => Promise<MemberState[]>;
-        getMember: (category: string, id: string) => Promise<Nullable<MemberState>>;
+        getMember: (category: string, id: string) => () => Promise<Nullable<MemberState>>;
     };
 
     type UserState = {

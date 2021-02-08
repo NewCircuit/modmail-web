@@ -5,6 +5,7 @@ import './theme/scss/global.scss';
 import { Router } from 'react-router-dom';
 import { CircularProgress, CssBaseline } from '@material-ui/core';
 import Authenticator from 'components/Authenticator';
+import { GlobalConfiguration } from 'react-showdown';
 import theme from './theme';
 import LayoutHOC, { Layout } from './components/Layout';
 import Pages from './pages';
@@ -19,6 +20,8 @@ function App(props: FG.AppProps): JSX.Element {
     const { onReady } = props;
     const layoutRef: RefObject<Layout> = React.createRef();
     useEffect(() => {
+        GlobalConfiguration.setOption('emoji', true);
+        GlobalConfiguration.setOption('openLinksInNewWindow', true);
         // if (onReady) onReady();
     }, []);
 

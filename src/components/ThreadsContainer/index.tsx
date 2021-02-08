@@ -1,4 +1,4 @@
-import React, { ComponentType, RefObject, useEffect } from 'react';
+import React, { ComponentType } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -10,7 +10,6 @@ import { MemberState, MutatedThread, Nullable, RequiredArgs } from '../../types'
 type Child = ComponentType<RequiredArgs<{ thread: MutatedThread }>>;
 type Props = {
     threads?: MutatedThread[];
-    fetchMember: (id: string) => Promise<Nullable<MemberState>>;
     itemProps?: any;
     empty?: {
         title?: React.ReactNode;
@@ -49,7 +48,7 @@ function itemRenderer(Component: Child, itemProps: any) {
 }
 
 function ThreadsContainer(props: Props): JSX.Element {
-    const { threads, children, empty, fetchMember, itemProps } = props;
+    const { threads, children, empty, itemProps } = props;
     const classes = useStyles();
 
     if (typeof threads === 'undefined' || threads.length === 0)
