@@ -162,7 +162,9 @@ function navigationState(defaultProps: any): State {
     ): Promise<Nullable<MutatedThread>> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const newThread: Thread = TEST_THREADS.find((th) => th.id === thread);
+                const newThread: Thread = TEST_THREADS_FULL.find(
+                    (th) => th.id === thread
+                );
                 if (newThread) {
                     resolve({
                         ...newThread,
@@ -179,7 +181,21 @@ function navigationState(defaultProps: any): State {
                         })),
                     });
                 } else {
-                    resolve(null);
+                    const th = TEST_THREADS_FULL[0];
+                    resolve({
+                        ...th,
+                        author: {
+                            id: th.author.id,
+                            data: getMember(category, th.author.id),
+                        },
+                        messages: th.messages.map((message) => ({
+                            ...message,
+                            sender: {
+                                id: message.sender,
+                                data: getMember(category, message.sender),
+                            },
+                        })),
+                    });
                 }
             }, 2000);
         });

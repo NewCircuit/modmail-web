@@ -4,10 +4,12 @@ import MessageContainer from 'components/MessageContainer';
 import { useParams } from 'react-router-dom';
 import { VerifiedUser } from '@material-ui/icons';
 import { Trans } from 'react-i18next';
+import { CircularProgress } from '@material-ui/core';
 import { Theme, APPBAR_HEIGHT } from '../../theme';
-import { MembersState, NavigationState } from '../../state';
+import { NavigationState } from '../../state';
 import Message from '../../components/Message';
 import { MutatedThread } from '../../types';
+import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 
 type Params = {
     categoryId: string;
@@ -34,21 +36,36 @@ const useStyle = makeStyles((theme: Theme) => ({
     },
 }));
 
+const Loading = () => (
+    <LocalizedBackdrop open>
+        <CircularProgress />
+    </LocalizedBackdrop>
+);
+
+enum FetchState {
+    EMPTY,
+    LOADING,
+    LOADED,
+}
+
 function ThreadPage() {
     const classes = useStyle();
+    const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [thread, setThread] = useState<MutatedThread | null>(null);
     const { categoryId, threadId } = useParams<Params>();
     const { threads } = NavigationState.useContainer();
-    const { getMember, members, fetchMembers } = MembersState.useContainer();
     const pageRef: RefObject<HTMLDivElement> = React.createRef();
 
-    // useEffect(() => {
-    //     if (members === null) {
-    //         fetchMembers(categoryId);
-    //     } else {
-    //         console.log(members);
-    //     }
-    // }, [members]);
+    useEffect(() => {
+        if (fetchState === FetchState.EMPTY) {
+            setFetchState(FetchState.LOADING);
+            console.log('Fetching thread');
+            threads.fetchOne(categoryId, threadId).then((currentThread) => {
+                setFetchState(FetchState.LOADED);
+                if (currentThread) setThread(currentThread);
+            });
+        }
+    }, [fetchState]);
 
     // This is a failsafe to load the specific thread if this is a direct load or a refresh
     useEffect(() => {
@@ -59,19 +76,14 @@ function ThreadPage() {
         }
     }, [threads.items]);
 
-    // Sets the current thread to view based on URL parameters
     useEffect(() => {
-        const currentThread = threads.findById(categoryId, threadId);
-        if (currentThread) {
-            if (thread === null || (thread && thread.id !== currentThread.id))
-                setThread(currentThread);
-        }
-    }, [categoryId, threadId, threads.items]);
-
-    const handleFetchMember = (id?: string) => getMember.call(null, categoryId, id || '');
+        setFetchState(FetchState.EMPTY);
+        setThread(null);
+    }, [categoryId, threadId]);
 
     return (
         <div ref={pageRef} className={classes.root}>
+            {fetchState === FetchState.LOADING && <Loading />}
             <MessageContainer
                 author={thread?.author.id}
                 pageRef={pageRef}
