@@ -22,24 +22,34 @@ const useStyle = makeStyles(() => ({
     title: { padding: '.5rem' },
 }));
 
+enum FetchState {
+    EMPTY,
+    LOADING,
+    LOADED,
+}
+
 function ThreadsPage(): JSX.Element {
     const { t } = useTranslation('pages');
     const classes = useStyle();
     const { categoryId } = useParams<ThreadsPageParams>();
     const history = useHistory();
     const { threads, categories } = NavigationState.useContainer();
+    const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [category, setCategory] = useState<Category | null>(null);
     const isThreadsLoaded = threads.items instanceof Array;
 
-    // useEffect(() => {
-    //     if (members === null) {
-    //         fetchMembers(categoryId);
-    //     } else {
-    //         console.log(members);
-    //     }
-    // }, [members]);
+    useEffect(() => {
+        if (fetchState === FetchState.EMPTY) {
+            setFetchState(FetchState.LOADING);
+            threads.fetch(categoryId).then(() => {
+                setFetchState(FetchState.LOADED);
+            });
+        }
+    }, [fetchState]);
 
     useEffect(() => {
+        setFetchState(FetchState.EMPTY);
+        threads.reset();
         setCategory(categories.findById(categoryId));
     }, [categoryId]);
 
@@ -77,6 +87,7 @@ function ThreadsPage(): JSX.Element {
             {isThreadsLoaded ? (
                 <ThreadsContainer
                     threads={threads.items}
+                    loaded={fetchState === FetchState.LOADED}
                     itemProps={{
                         full: true,
                         style: { height: 150 },

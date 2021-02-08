@@ -1,16 +1,18 @@
 import React, { ComponentType } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper } from '@material-ui/core';
+import { CircularProgress, Paper } from '@material-ui/core';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { Thread } from 'modmail-types';
 import Alert from '../Alert';
 import { MemberState, MutatedThread, Nullable, RequiredArgs } from '../../types';
+import LocalizedBackdrop from '../LocalizedBackdrop';
 
 type Child = ComponentType<RequiredArgs<{ thread: MutatedThread }>>;
 type Props = {
     threads?: MutatedThread[];
     itemProps?: any;
+    loaded?: boolean;
     empty?: {
         title?: React.ReactNode;
         description?: React.ReactNode;
@@ -47,9 +49,17 @@ function itemRenderer(Component: Child, itemProps: any) {
     };
 }
 
+const Loading = () => (
+    <LocalizedBackdrop open>
+        <CircularProgress />
+    </LocalizedBackdrop>
+);
+
 function ThreadsContainer(props: Props): JSX.Element {
-    const { threads, children, empty, itemProps } = props;
+    const { threads, children, empty, itemProps, loaded } = props;
     const classes = useStyles();
+
+    if (!loaded) return <Loading />;
 
     if (typeof threads === 'undefined' || threads.length === 0)
         return (

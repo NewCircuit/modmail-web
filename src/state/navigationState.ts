@@ -244,18 +244,28 @@ function navigationState(defaultProps: any): State {
         return null;
     }
 
+    function resetThreads() {
+        setThreads([]);
+    }
+
+    function resetCategories() {
+        setCategories([]);
+    }
+
     return {
         threads: {
             items: threads,
             fetch: fetchThreads,
             fetchOne: fetchOneThread,
             findById: findThreadById,
+            reset: resetThreads,
         },
         categories: {
             items: categories,
             fetch: fetchCategories,
             fetchOne: fetchOneCategory,
             findById: findCategoryById,
+            reset: resetCategories,
         },
     };
 }

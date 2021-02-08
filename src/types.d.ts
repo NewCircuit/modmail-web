@@ -90,6 +90,7 @@ declare namespace FG.State {
                 thread: string
             ) => Promise<Nullable<MutatedThread>>;
             findById: (category: string, thread: string) => Nullable<MutatedThread>;
+            reset: () => void;
             // TODO add ability to cancel fetch requests
             // cancel?: (message: string) => void;
         };
@@ -100,6 +101,7 @@ declare namespace FG.State {
             // TODO add ability to cancel fetch requests
             // cancel?: (message: string) => void;
             findById: (category: string) => Nullable<Category>;
+            reset: () => void;
         };
     };
 }
