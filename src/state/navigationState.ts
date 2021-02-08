@@ -160,7 +160,7 @@ function navigationState(defaultProps: any): State {
     }
 
     // TODO remove TEMP Function
-    function fetchOneThread(
+    function fetchOneThread2(
         category: string,
         thread: string
     ): Promise<Nullable<MutatedThread>> {
@@ -205,7 +205,7 @@ function navigationState(defaultProps: any): State {
         });
     }
 
-    function fetchOneThread2(
+    function fetchOneThread(
         category: string,
         thread: string
     ): Promise<Nullable<MutatedThread>> {
