@@ -164,9 +164,9 @@ function Message(props: Props) {
                 },
             },
             {
-                pattern: /<@!\d+>/gim,
+                pattern: /<@!?\d+>/gim,
                 callback: (matched) => {
-                    const parts = /<@!(\d+)>/gim.exec(matched);
+                    const parts = /<@!?(\d+)>/gim.exec(matched);
                     if (parts) {
                         const member = attachedMemberPromises.current[parts[1]];
                         console.log(parts, member);
