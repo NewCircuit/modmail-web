@@ -1,4 +1,4 @@
-import { Thread, ModmailUser, Category, Message } from 'modmail-types';
+import { Thread, ModmailUser, Category, Message } from '@Floor-Gang/modmail-types';
 
 type Role = 'admin' | 'mod' | '';
 

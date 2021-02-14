@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useParams } from 'react-router-dom';
 import { CircularProgress, Container, Paper, Typography } from '@material-ui/core';
 import { useTranslation, Trans } from 'react-i18next';
-import { Category, Thread } from 'modmail-types';
+import { Category, Thread } from '@Floor-Gang/modmail-types';
 import { NavigationState } from '../../state';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 import ThreadsContainer from '../../components/ThreadsContainer';

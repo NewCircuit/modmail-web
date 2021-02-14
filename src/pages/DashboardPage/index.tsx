@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
-import { Category } from 'modmail-types';
+import { Category } from '@Floor-Gang/modmail-types';
 import { useTranslation } from 'react-i18next';
 import { NavigationState } from '../../state';
 import PaperCategory from '../../components/PaperCategory';

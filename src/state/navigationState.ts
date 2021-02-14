@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { createContainer } from 'unstated-next';
-import { Category, Thread } from 'modmail-types';
+import { Category, Thread } from '@Floor-Gang/modmail-types';
 import axios, { AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { FG, Nullable, Optional, MutatedThread } from '../types';
@@ -40,7 +40,7 @@ function navigationState(defaultProps: any): State {
     }
 
     // TODO remove TEMP Function
-    function fetchCategories(): Promise<Category[]> {
+    function fetchCategories2(): Promise<Category[]> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 console.log('fetchCategories');
@@ -50,7 +50,7 @@ function navigationState(defaultProps: any): State {
         });
     }
 
-    function fetchCategories2(): Promise<Category[]> {
+    function fetchCategories(): Promise<Category[]> {
         console.log('Fetch Categories Now!');
         return axios
             .get(t('urls.categories'))
@@ -71,7 +71,7 @@ function navigationState(defaultProps: any): State {
     }
 
     // TODO remove TEMP Function
-    function fetchOneCategory(category: string): Promise<Nullable<Category>> {
+    function fetchOneCategory2(category: string): Promise<Nullable<Category>> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(TEST_CATEGORIES.find((cat) => cat.id === category) || null);
@@ -79,7 +79,7 @@ function navigationState(defaultProps: any): State {
         });
     }
 
-    function fetchOneCategory2(category: string): Promise<Nullable<Category>> {
+    function fetchOneCategory(category: string): Promise<Nullable<Category>> {
         return axios
             .get(t('urls.categoryOne', { category }))
             .then((response: AxiosResponse<FG.Api.CategoryOneResponse>) => {
@@ -96,7 +96,7 @@ function navigationState(defaultProps: any): State {
     }
 
     // TODO remove TEMP Function
-    function fetchThreads(category: string): Promise<MutatedThread[]> {
+    function fetchThreads2(category: string): Promise<MutatedThread[]> {
         console.log('Fetch Threads Now!');
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -124,7 +124,7 @@ function navigationState(defaultProps: any): State {
         });
     }
 
-    function fetchThreads2(category: string): Promise<MutatedThread[]> {
+    function fetchThreads(category: string): Promise<MutatedThread[]> {
         console.log('Fetch Threads Now!');
         return axios
             .get(t('urls.threads', { category }))
@@ -163,7 +163,7 @@ function navigationState(defaultProps: any): State {
     }
 
     // TODO remove TEMP Function
-    function fetchOneThread(
+    function fetchOneThread2(
         category: string,
         thread: string
     ): Promise<Nullable<MutatedThread>> {

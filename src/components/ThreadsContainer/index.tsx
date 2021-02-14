@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { CircularProgress, Paper } from '@material-ui/core';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
-import { Thread } from 'modmail-types';
+import { Thread } from '@Floor-Gang/modmail-types';
 import Alert from '../Alert';
 import { MemberState, MutatedThread, Nullable, RequiredArgs } from '../../types';
 import LocalizedBackdrop from '../LocalizedBackdrop';

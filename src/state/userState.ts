@@ -79,6 +79,7 @@ function userState(): State {
     }
 
     return {
+        token: userData?.token || null,
         authenticated,
         processing,
         redirect,

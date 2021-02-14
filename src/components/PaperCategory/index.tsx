@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, lighten, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Category } from 'modmail-types';
+import { Category } from '@Floor-Gang/modmail-types';
 import clsx from 'clsx';
 
 type Props = {
