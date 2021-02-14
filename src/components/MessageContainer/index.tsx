@@ -44,6 +44,7 @@ function MessageContainer(props: Props) {
 
     useEffect(() => {
         if (pageRef?.current) {
+            colorMap.current = {};
             pageRef.current.scrollBy({
                 top: pageRef.current.scrollHeight - window.innerHeight - 20,
             });
