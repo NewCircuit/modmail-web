@@ -97,7 +97,7 @@ function membersState(): State {
                 semaphore
                     .runExclusive(async () => {
                         const data = await axios.get<FG.Api.MemberResponse>(
-                            t('urls.fetchMember', { user: id, category }),
+                            t('urls.fetchMember', { member: id, category }),
                             {
                                 headers: {
                                     Authorization: `Bearer ${token}`,
