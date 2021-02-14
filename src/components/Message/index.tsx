@@ -166,15 +166,15 @@ function Message(props: Props) {
                 callback: (matched) => {
                     const parts = /<@!(\d+)>/gim.exec(matched);
                     if (parts) {
-                        const member = attachedMemberPromises.current[parts[0]];
+                        const member = attachedMemberPromises.current[parts[1]];
                         if (member) {
                             return `<span data-md-react data-id="${member.id}" class="${classes.mdUser}">${member.username}#${member.discriminator}</span>`;
                         }
 
-                        const promise = getMember('cat', parts[0])();
+                        const promise = getMember('cat', parts[1])();
                         if (promise) {
                             promise.then((message) => {
-                                attachedMemberPromises.current[parts[0]] = message;
+                                attachedMemberPromises.current[parts[1]] = message;
                                 // setUpdater(updater + 1);
                             });
                         }
