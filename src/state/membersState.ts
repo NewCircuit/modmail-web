@@ -107,7 +107,7 @@ function membersState(): State {
                         return data;
                     })
                     .then((response) => {
-                        console.log(response);
+                        resolve(response.data);
                     });
             });
             fetchers.current[id].promise = promise;
