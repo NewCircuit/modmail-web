@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MessageContainer from 'components/MessageContainer';
 import { useParams } from 'react-router-dom';
 import { VerifiedUser } from '@material-ui/icons';
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { CircularProgress } from '@material-ui/core';
 import { Theme, APPBAR_HEIGHT } from '../../theme';
 import { NavigationState } from '../../state';
@@ -49,6 +49,7 @@ enum FetchState {
 }
 
 function ThreadPage() {
+    const { i18n } = useTranslation('pages');
     const classes = useStyle();
     const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [thread, setThread] = useState<MutatedThread | null>(null);
@@ -95,7 +96,7 @@ function ThreadPage() {
             <div className={classes.eof}>
                 <VerifiedUser className={classes.eofIcon} />
                 <p>
-                    <Trans i18nKey={'thread.eof'} ns={'pages'} />
+                    <Trans i18n={i18n} i18nKey={'thread.eof'} ns={'pages'} />
                 </p>
             </div>
         </div>
