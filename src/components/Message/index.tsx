@@ -20,6 +20,7 @@ import { useDiscordParser } from '../../util/DiscordParser';
 import { MembersState } from '../../state';
 
 type Props = MutatedMessage & {
+    category?: string;
     extensions?: ShowdownExtension[];
     isDesktop?: boolean;
     isLastMessage?: boolean;
@@ -132,6 +133,7 @@ function Message(props: Props) {
         isLastMessage,
         bodyStyle,
         isCreator,
+        category,
     } = props;
     const classes = useStyle();
     const { getMember } = MembersState.useContainer();
@@ -167,11 +169,12 @@ function Message(props: Props) {
                     const parts = /<@!(\d+)>/gim.exec(matched);
                     if (parts) {
                         const member = attachedMemberPromises.current[parts[1]];
+                        console.log(parts, member);
                         if (member) {
                             return `<span data-md-react data-id="${member.id}" class="${classes.mdUser}">${member.username}#${member.discriminator}</span>`;
                         }
 
-                        const promise = getMember('cat', parts[1])();
+                        const promise = getMember(parts[1], category)();
                         if (promise) {
                             promise.then((message) => {
                                 attachedMemberPromises.current[parts[1]] = message;

@@ -86,6 +86,7 @@ function ThreadPage() {
             {fetchState === FetchState.LOADING && <Loading />}
             <MessageContainer
                 author={thread?.author.id}
+                category={thread?.category}
                 pageRef={pageRef}
                 messages={thread?.messages || []}
             >

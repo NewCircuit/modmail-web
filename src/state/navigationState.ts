@@ -169,10 +169,12 @@ function navigationState(defaultProps: any): State {
     ): Promise<Nullable<MutatedThread>> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const newThread: Thread | undefined = TEST_THREADS_FULL.threads.find(
-                    (th) => th.id === thread
-                );
+                const newThread: FG.Api.ThreadsOneResponse = TEST_THREAD;
+                // const newThread: Thread | undefined = TEST_THREADS_FULL.threads.find(
+                //     (th) => th.id === thread
+                // );
                 if (newThread) {
+                    addMembers(newThread.users);
                     resolve({
                         ...newThread,
                         author: {
@@ -189,6 +191,7 @@ function navigationState(defaultProps: any): State {
                     });
                 } else {
                     const th = TEST_THREADS_FULL[0];
+                    addMembers(th.users);
                     resolve({
                         ...th,
                         author: {
@@ -217,6 +220,7 @@ function navigationState(defaultProps: any): State {
             .then((response: AxiosResponse<FG.Api.ThreadsOneResponse>) => {
                 console.log(response);
                 if (response.status === 200) {
+                    addMembers(response.data.users);
                     return {
                         ...response.data,
                         author: {

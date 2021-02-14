@@ -7,6 +7,7 @@ import { MutatedMessage } from '../../types';
 
 type Props = {
     messages: MutatedMessage[];
+    category?: string;
     author?: string;
     pageRef?: RefObject<HTMLDivElement>;
     children: (child: MessageProps, index: number) => JSX.Element;
@@ -35,7 +36,7 @@ type ColorMap = {
 };
 
 function MessageContainer(props: Props) {
-    const { children, messages, pageRef, author } = props;
+    const { children, messages, pageRef, author, category } = props;
     const classes = useStyle();
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
@@ -67,6 +68,7 @@ function MessageContainer(props: Props) {
                 return children(
                     {
                         ...message,
+                        category,
                         isDesktop,
                         bodyStyle: style,
                         isCreator: message.sender.id === author,
