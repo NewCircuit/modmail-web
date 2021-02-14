@@ -53,13 +53,6 @@ function ThreadsPage(): JSX.Element {
         setCategory(categories.findById(categoryId));
     }, [categoryId]);
 
-    useEffect(() => {
-        console.log(threads);
-        if (typeof threads.items === 'undefined' && typeof categoryId !== 'undefined') {
-            threads.fetch(categoryId);
-        }
-    }, [threads.items]);
-
     const onThreadClicked = (evt: React.SyntheticEvent, thread: Thread) => {
         console.log({ evt, thread });
         history.push(`/category/${categoryId}/${thread.id}`);

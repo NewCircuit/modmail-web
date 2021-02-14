@@ -38,7 +38,12 @@ type TempModmailUser = ModmailUser & {
     public_flags: number;
     flags: number;
     locale: string;
+    token: string;
     mfa_enabled: bolean;
+};
+
+export type UserMap = {
+    [s: string]: MemberState;
 };
 
 declare namespace FG {
@@ -58,8 +63,13 @@ declare namespace FG.Api {
     type CategoryOneResponse = Category;
     type CategoriesResponse = Category[];
 
-    type ThreadsOneResponse = Thread;
-    type ThreadsResponse = Thread[];
+    type ThreadsOneResponse = Thread & {
+        users: UserMap;
+    };
+    type ThreadsResponse = {
+        threads: Thread[];
+        users: UserMap;
+    };
 
     type MemberResponse = MemberState;
     type MembersResponse = MemberState[];
@@ -70,10 +80,15 @@ declare namespace FG.State {
         members: MemberState[] | null;
         // fetchMember: (category: string, id: string) => Promise<Nullable<MemberState>>;
         fetchMembers: (category: string) => Promise<MemberState[]>;
-        getMember: (category: string, id: string) => () => Promise<Nullable<MemberState>>;
+        addMembers: (members: UserMap) => void;
+        getMember: (
+            id: string,
+            category?: string
+        ) => () => Promise<Nullable<MemberState>>;
     };
 
     type UserState = {
+        token: ReadOnly<Nullable<string>>;
         authenticated?: boolean;
         processing: boolean;
         authenticate: () => Promise<boolean>;

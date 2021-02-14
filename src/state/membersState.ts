@@ -1,8 +1,10 @@
 import { useState, useRef } from 'react';
-import { FG, MemberState, Nullable } from 'types';
+import { FG, MemberState, Nullable, UserMap } from 'types';
 import { createContainer } from 'unstated-next';
 import { useTranslation } from 'react-i18next';
 import axios, { AxiosResponse } from 'axios';
+import { Semaphore } from 'async-mutex';
+import { UserState } from './index';
 
 type State = FG.State.MembersState;
 
@@ -60,7 +62,7 @@ const TEST_MEMBERS = JSON.parse(`[
 type Fetchers = {
     [s: string]: {
         index: number;
-        category: string;
+        category?: string;
         id: string;
         resolver?: (member: MemberState) => any;
         promise?: Promise<Nullable<MemberState>>;
@@ -70,10 +72,12 @@ type Fetchers = {
 let num = 0;
 function membersState(): State {
     const { t } = useTranslation();
+    const { token } = UserState.useContainer();
     const [members, setMembers] = useState<MemberState[] | null>([]);
+    const { current: semaphore } = useRef<Semaphore>(new Semaphore(1));
     const fetchers = useRef<Fetchers>({});
 
-    const fetchMember = (category: string, id: string) => {
+    const fetchMember = (id: string, category?: string) => {
         let promise: Promise<Nullable<MemberState>>;
         if (typeof fetchers.current[id] !== 'undefined' && fetchers.current[id].promise) {
             promise = fetchers.current[id].promise as Promise<Nullable<MemberState>>;
@@ -90,22 +94,20 @@ function membersState(): State {
                 }
                 console.log('Promise Executed');
 
-                // TODO remove test code
-                // const timeout = Math.floor(Math.random() * 3000) + 500;
-                // setTimeout(() => {
-                //     const exists = TEST_MEMBERS.find((k) => k.id === id);
-                //     if (exists) resolve(exists);
-                //     else resolve(TEST_MEMBERS[0]);
-                // }, timeout);
-
-                axios
-                    .get(t('urls.fetchMember', { category, member: id }))
-                    .then((response: AxiosResponse<FG.Api.MemberResponse>) => {
-                        if (response.status === 200) {
-                            resolve(response.data);
-                        } else {
-                            resolve(null);
-                        }
+                semaphore
+                    .runExclusive(async () => {
+                        const data = await axios.get<FG.Api.MemberResponse>(
+                            t('urls.fetchMember', { user: id, category }),
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            }
+                        );
+                        return data;
+                    })
+                    .then((response) => {
+                        console.log(response);
                     });
             });
             fetchers.current[id].promise = promise;
@@ -113,7 +115,7 @@ function membersState(): State {
         return promise;
     };
 
-    function getMember(category: string, id: string) {
+    function getMember(id: string, category?: string) {
         return () =>
             new Promise((resolveMember) => {
                 const exists = members?.find((mem) => mem.id === id);
@@ -122,7 +124,7 @@ function membersState(): State {
                     return;
                 }
 
-                fetchMember(category, id).then((response) => resolveMember(response));
+                fetchMember(id, category).then((response) => resolveMember(response));
             });
     }
 
@@ -143,11 +145,27 @@ function membersState(): State {
         //     });
     }
 
+    function addMembers(users: UserMap) {
+        Object.keys(users).forEach((user) => {
+            if (typeof fetchers.current[user] === 'undefined') {
+                fetchers.current[user] = {
+                    promise: Promise.resolve(users[user]),
+                    id: users[user].id,
+                    // eslint-disable-next-line no-plusplus
+                    index: ++num,
+                };
+            }
+        });
+
+        console.log(fetchers);
+    }
+
     return {
         members,
         fetchers,
         getMember,
         fetchMembers,
+        addMembers,
     } as any;
 }
 

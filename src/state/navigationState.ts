@@ -24,7 +24,7 @@ const TEST_THREADS = JSON.parse(
 // TODO Rename to ModmailState since this isn't actually navigation state at all anymore
 function navigationState(defaultProps: any): State {
     const { t } = useTranslation();
-    const { getMember } = MembersState.useContainer();
+    const { getMember, addMembers } = MembersState.useContainer();
     const [categories, setCategories] = useState<Optional<Category[]>>(undefined);
     const [threads, setThreads] = useState<Optional<MutatedThread[]>>(undefined);
 
@@ -40,7 +40,7 @@ function navigationState(defaultProps: any): State {
     }
 
     // TODO remove TEMP Function
-    function fetchCategories2(): Promise<Category[]> {
+    function fetchCategories(): Promise<Category[]> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 console.log('fetchCategories');
@@ -50,7 +50,7 @@ function navigationState(defaultProps: any): State {
         });
     }
 
-    function fetchCategories(): Promise<Category[]> {
+    function fetchCategories2(): Promise<Category[]> {
         console.log('Fetch Categories Now!');
         return axios
             .get(t('urls.categories'))
@@ -71,7 +71,7 @@ function navigationState(defaultProps: any): State {
     }
 
     // TODO remove TEMP Function
-    function fetchOneCategory2(category: string): Promise<Nullable<Category>> {
+    function fetchOneCategory(category: string): Promise<Nullable<Category>> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(TEST_CATEGORIES.find((cat) => cat.id === category) || null);
@@ -79,7 +79,7 @@ function navigationState(defaultProps: any): State {
         });
     }
 
-    function fetchOneCategory(category: string): Promise<Nullable<Category>> {
+    function fetchOneCategory2(category: string): Promise<Nullable<Category>> {
         return axios
             .get(t('urls.categoryOne', { category }))
             .then((response: AxiosResponse<FG.Api.CategoryOneResponse>) => {
@@ -96,56 +96,59 @@ function navigationState(defaultProps: any): State {
     }
 
     // TODO remove TEMP Function
-    function fetchThreads2(category: string): Promise<MutatedThread[]> {
+    function fetchThreads(category: string): Promise<MutatedThread[]> {
+        console.log('Fetch Threads Now!');
         return new Promise((resolve) => {
             setTimeout(() => {
-                const x = TEST_THREADS.map((thread) => {
+                const x = TEST_THREADS.threads.map((thread) => {
                     return {
                         ...thread,
                         author: {
                             id: thread.author.id,
-                            data: () => getMember(thread.category, thread.author.id),
+                            data: getMember(thread.author.id, thread.category),
                         },
                         messages: thread.messages.map((message) => ({
                             ...message,
                             sender: {
                                 id: message.sender,
-                                data: () => getMember(thread.category, message.sender),
+                                data: getMember(message.sender, thread.category),
                             },
                         })),
                     } as MutatedThread;
                 }) as MutatedThread[];
                 console.log(x);
+                addMembers(TEST_THREADS.users);
                 setThreads(x);
                 resolve(x);
             }, 2000);
         });
     }
 
-    function fetchThreads(category: string): Promise<MutatedThread[]> {
+    function fetchThreads2(category: string): Promise<MutatedThread[]> {
         console.log('Fetch Threads Now!');
         return axios
             .get(t('urls.threads', { category }))
             .then((response: AxiosResponse<FG.Api.ThreadsResponse>) => {
                 console.log(response);
                 if (response.status === 200) {
-                    const mutated = response.data.map((thread) => {
+                    const mutated = response.data.threads.map((thread) => {
                         return {
                             ...thread,
                             author: {
                                 id: thread.author.id,
-                                data: getMember(thread.category, thread.author.id),
+                                data: getMember(thread.author.id, thread.category),
                             },
                             messages: thread.messages.map((message) => ({
                                 ...message,
                                 sender: {
                                     id: message.sender,
-                                    data: getMember(thread.category, message.sender),
+                                    data: getMember(message.sender, thread.category),
                                 },
                             })),
                         } as MutatedThread;
                     }) as MutatedThread[];
 
+                    addMembers(response.data.users);
                     setThreads(mutated);
                     return mutated;
                 }
@@ -160,13 +163,13 @@ function navigationState(defaultProps: any): State {
     }
 
     // TODO remove TEMP Function
-    function fetchOneThread2(
+    function fetchOneThread(
         category: string,
         thread: string
     ): Promise<Nullable<MutatedThread>> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const newThread: Thread = TEST_THREADS_FULL.find(
+                const newThread: Thread | undefined = TEST_THREADS_FULL.threads.find(
                     (th) => th.id === thread
                 );
                 if (newThread) {
@@ -174,13 +177,13 @@ function navigationState(defaultProps: any): State {
                         ...newThread,
                         author: {
                             id: newThread.author.id,
-                            data: getMember(category, newThread.author.id),
+                            data: getMember(newThread.author.id, category),
                         },
                         messages: newThread.messages.map((message) => ({
                             ...message,
                             sender: {
                                 id: message.sender,
-                                data: getMember(category, message.sender),
+                                data: getMember(message.sender, category),
                             },
                         })),
                     });
@@ -196,7 +199,7 @@ function navigationState(defaultProps: any): State {
                             ...message,
                             sender: {
                                 id: message.sender,
-                                data: getMember(category, message.sender),
+                                data: getMember(message.sender, category),
                             },
                         })),
                     });
@@ -224,7 +227,7 @@ function navigationState(defaultProps: any): State {
                             ...message,
                             sender: {
                                 id: message.sender,
-                                data: getMember(category, message.sender),
+                                data: getMember(message.sender, category),
                             },
                         })),
                     };
