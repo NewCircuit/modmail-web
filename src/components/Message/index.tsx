@@ -227,7 +227,7 @@ function Message(props: Props) {
                             let body = `&lt;Unknown Role: '${currentRole.id}'&gt;`;
                             let style = '';
                             if (currentRole.exists) {
-                                style = `background: #${currentRole.color}`;
+                                style = `color: #${currentRole.color}`;
                                 body = `@${currentRole.name}`;
                             }
                             return `<span style="${style}" class="${clsx(classes.mdRole, {
