@@ -1,4 +1,4 @@
-import { Thread, ModmailUser, Category, Message } from '@Floor-Gang/modmail-types';
+import { Thread, ModmailUser, Category, Message, RoleState, ChannelState } from '@Floor-Gang/modmail-types';
 
 type Role = 'admin' | 'mod' | '';
 
@@ -10,6 +10,19 @@ export type MemberState = {
     // role: Role;
     // nickname: string;
 };
+
+export type RoleTag = Partial<Omit<RoleState, 'color'>> & {
+    id: string;
+    exists: boolean;
+    color?: string;
+};
+
+export type ChannelTag = Partial<ChannelState> & {
+    id: string;
+    exists: boolean;
+};
+
+export type DiscordTag = RoleTag | ChannelTag;
 
 export type Nullable<T> = T | null;
 export type Optional<T> = T | undefined;
@@ -73,6 +86,9 @@ declare namespace FG.Api {
 
     type MemberResponse = MemberState;
     type MembersResponse = MemberState[];
+
+    type RoleResponse = Nullable<RoleState>;
+    type ChannelResponse = Nullable<ChannelState>;
 }
 
 declare namespace FG.State {
@@ -117,6 +133,14 @@ declare namespace FG.State {
             // cancel?: (message: string) => void;
             findById: (category: string) => Nullable<Category>;
             reset: () => void;
+        };
+        roles: {
+            fetch: (category: string, role: string) => Promise<RoleTag>;
+            get: (category: string, role: string) => Promise<RoleTag>;
+        };
+        channels: {
+            fetch: (category: string, channel: string) => Promise<ChannelTag>;
+            get: (category: string, channel: string) => Promise<ChannelTag>;
         };
     };
 }

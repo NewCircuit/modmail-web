@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { makeStyles, lighten } from '@material-ui/core/styles';
+import { makeStyles, lighten, fade } from '@material-ui/core/styles';
 import {
     Skeleton,
     TimelineConnector,
@@ -13,11 +13,19 @@ import { Avatar, Chip, darken, Paper, Typography } from '@material-ui/core';
 import { Lock, DeleteForever, Create } from '@material-ui/icons';
 import MarkdownView, { ShowdownExtension } from 'react-showdown';
 import clsx from 'clsx';
+import { ChannelState, RoleState } from '@Floor-Gang/modmail-types';
 import { getNameFromMemberState, getTimestampFromSnowflake } from '../../util';
-import { MemberState, MutatedMessage, Nullable } from '../../types';
+import {
+    ChannelTag,
+    DiscordTag,
+    MemberState,
+    MutatedMessage,
+    Nullable,
+    RoleTag,
+} from '../../types';
 import Async from '../Async';
 import { useDiscordParser } from '../../util/DiscordParser';
-import { MembersState } from '../../state';
+import { MembersState, NavigationState } from '../../state';
 
 type Props = MutatedMessage & {
     category?: string;
@@ -116,6 +124,18 @@ const useStyle = makeStyles((theme) => ({
         fontWeight: 'bold',
         padding: '0.05rem .1rem',
     },
+    mdRole: {
+        fontWeight: 'bold',
+        padding: '0.05rem .1rem',
+    },
+    mdChannel: {
+        color: '#7289da',
+        fontWeight: 'bold',
+        padding: '0.05rem .1rem',
+    },
+    mdNotExists: {
+        color: fade('#f00', 0.5),
+    },
 }));
 
 function Message(props: Props) {
@@ -137,12 +157,20 @@ function Message(props: Props) {
     } = props;
     const classes = useStyle();
     const { getMember } = MembersState.useContainer();
+    const {
+        roles: { get: fetchRole },
+        channels: { get: fetchChannel },
+    } = NavigationState.useContainer();
     const [memberPromise, setMemberPromise] = useState<
         Nullable<Promise<Nullable<MemberState>>>
     >(null);
     const attachedMemberPromises = useRef<{
         [s: string]: Nullable<MemberState>;
     }>({});
+    const attachedDiscordPromises = useRef<{
+        [s: string]: DiscordTag;
+    }>({});
+    const [hack, setHack] = useState(0);
     const discordParser = useDiscordParser();
 
     const dateSent = getTimestampFromSnowflake(modmailID);
@@ -150,6 +178,7 @@ function Message(props: Props) {
     const time = dateSent?.toFormat('hh:mm a');
 
     useEffect(() => {
+        // TODO memoize callbacks
         discordParser.attachExtensions([
             {
                 pattern: /<:[a-z0-9]+:\d+>/gim,
@@ -168,20 +197,83 @@ function Message(props: Props) {
                 callback: (matched) => {
                     const parts = /<@!?(\d+)>/gim.exec(matched);
                     if (parts) {
-                        const member = attachedMemberPromises.current[parts[1]];
-                        console.log(parts, member);
-                        if (member) {
-                            return `<span data-md-react data-id="${member.id}" class="${classes.mdUser}">${member.username}#${member.discriminator}</span>`;
+                        const currentMember = attachedMemberPromises.current[parts[1]];
+                        if (currentMember) {
+                            return `<span data-md-react data-id="${currentMember.id}" class="${classes.mdUser}">${currentMember.username}#${currentMember.discriminator}</span>`;
                         }
 
                         const promise = getMember(parts[1], category)();
                         if (promise) {
-                            promise.then((message) => {
-                                attachedMemberPromises.current[parts[1]] = message;
-                                // setUpdater(updater + 1);
+                            promise.then((member) => {
+                                setHack((n) => n + 1);
+                                attachedMemberPromises.current[parts[1]] = member;
                             });
                         }
                         return matched;
+                    }
+                    return matched;
+                },
+            },
+            {
+                pattern: /<@&\d+>/gim,
+                callback: (matched) => {
+                    const parts = /<@&(\d+)>/gim.exec(matched);
+                    if (parts) {
+                        const currentRole = attachedDiscordPromises.current[
+                            parts[1]
+                        ] as RoleTag;
+                        console.log({ currentRole });
+                        if (currentRole) {
+                            let body = `&lt;Unknown Role: '${currentRole.id}'&gt;`;
+                            let style = '';
+                            if (currentRole.exists) {
+                                style = `background: #${currentRole.color}`;
+                                body = `@${currentRole.name}`;
+                            }
+                            return `<span style="${style}" class="${clsx(classes.mdRole, {
+                                [classes.mdNotExists]: !currentRole.exists,
+                            })}" data-id="${currentRole.id}">${body}</span>`;
+                        }
+                        if (category) {
+                            const promise = fetchRole(category, parts[1]);
+                            if (promise) {
+                                promise.then((role) => {
+                                    attachedDiscordPromises.current[parts[1]] = role;
+                                    setHack((n) => n + 1);
+                                });
+                            }
+                        }
+                    }
+                    return matched;
+                },
+            },
+            {
+                pattern: /<#\d+>/gim,
+                callback: (matched) => {
+                    const parts = /<#(\d+)>/gim.exec(matched);
+                    if (parts) {
+                        const currentChannel = attachedDiscordPromises.current[
+                            parts[1]
+                        ] as ChannelTag;
+                        console.log({ currentChannel });
+                        if (currentChannel) {
+                            let body = `&lt;Unknown Channel: '${currentChannel.id}'&gt;`;
+                            if (currentChannel.exists) {
+                                body = `#${currentChannel.name}`;
+                            }
+                            return `<span class="${clsx(classes.mdChannel, {
+                                [classes.mdNotExists]: !currentChannel.exists,
+                            })}" data-id="${currentChannel.id}">${body}</span>`;
+                        }
+                        if (category) {
+                            const promise = fetchChannel(category, parts[1]);
+                            if (promise) {
+                                promise.then((channel) => {
+                                    attachedDiscordPromises.current[parts[1]] = channel;
+                                    setHack((n) => n + 1);
+                                });
+                            }
+                        }
                     }
                     return matched;
                 },

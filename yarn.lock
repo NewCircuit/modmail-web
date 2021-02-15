@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@Floor-Gang/modmail-types@^1.9.0":
-  version "1.9.0"
-  resolved "https://npm.pkg.github.com/download/@Floor-Gang/modmail-types/1.9.0/5ad393ced62878246fcbf65d3fbf072ba661c7260b4dd01c3ec7bc93704a99cd#309f5851df72acd837431c1522eacdc63fce7a8b"
-  integrity sha512-p6dnFoh0jEitjdtHCnK36j5Dh7RuT3TYotEJMKsPiPbQM+VDOBp8aoby9f7PcbnMbbPy4WnaDFL5seO59gf74Q==
+"@Floor-Gang/modmail-types@^1.14.0":
+  version "1.14.0"
+  resolved "https://npm.pkg.github.com/download/@Floor-Gang/modmail-types/1.14.0/b033c47eae7abe886c895451de43568f07ce741f766fe196b6833c01f73fed5e#5a37f0514ded47296b37f66101236d2231000561"
+  integrity sha512-zuJTioWUVpAaCJF+6EIFBY5YWoxceQZF8LTEoEv3T/Te9/DkRObyBuWG/VEda+H0Uc5jufD904NyMkW000ncBw==
 
 "@babel/code-frame@7.10.4", "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.5.5":
   version "7.10.4"

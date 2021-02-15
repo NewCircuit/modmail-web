@@ -12,7 +12,9 @@
     "threadsOne": "$t(urls.base)/categories/{{category}}/threads/{{thread}}",
     "fetchMember": "$t(urls.base)/categories/{{category}}/users/{{member}}",
     "fetchMembers": "$t(urls.base)/categories/{{category}}/members",
-    "fetchDiscordMember": "$t(urls.discordBase)/users/@me"
+    "fetchDiscordMember": "$t(urls.discordBase)/users/@me",
+    "fetchRole": "$t(urls.base)/categories/{{category}}/roles/{{role}}",
+    "fetchChannel": "$t(urls.base)/categories/{{category}}/channels/{{channel}}"
   },
   "drawer": {
     "tabs": {
