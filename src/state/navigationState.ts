@@ -282,7 +282,7 @@ function navigationState(defaultProps: any): State {
                 if (response.status === 200 && response.data) {
                     return {
                         ...response.data,
-                        color: response.data.color.toString(8),
+                        color: response.data.color.toString(16),
                         exists: true,
                     };
                 }
