@@ -12,6 +12,9 @@ export function init() {
             lng: 'en',
             backend: {
                 loadPath: '/i18n/{{lng}}/{{ns}}.json',
+                queryStringParams: {
+                    v: process.env.REACT_APP_VERSION,
+                },
             },
             react: {
                 transKeepBasicHtmlNodesFor: ['b', 'br', 'u', 'span'], // TODO add these as needed
