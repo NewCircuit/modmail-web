@@ -153,25 +153,23 @@ function navigationState(defaultProps: any): State {
         user: string,
         cache = false
     ): Promise<MutatedThread[]> {
-        return new Promise((resolve, reject) => {
-            return axios
-                .get<FG.Api.UserHistoryResponse>(
-                    t('urls.fetchThreadsByUser', { category, user })
-                )
-                .then((response) => {
-                    if (response.status === 200) {
-                        const mutated = parseThreads(response.data.threads);
-                        addMembers(response.data.users);
-                        if (cache) cacheThreads(mutated);
-                        return mutated;
-                    }
-                    return [];
-                })
-                .catch((err) => {
-                    console.error(err);
-                    return [];
-                });
-        });
+        return axios
+            .get<FG.Api.UserHistoryResponse>(
+                t('urls.fetchThreadsByUser', { category, user })
+            )
+            .then((response) => {
+                if (response.status === 200) {
+                    const mutated = parseThreads(response.data.threads);
+                    addMembers(response.data.users);
+                    if (cache) cacheThreads(mutated);
+                    return mutated;
+                }
+                return [];
+            })
+            .catch((err) => {
+                console.error(err);
+                return [];
+            });
     }
 
     function findThreadById(categoryId: string, threadId: string) {
