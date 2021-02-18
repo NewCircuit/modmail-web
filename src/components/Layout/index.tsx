@@ -9,7 +9,7 @@ import {
     useMediaQuery,
     useTheme,
 } from '@material-ui/core';
-import { Menu as MenuIcon } from '@material-ui/icons';
+import { Menu as MenuIcon, ExitToApp } from '@material-ui/icons';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
@@ -149,14 +149,14 @@ export class Layout extends React.Component<Props, State> {
                             </Typography>
                         )}
                         <div style={{ marginLeft: 'auto' }}>
-                            <Button
-                                onClick={
-                                    () => this.props.user.authenticate()
-                                    // this.setState({ authenticated: !authenticated })
-                                }
-                            >
-                                Toggle Authenticated
-                            </Button>
+                            {user.authenticated && (
+                                <Button
+                                    startIcon={<ExitToApp />}
+                                    onClick={this.props.user.logout}
+                                >
+                                    Logout
+                                </Button>
+                            )}
                         </div>
                     </Toolbar>
                 </AppBar>
