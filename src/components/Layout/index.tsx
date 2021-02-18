@@ -190,7 +190,7 @@ type LayoutHOCProps = {
     children: React.ReactChild;
 };
 export default function LayoutHOC(props: LayoutHOCProps) {
-    const theme = useTheme();
+    const theme = useTheme<Theme>();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const classes = useStyles();
     const userState = UserState.useContainer();
