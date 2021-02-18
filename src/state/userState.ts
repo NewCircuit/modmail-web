@@ -54,6 +54,7 @@ function userState(): State {
 
     return {
         token: userData?.token || null,
+        userId: userData?.id || null,
         authenticated,
         processing,
         redirect,
