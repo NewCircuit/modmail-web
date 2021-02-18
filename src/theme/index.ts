@@ -1,19 +1,49 @@
-import { createMuiTheme, Theme as _Theme } from '@material-ui/core';
+import { createMuiTheme, Theme as _Theme, ThemeOptions } from '@material-ui/core';
 
 import { Palette } from '@material-ui/core/styles/createPalette';
 import palette from './palette';
 import typography from './typography';
 import overrides from './overrides';
 
-const theme: Theme = createMuiTheme({
-    palette,
-    typography,
-    overrides,
-    zIndex: {
-        appBar: 1200,
-        drawer: 1100,
-    },
-});
+export interface DarkTheme extends _Theme {
+    palette: Palette;
+    mode: 'dark';
+}
+
+export interface LightTheme extends _Theme {
+    palette: Palette;
+    mode: 'light';
+}
+
+export type Theme = DarkTheme | LightTheme;
+
+interface CustomThemeOptions extends ThemeOptions {
+    mode: 'dark' | 'light';
+}
+
+const generateDarkTheme = () =>
+    createMuiTheme({
+        palette,
+        typography,
+        overrides,
+        zIndex: {
+            appBar: 1200,
+            drawer: 1100,
+        },
+        mode: 'dark',
+    } as CustomThemeOptions) as DarkTheme;
+
+const generateLightTheme = () =>
+    createMuiTheme({
+        palette,
+        typography,
+        overrides,
+        zIndex: {
+            appBar: 1200,
+            drawer: 1100,
+        },
+        mode: 'light',
+    } as CustomThemeOptions) as LightTheme;
 
 export const APPBAR_HEIGHT = 64;
 export const DRAWER_WIDTH = {
@@ -21,8 +51,9 @@ export const DRAWER_WIDTH = {
     desktop: 300,
 };
 
-export interface Theme extends _Theme {
-    palette: Palette;
-}
+export const themes = {
+    dark: generateDarkTheme,
+    light: generateLightTheme,
+};
 
-export default theme;
+export default generateDarkTheme();
