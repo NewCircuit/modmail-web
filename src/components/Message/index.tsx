@@ -15,6 +15,7 @@ import MarkdownView, { ShowdownExtension } from 'react-showdown';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { ChannelState, RoleState } from '@Floor-Gang/modmail-types';
+import { Trans, useTranslation } from 'react-i18next';
 import { getNameFromMemberState, getTimestampFromSnowflake } from '../../util';
 import {
     ChannelTag,
@@ -157,6 +158,7 @@ function Message(props: Props) {
         isCreator,
         category,
     } = props;
+    const { t, i18n } = useTranslation();
     const classes = useStyle();
     const { getMember } = MembersState.useContainer();
     const {
@@ -179,106 +181,122 @@ function Message(props: Props) {
     const date = dateSent?.toFormat('MM/dd/yyyy');
     const time = dateSent?.toFormat('hh:mm a');
 
+    const imageParser = React.useCallback((matched) => {
+        const parts = /<:[a-z0-9]+:(\d+)>/gim.exec(matched);
+        if (parts) {
+            const url = `https://cdn.discordapp.com/emojis/${parts[1]}.png`;
+            const size = 32;
+            return `<img src="${url}?size=${size}" height="${size}" />`;
+        }
+        return matched;
+    }, []);
+
+    const memberParser = React.useCallback(
+        (matched) => {
+            const parts = /<@!?(\d+)>/gim.exec(matched);
+            if (parts) {
+                const currentMember = attachedMemberPromises.current[parts[1]];
+                if (currentMember) {
+                    return `<span data-id="${currentMember.id}" class="${classes.mdUser}">${currentMember.username}#${currentMember.discriminator}</span>`;
+                }
+
+                const promise = getMember(category || '', parts[1])();
+                if (promise) {
+                    promise.then((member) => {
+                        setHack((n) => n + 1);
+                        attachedMemberPromises.current[parts[1]] = member;
+                    });
+                }
+                return matched;
+            }
+            return matched;
+        },
+        [attachedMemberPromises, category, getMember, hack]
+    );
+
+    const roleParser = React.useCallback(
+        (matched) => {
+            const parts = /<@&(\d+)>/gim.exec(matched);
+            if (parts) {
+                const currentRole = attachedDiscordPromises.current[parts[1]] as RoleTag;
+                console.log({ currentRole });
+                if (currentRole) {
+                    let body = t('message.unknownRole', { role: currentRole.id });
+                    let style = '';
+                    if (currentRole.exists) {
+                        style = `color: #${currentRole.color}`;
+                        body = `@${currentRole.name}`;
+                    }
+                    return `<span style="${style}" class="${clsx(classes.mdRole, {
+                        [classes.mdNotExists]: !currentRole.exists,
+                    })}" data-id="${currentRole.id}">${body}</span>`;
+                }
+                if (category) {
+                    const promise = fetchRole(category, parts[1]);
+                    if (promise) {
+                        promise.then((role) => {
+                            attachedDiscordPromises.current[parts[1]] = role;
+                            setHack((n) => n + 1);
+                        });
+                    }
+                }
+            }
+            return matched;
+        },
+        [attachedDiscordPromises, category, getMember, hack]
+    );
+
+    const channelParser = React.useCallback(
+        (matched) => {
+            const parts = /<#(\d+)>/gim.exec(matched);
+            if (parts) {
+                const currentChannel = attachedDiscordPromises.current[
+                    parts[1]
+                ] as ChannelTag;
+                console.log({ currentChannel });
+                if (currentChannel) {
+                    let body = t('message.unknownChannel', {
+                        channel: currentChannel.id,
+                    });
+                    if (currentChannel.exists) {
+                        body = `#${currentChannel.name}`;
+                    }
+                    return `<span class="${clsx(classes.mdChannel, {
+                        [classes.mdNotExists]: !currentChannel.exists,
+                    })}" data-id="${currentChannel.id}">${body}</span>`;
+                }
+                if (category) {
+                    const promise = fetchChannel(category, parts[1]);
+                    if (promise) {
+                        promise.then((channel) => {
+                            attachedDiscordPromises.current[parts[1]] = channel;
+                            setHack((n) => n + 1);
+                        });
+                    }
+                }
+            }
+            return matched;
+        },
+        [attachedDiscordPromises, category, getMember, hack]
+    );
+
     useEffect(() => {
-        // TODO memoize callbacks
         discordParser.attachExtensions([
             {
                 pattern: /<:[a-z0-9]+:\d+>/gim,
-                callback: (matched) => {
-                    const parts = /<:[a-z0-9]+:(\d+)>/gim.exec(matched);
-                    if (parts) {
-                        const url = `https://cdn.discordapp.com/emojis/${parts[1]}.png`;
-                        const size = 32;
-                        return `<img src="${url}?size=${size}" height="${size}" />`;
-                    }
-                    return matched;
-                },
+                callback: imageParser,
             },
             {
                 pattern: /<@!?\d+>/gim,
-                callback: (matched) => {
-                    const parts = /<@!?(\d+)>/gim.exec(matched);
-                    if (parts) {
-                        const currentMember = attachedMemberPromises.current[parts[1]];
-                        if (currentMember) {
-                            return `<span data-md-react data-id="${currentMember.id}" class="${classes.mdUser}">${currentMember.username}#${currentMember.discriminator}</span>`;
-                        }
-
-                        const promise = getMember(category || '', parts[1])();
-                        if (promise) {
-                            promise.then((member) => {
-                                setHack((n) => n + 1);
-                                attachedMemberPromises.current[parts[1]] = member;
-                            });
-                        }
-                        return matched;
-                    }
-                    return matched;
-                },
+                callback: memberParser,
             },
             {
                 pattern: /<@&\d+>/gim,
-                callback: (matched) => {
-                    const parts = /<@&(\d+)>/gim.exec(matched);
-                    if (parts) {
-                        const currentRole = attachedDiscordPromises.current[
-                            parts[1]
-                        ] as RoleTag;
-                        console.log({ currentRole });
-                        if (currentRole) {
-                            let body = `&lt;Unknown Role: '${currentRole.id}'&gt;`;
-                            let style = '';
-                            if (currentRole.exists) {
-                                style = `color: #${currentRole.color}`;
-                                body = `@${currentRole.name}`;
-                            }
-                            return `<span style="${style}" class="${clsx(classes.mdRole, {
-                                [classes.mdNotExists]: !currentRole.exists,
-                            })}" data-id="${currentRole.id}">${body}</span>`;
-                        }
-                        if (category) {
-                            const promise = fetchRole(category, parts[1]);
-                            if (promise) {
-                                promise.then((role) => {
-                                    attachedDiscordPromises.current[parts[1]] = role;
-                                    setHack((n) => n + 1);
-                                });
-                            }
-                        }
-                    }
-                    return matched;
-                },
+                callback: roleParser,
             },
             {
                 pattern: /<#\d+>/gim,
-                callback: (matched) => {
-                    const parts = /<#(\d+)>/gim.exec(matched);
-                    if (parts) {
-                        const currentChannel = attachedDiscordPromises.current[
-                            parts[1]
-                        ] as ChannelTag;
-                        console.log({ currentChannel });
-                        if (currentChannel) {
-                            let body = `&lt;Unknown Channel: '${currentChannel.id}'&gt;`;
-                            if (currentChannel.exists) {
-                                body = `#${currentChannel.name}`;
-                            }
-                            return `<span class="${clsx(classes.mdChannel, {
-                                [classes.mdNotExists]: !currentChannel.exists,
-                            })}" data-id="${currentChannel.id}">${body}</span>`;
-                        }
-                        if (category) {
-                            const promise = fetchChannel(category, parts[1]);
-                            if (promise) {
-                                promise.then((channel) => {
-                                    attachedDiscordPromises.current[parts[1]] = channel;
-                                    setHack((n) => n + 1);
-                                });
-                            }
-                        }
-                    }
-                    return matched;
-                },
+                callback: channelParser,
             },
         ]);
     }, []);
@@ -328,9 +346,15 @@ function Message(props: Props) {
                                     <Tooltip
                                         arrow
                                         placement={'right'}
-                                        title={`Click to view ${getNameFromMemberState(
-                                            member
-                                        )}'s history`}
+                                        title={
+                                            <Trans
+                                                i18n={i18n}
+                                                tOptions={{
+                                                    user: getNameFromMemberState(member),
+                                                }}
+                                                i18nKey={'message.nameTooltip'}
+                                            />
+                                        }
                                     >
                                         <Link
                                             to={`/category/${category}/users/${member.id}/history`}
@@ -352,7 +376,7 @@ function Message(props: Props) {
                                             avatar={<Lock />}
                                             className={classes.internalChip}
                                             size={'small'}
-                                            label={'Internal Message'}
+                                            label={t('message.chips.internal')}
                                         />
                                     )}
                                     {isDeleted && (
@@ -360,7 +384,7 @@ function Message(props: Props) {
                                             avatar={<DeleteForever />}
                                             className={classes.deletedChip}
                                             size={'small'}
-                                            label={'Deleted'}
+                                            label={t('message.chips.deleted')}
                                         />
                                     )}
                                     {isCreator && (
@@ -368,7 +392,7 @@ function Message(props: Props) {
                                             avatar={<Create />}
                                             className={classes.creatorChip}
                                             size={'small'}
-                                            label={'Creator'}
+                                            label={t('message.chips.creator')}
                                         />
                                     )}
                                 </div>

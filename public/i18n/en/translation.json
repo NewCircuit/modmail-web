@@ -32,6 +32,16 @@
       "question": "This thread requires attention."
     }
   },
+  "message": {
+    "unknownRole": "&lt;Unknown Role: '{{role}}'&gt;",
+    "unknownChannel": "&lt;Unknown Channel: '{{channel}}'&gt;",
+    "nameTooltip": "Click to view <b>{{user}}</b>'s history",
+    "chips": {
+      "internal": "Internal",
+      "creator": "Creator",
+      "deleted": "Removed"
+    }
+  },
   "errors": {
     "splash": {
       "noSelector": "You must specify a selector to use splash",
