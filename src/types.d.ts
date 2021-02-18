@@ -1,4 +1,11 @@
-import { Thread, ModmailUser, Category, Message, RoleState, ChannelState } from '@Floor-Gang/modmail-types';
+import {
+    Thread,
+    ModmailUser,
+    Category,
+    Message,
+    RoleState,
+    ChannelState,
+} from '@Floor-Gang/modmail-types';
 
 type Role = 'admin' | 'mod' | '';
 
@@ -24,6 +31,7 @@ export type ChannelTag = Partial<ChannelState> & {
 
 export type DiscordTag = RoleTag | ChannelTag;
 
+export type Modify<T, R> = Omit<T, keyof R> & R;
 export type Nullable<T> = T | null;
 export type Optional<T> = T | undefined;
 export type RequiredArgs<T = {}> = {
@@ -83,6 +91,7 @@ declare namespace FG.Api {
         threads: Thread[];
         users: UserMap;
     };
+    type UserHistoryResponse = ThreadsResponse;
 
     type MemberResponse = MemberState;
     type MembersResponse = MemberState[];
@@ -104,15 +113,13 @@ declare namespace FG.State {
     type MembersState = {
         members: MemberMap;
         addMembers: (members: UserMap) => void;
-        fetchMember: (id: string, category: string) => Promise<Nullable<MemberState>>;
-        getMember: (
-            id: string,
-            category?: string
-        ) => () => Promise<Nullable<MemberState>>;
+        fetchMember: (category: string, id: string) => Promise<Nullable<MemberState>>;
+        getMember: (category: string, id: string) => () => Promise<Nullable<MemberState>>;
     };
 
     type UserState = {
         token: ReadOnly<Nullable<string>>;
+        userId: ReadOnly<Nullable<string>>;
         authenticated?: boolean;
         processing: boolean;
         authenticate: () => Promise<boolean>;
@@ -129,6 +136,11 @@ declare namespace FG.State {
                 thread: string
             ) => Promise<Nullable<MutatedThread>>;
             findById: (category: string, thread: string) => Nullable<MutatedThread>;
+            fetchByUserId: (
+                category: string,
+                user: string,
+                cache?: boolean
+            ) => Promise<MutatedThread[]>;
             reset: () => void;
             // TODO add ability to cancel fetch requests
             // cancel?: (message: string) => void;
