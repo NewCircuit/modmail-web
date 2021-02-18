@@ -10,6 +10,7 @@
     "categoriesOne": "$t(urls.base)/categories/{{category}}",
     "threads": "$t(urls.base)/categories/{{category}}/threads",
     "threadsOne": "$t(urls.base)/categories/{{category}}/threads/{{thread}}",
+    "fetchThreadsByUser": "$t(urls.base)/categories/{{category}}/users/{{user}}/history",
     "fetchMember": "$t(urls.base)/categories/{{category}}/users/{{member}}",
     "fetchMembers": "$t(urls.base)/categories/{{category}}/members",
     "fetchDiscordMember": "$t(urls.discordBase)/users/@me",

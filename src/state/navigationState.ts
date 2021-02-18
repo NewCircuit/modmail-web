@@ -38,6 +38,31 @@ function navigationState(defaultProps: any): State {
         console.log({ defaultProps });
     });
 
+    function parseThread(thread: Thread): MutatedThread {
+        return {
+            ...thread,
+            author: {
+                id: thread.author.id,
+                data: getMember(thread.category, thread.author.id),
+            },
+            messages: thread.messages.map((message) => ({
+                ...message,
+                sender: {
+                    id: message.sender,
+                    data: getMember(thread.category, message.sender),
+                },
+            })),
+        };
+    }
+    function parseThreads(unparsed: Thread[]): MutatedThread[] {
+        return unparsed.map(parseThread);
+    }
+
+    function cacheThreads(threadsToAdd: MutatedThread[]) {
+        // TODO handle this better..
+        setThreads(threadsToAdd);
+    }
+
     function findCategoryById(id: string): Nullable<Category> {
         if (categories instanceof Array) {
             return categories.find((cat) => cat.id === id) || null;
@@ -88,23 +113,7 @@ function navigationState(defaultProps: any): State {
             .then((response: AxiosResponse<FG.Api.ThreadsResponse>) => {
                 console.log(response);
                 if (response.status === 200) {
-                    const mutated = response.data.threads.map((thread) => {
-                        return {
-                            ...thread,
-                            author: {
-                                id: thread.author.id,
-                                data: getMember(thread.author.id, thread.category),
-                            },
-                            messages: thread.messages.map((message) => ({
-                                ...message,
-                                sender: {
-                                    id: message.sender,
-                                    data: getMember(message.sender, thread.category),
-                                },
-                            })),
-                        } as MutatedThread;
-                    }) as MutatedThread[];
-
+                    const mutated = parseThreads(response.data.threads);
                     addMembers(response.data.users);
                     setThreads(mutated);
                     return mutated;
@@ -129,20 +138,7 @@ function navigationState(defaultProps: any): State {
                 console.log(response);
                 if (response.status === 200) {
                     addMembers(response.data.users);
-                    return {
-                        ...response.data,
-                        author: {
-                            id: response.data.author.id,
-                            data: getMember(category, response.data.author.id),
-                        },
-                        messages: response.data.messages.map((message) => ({
-                            ...message,
-                            sender: {
-                                id: message.sender,
-                                data: getMember(message.sender, category),
-                            },
-                        })),
-                    };
+                    return parseThread(response.data);
                 }
                 return null;
             })
@@ -150,6 +146,32 @@ function navigationState(defaultProps: any): State {
                 console.error(err);
                 return null;
             });
+    }
+
+    function fetchThreadsByUserId(
+        category: string,
+        user: string,
+        cache = false
+    ): Promise<MutatedThread[]> {
+        return new Promise((resolve, reject) => {
+            return axios
+                .get<FG.Api.UserHistoryResponse>(
+                    t('urls.fetchThreadsByUser', { category, user })
+                )
+                .then((response) => {
+                    if (response.status === 200) {
+                        const mutated = parseThreads(response.data.threads);
+                        addMembers(response.data.users);
+                        if (cache) cacheThreads(mutated);
+                        return mutated;
+                    }
+                    return [];
+                })
+                .catch((err) => {
+                    console.error(err);
+                    return [];
+                });
+        });
     }
 
     function findThreadById(categoryId: string, threadId: string) {
@@ -262,6 +284,7 @@ function navigationState(defaultProps: any): State {
             fetch: fetchThreads,
             fetchOne: fetchOneThread,
             findById: findThreadById,
+            fetchByUserId: fetchThreadsByUserId,
             reset: resetThreads,
         },
         categories: {
