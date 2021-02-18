@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { CircularProgress, Container, Paper, Typography } from '@material-ui/core';
 import { useTranslation, Trans } from 'react-i18next';
 import { Category, Thread } from '@Floor-Gang/modmail-types';
-import { NavigationState } from '../../state';
+import { NavigationState, FetchState } from '../../state';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 import ThreadsContainer from '../../components/ThreadsContainer';
 import ThreadListItem from '../../components/ThreadListItem';
@@ -21,12 +21,6 @@ const useStyle = makeStyles(() => ({
     },
     title: { padding: '.5rem' },
 }));
-
-enum FetchState {
-    EMPTY,
-    LOADING,
-    LOADED,
-}
 
 function ThreadsPage(): JSX.Element {
     const { t } = useTranslation('pages');
