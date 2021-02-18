@@ -69,7 +69,7 @@ function membersState(): State {
     const { current: semaphore } = useRef<Semaphore>(new Semaphore(1));
     const { current: members } = useRef<Members>({});
 
-    const fetchMember = (id: string, category?: string) => {
+    const fetchMember = (category: string, id: string) => {
         let promise: Promise<Nullable<MemberState>>;
         if (typeof members[id] !== 'undefined' && members[id].promise) {
             promise = members[id].promise as Promise<Nullable<MemberState>>;
@@ -116,8 +116,8 @@ function membersState(): State {
     };
 
     function getMember(
-        id: string,
-        category?: string
+        category: string,
+        id: string
     ): () => Promise<Nullable<MemberState>> {
         return () =>
             new Promise((resolveMember) => {
@@ -126,7 +126,7 @@ function membersState(): State {
                     return;
                 }
 
-                fetchMember(id, category).then((response) => resolveMember(response));
+                fetchMember(category, id).then((response) => resolveMember(response));
             });
     }
 

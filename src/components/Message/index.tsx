@@ -202,7 +202,7 @@ function Message(props: Props) {
                             return `<span data-md-react data-id="${currentMember.id}" class="${classes.mdUser}">${currentMember.username}#${currentMember.discriminator}</span>`;
                         }
 
-                        const promise = getMember(parts[1], category)();
+                        const promise = getMember(category || '', parts[1])();
                         if (promise) {
                             promise.then((member) => {
                                 setHack((n) => n + 1);
