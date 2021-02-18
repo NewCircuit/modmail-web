@@ -9,9 +9,10 @@ import {
     TimelineOppositeContent,
     TimelineSeparator,
 } from '@material-ui/lab';
-import { Avatar, Chip, darken, Paper, Typography } from '@material-ui/core';
+import { Avatar, Chip, darken, Paper, Tooltip, Typography } from '@material-ui/core';
 import { Lock, DeleteForever, Create } from '@material-ui/icons';
 import MarkdownView, { ShowdownExtension } from 'react-showdown';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { ChannelState, RoleState } from '@Floor-Gang/modmail-types';
 import { getNameFromMemberState, getTimestampFromSnowflake } from '../../util';
@@ -61,6 +62,7 @@ const useStyle = makeStyles((theme) => ({
         },
     },
     sender: {
+        '& a': { textDecoration: 'none' },
         display: 'flex',
         flexDirection: 'column',
         marginBottom: '1rem',
@@ -289,7 +291,7 @@ function Message(props: Props) {
 
     return (
         <Async promise={memberPromise}>
-            {(member) => (
+            {(member: Nullable<MemberState>) => (
                 <TimelineItem
                     classes={{
                         missingOppositeContent: classes.missingOppositeContent,
@@ -323,9 +325,24 @@ function Message(props: Props) {
                         >
                             <div className={classes.sender}>
                                 {member ? (
-                                    <Typography variant={'body2'} style={{ margin: 0 }}>
-                                        {getNameFromMemberState(member)}
-                                    </Typography>
+                                    <Tooltip
+                                        arrow
+                                        placement={'right'}
+                                        title={`Click to view ${getNameFromMemberState(
+                                            member
+                                        )}'s history`}
+                                    >
+                                        <Link
+                                            to={`/category/${category}/users/${member.id}/history`}
+                                        >
+                                            <Typography
+                                                variant={'body2'}
+                                                style={{ margin: 0 }}
+                                            >
+                                                {getNameFromMemberState(member)}
+                                            </Typography>
+                                        </Link>
+                                    </Tooltip>
                                 ) : (
                                     <Skeleton width={250} height={18} />
                                 )}
