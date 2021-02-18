@@ -67,7 +67,7 @@ function UserHistoryPage(props: Props) {
     }, []);
 
     useEffect(() => {
-        if (fetchState === FetchState.EMPTY) {
+        if (fetchState === FetchState.EMPTY && targetUserId !== 'me') {
             setFetchState(FetchState.LOADING);
             threadsHandler
                 .fetchByUserId(categoryId, targetUserId)
@@ -76,7 +76,7 @@ function UserHistoryPage(props: Props) {
                     setThreads(currentThreads);
                 });
         }
-    }, [fetchState]);
+    }, [fetchState, targetUserId]);
 
     useEffect(() => {
         if (targetUserId === 'me') {
