@@ -53,7 +53,7 @@ const useStyle = makeStyles((theme) => ({
         padding: '.5rem 1rem',
     },
     content: {
-        overflowWrap: 'anywhere',
+        wordBreak: 'break-word',
         flexGrow: 1,
         padding: '.5rem 1rem',
 
