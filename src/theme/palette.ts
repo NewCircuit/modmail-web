@@ -1,11 +1,12 @@
 import { colors, darken } from '@material-ui/core';
+import { CustomPalette } from './index';
 
 const darkBackground = darken('#191919', 0.3);
 const pdpRedLight = '#e93030';
 const pdpRedMain = '#bc0707';
 const pdpRedDark = '#750202';
 
-export default {
+const palette: CustomPalette = {
     primary: {
         contrastText: colors.common.white,
         dark: pdpRedDark,
@@ -53,4 +54,6 @@ export default {
     },
     icon: colors.blueGrey[600],
     divider: colors.grey[800],
-};
+} as never;
+
+export default palette;

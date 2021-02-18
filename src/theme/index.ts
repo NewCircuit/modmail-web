@@ -5,13 +5,24 @@ import palette from './palette';
 import typography from './typography';
 import overrides from './overrides';
 
+export interface CustomPalette extends Palette {
+    background: {
+        paper: string;
+        default: string;
+    };
+    text: Palette['text'] & {
+        link: string;
+    };
+    icon: string;
+}
+
 export interface DarkTheme extends _Theme {
-    palette: Palette;
+    palette: CustomPalette;
     mode: 'dark';
 }
 
 export interface LightTheme extends _Theme {
-    palette: Palette;
+    palette: CustomPalette;
     mode: 'light';
 }
 
