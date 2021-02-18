@@ -57,6 +57,7 @@ function UserHistoryTitleCard(props: Partial<Props>) {
 
     useEffect(() => {
         if (user === 'me') return;
+        setUserData(null);
         setFetchState(FetchState.LOADING);
         fetch().then((data) => {
             setFetchState(FetchState.LOADED);

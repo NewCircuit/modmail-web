@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useParams } from 'react-router-dom';
-import {
-    CircularProgress,
-    Container,
-    Paper,
-    Typography,
-    useTheme,
-} from '@material-ui/core';
-import { Trans, useTranslation } from 'react-i18next';
+import { Container, Grid, useTheme } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import UserHistoryTitleCard from 'components/UserHistoryTitleCard';
+import UserSearchDialog, {
+    UserSearchDialog as UserSearchDialogClass,
+} from 'components/UserSearchDialog';
 import { FetchState, MembersState, NavigationState, UserState } from '../../state';
-import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 import ThreadsContainer from '../../components/ThreadsContainer';
 import ThreadListItem from '../../components/ThreadListItem';
 import { MemberState, MutatedThread, Nullable } from '../../types';
+import UserHistoryActions from '../../components/UserHistoryActions';
 
 type Props = any;
 
@@ -53,6 +50,11 @@ function UserHistoryPage(props: Props) {
     const { userId: targetUserId, categoryId } = useParams<Params>();
     const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [threads, setThreads] = useState<MutatedThread[]>([]);
+    const dialogRef = React.createRef<UserSearchDialogClass>();
+
+    useEffect(() => {
+        console.log({ dialogRef });
+    }, [threads]);
 
     const category = categoriesHandler.findById(categoryId);
 
@@ -70,47 +72,74 @@ function UserHistoryPage(props: Props) {
 
     useEffect(() => {
         if (targetUserId === 'me') {
-            history.push(`/category/${categoryId}/user/${userId}`);
+            history.replace(`/category/${categoryId}/users/${userId}/history`);
             // return;
+        } else {
+            setThreads([]);
+            setFetchState(FetchState.EMPTY);
         }
     }, [targetUserId]);
 
     const onThreadClicked = (evt, thread: MutatedThread) => {
         console.log({ evt, thread });
-        history.push(`/category/${categoryId}/${thread.id}`);
+        history.push(`/category/${categoryId}/threads/${thread.id}`);
     };
 
-    const renderLoading = (
-        <LocalizedBackdrop open fadeOut>
-            <CircularProgress />
-        </LocalizedBackdrop>
-    );
+    const handleLookup = (evt) => {
+        if (dialogRef.current) {
+            const dialog = dialogRef.current;
+            dialog.open();
+        }
+    };
+
+    const onSearch = (evt, value) => {
+        history.push(`/category/${categoryId}/users/${value}/history`);
+    };
+
+    const actions = [
+        {
+            render: 'View Complete Archive',
+            href: `/category/${categoryId}/threads`,
+        },
+        {
+            render: <>Lookup User History</>,
+            onClick: handleLookup,
+        },
+    ];
 
     return (
         <Container className={classes.root}>
-            <UserHistoryTitleCard
-                className={classes.title}
-                total={threads.length}
-                user={userId}
-                fetch={getMember(categoryId, userId)}
-            />
+            <UserSearchDialog ref={dialogRef} onSubmit={onSearch} />
+            <Grid container spacing={4}>
+                <Grid item md={4} xs={12}>
+                    <UserHistoryActions actions={actions} />
+                </Grid>
+                <Grid item md={8} xs={12}>
+                    <UserHistoryTitleCard
+                        className={classes.title}
+                        total={threads.length}
+                        user={targetUserId}
+                        fetch={getMember(categoryId, targetUserId)}
+                    />
 
-            <ThreadsContainer
-                threads={threads}
-                loaded={fetchState === FetchState.LOADED}
-                itemProps={{
-                    full: true,
-                    style: { height: 150 },
-                    replied: true,
-                    onClick: onThreadClicked,
-                }}
-                empty={{
-                    title: t('category.noThreadsTitle'),
-                    description: t('category.noThreadsDesc'),
-                }}
-            >
-                {ThreadListItem}
-            </ThreadsContainer>
+                    <ThreadsContainer
+                        threads={threads}
+                        loaded={fetchState === FetchState.LOADED}
+                        itemProps={{
+                            full: true,
+                            style: { height: 150 },
+                            replied: true,
+                            onClick: onThreadClicked,
+                        }}
+                        empty={{
+                            title: t('category.noThreadsTitle'),
+                            description: t('category.noThreadsDesc'),
+                        }}
+                    >
+                        {ThreadListItem}
+                    </ThreadsContainer>
+                </Grid>
+            </Grid>
         </Container>
     );
 }
