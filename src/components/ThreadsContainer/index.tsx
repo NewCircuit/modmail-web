@@ -4,6 +4,7 @@ import { CircularProgress, Paper } from '@material-ui/core';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { Thread } from '@Floor-Gang/modmail-types';
+import clsx from 'clsx';
 import Alert from '../Alert';
 import { MemberState, MutatedThread, Nullable, RequiredArgs } from '../../types';
 import LocalizedBackdrop from '../LocalizedBackdrop';
@@ -17,6 +18,7 @@ type Props = {
         title?: React.ReactNode;
         description?: React.ReactNode;
     };
+    className?: string;
     children: Child;
     // children: (props: any) => React.Component;
 };
@@ -24,7 +26,6 @@ type Props = {
 const useStyles = makeStyles((theme) => ({
     root: {
         position: 'relative',
-        marginTop: '.5rem',
         width: '100%',
         height: 400,
         [theme.breakpoints.up('md')]: {
@@ -57,12 +58,13 @@ const Loading = () => (
 );
 
 function ThreadsContainer(props: Props): JSX.Element {
-    const { threads, children, empty, itemProps, loaded } = props;
+    const { threads, children, empty, itemProps, loaded, className } = props;
     const classes = useStyles();
+    const rootClasses = clsx(classes.root, className);
 
     if (!loaded)
         return (
-            <Paper className={classes.root} elevation={1}>
+            <Paper className={rootClasses} elevation={1}>
                 <Loading />
             </Paper>
         );
@@ -79,7 +81,7 @@ function ThreadsContainer(props: Props): JSX.Element {
 
     const renderer = itemRenderer(children, itemProps);
     return (
-        <Paper className={classes.root} elevation={1}>
+        <Paper className={rootClasses} elevation={1}>
             <AutoSizer>
                 {({ height, width }) => (
                     <FixedSizeList
