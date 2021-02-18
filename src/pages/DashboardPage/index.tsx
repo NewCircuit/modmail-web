@@ -64,7 +64,7 @@ export default function DashboardPage(): JSX.Element {
 
     const onCategorySelected = (evt: React.SyntheticEvent, category: Category) => {
         console.log({ evt, category });
-        history.push(`/category/${category.id}/user/me`);
+        history.push(`/category/${category.id}/users/me/history`);
     };
 
     const renderGridItems = () => {

@@ -37,17 +37,17 @@ export default function Pages(): JSX.Element {
                         <Route exact path={'/'} component={DashboardPage} />
                         <Route
                             exact
-                            path={`/category/:categoryId`}
+                            path={`/category/:categoryId/threads`}
                             component={ThreadsPage}
                         />
                         <Route
                             exact
-                            path={`/category/:categoryId/:threadId`}
+                            path={`/category/:categoryId/threads/:threadId`}
                             component={ThreadPage}
                         />
                         <Route
                             exact
-                            path={`/category/:categoryId/user/:userId`}
+                            path={`/category/:categoryId/users/:userId/history`}
                             component={UserHistoryPage}
                         />
                     </React.Fragment>
