@@ -65,7 +65,7 @@ function membersState(): State {
                     return;
                 }
 
-                fetchMember(id, category).then((response) => resolveMember(response));
+                fetchMember(category, id).then((response) => resolveMember(response));
             });
     }
 
