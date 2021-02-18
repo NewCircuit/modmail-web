@@ -92,11 +92,19 @@ declare namespace FG.Api {
 }
 
 declare namespace FG.State {
+    type MemberMap = {
+        [s: string]: {
+            index: number;
+            category?: string;
+            id: string;
+            promise?: Promise<Nullable<MemberState>>;
+        };
+    };
+
     type MembersState = {
-        members: MemberState[] | null;
-        // fetchMember: (category: string, id: string) => Promise<Nullable<MemberState>>;
-        fetchMembers: (category: string) => Promise<MemberState[]>;
+        members: MemberMap;
         addMembers: (members: UserMap) => void;
+        fetchMember: (id: string, category: string) => Promise<Nullable<MemberState>>;
         getMember: (
             id: string,
             category?: string
