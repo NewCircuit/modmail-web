@@ -49,7 +49,7 @@ function ThreadsPage(): JSX.Element {
 
     const onThreadClicked = (evt: React.SyntheticEvent, thread: Thread) => {
         console.log({ evt, thread });
-        history.push(`/category/${categoryId}/${thread.id}`);
+        history.push(`/category/${categoryId}/threads/${thread.id}`);
     };
 
     const renderLoading = (

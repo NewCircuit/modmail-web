@@ -92,7 +92,7 @@ function navigationState(defaultProps: any): State {
 
     function fetchOneCategory(category: string): Promise<Nullable<Category>> {
         return axios
-            .get(t('urls.categoryOne', { category }))
+            .get(t('urls.categoriesOne', { category }))
             .then((response: AxiosResponse<FG.Api.CategoryOneResponse>) => {
                 console.log(response);
                 if (response.status === 200) {
