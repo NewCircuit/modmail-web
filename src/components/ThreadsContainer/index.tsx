@@ -23,6 +23,7 @@ type Props = {
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        position: 'relative',
         marginTop: '.5rem',
         width: '100%',
         height: 400,
@@ -59,7 +60,12 @@ function ThreadsContainer(props: Props): JSX.Element {
     const { threads, children, empty, itemProps, loaded } = props;
     const classes = useStyles();
 
-    if (!loaded) return <Loading />;
+    if (!loaded)
+        return (
+            <Paper className={classes.root} elevation={1}>
+                <Loading />
+            </Paper>
+        );
 
     if (typeof threads === 'undefined' || threads.length === 0)
         return (
