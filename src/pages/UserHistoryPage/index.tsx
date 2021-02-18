@@ -7,6 +7,7 @@ import UserHistoryTitleCard from 'components/UserHistoryTitleCard';
 import UserSearchDialog, {
     UserSearchDialog as UserSearchDialogClass,
 } from 'components/UserSearchDialog';
+import { Category } from '@Floor-Gang/modmail-types';
 import { FetchState, MembersState, NavigationState, UserState } from '../../state';
 import ThreadsContainer from '../../components/ThreadsContainer';
 import ThreadListItem from '../../components/ThreadListItem';
@@ -50,13 +51,20 @@ function UserHistoryPage(props: Props) {
     const { userId: targetUserId, categoryId } = useParams<Params>();
     const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [threads, setThreads] = useState<MutatedThread[]>([]);
+    const [category, setCategory] = useState<Nullable<Category>>(
+        categoriesHandler.findById(categoryId)
+    );
     const dialogRef = React.createRef<UserSearchDialogClass>();
 
     useEffect(() => {
-        console.log({ dialogRef });
-    }, [threads]);
-
-    const category = categoriesHandler.findById(categoryId);
+        const currentCategory = categoriesHandler.findById(categoryId);
+        if (currentCategory === null) {
+            console.log('Collecting current category...');
+            categoriesHandler.fetchOne(categoryId).then((response) => {
+                setCategory(response);
+            });
+        }
+    }, []);
 
     useEffect(() => {
         if (fetchState === FetchState.EMPTY) {
@@ -98,11 +106,11 @@ function UserHistoryPage(props: Props) {
 
     const actions = [
         {
-            render: 'View Complete Archive',
+            render: t('userHistory.actions.archive'),
             href: `/category/${categoryId}/threads`,
         },
         {
-            render: <>Lookup User History</>,
+            render: t('userHistory.actions.lookup'),
             onClick: handleLookup,
         },
     ];
@@ -119,6 +127,7 @@ function UserHistoryPage(props: Props) {
                         className={classes.title}
                         total={threads.length}
                         user={targetUserId}
+                        category={category}
                         fetch={getMember(categoryId, targetUserId)}
                     />
 

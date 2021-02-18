@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, ButtonGroup, lighten, Paper, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Theme } from '../../theme';
 
 type Action = {
@@ -31,6 +32,7 @@ const useStyle = makeStyles((theme: Theme) => ({
 
 function UserHistoryActions(props: Props) {
     const { actions } = props;
+    const { t } = useTranslation('pages');
     const classes = useStyle();
     const history = useHistory();
 
@@ -47,7 +49,7 @@ function UserHistoryActions(props: Props) {
     return (
         <Paper className={classes.root}>
             <Typography className={classes.title} variant={'h2'}>
-                Actions
+                {t('userHistory.actions.title')}
             </Typography>
             <ButtonGroup fullWidth orientation={'vertical'}>
                 {actions?.map((action, idx) => (

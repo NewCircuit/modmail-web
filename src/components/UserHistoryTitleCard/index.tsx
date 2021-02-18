@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, List, ListItem, Paper, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
+import { Category } from '@Floor-Gang/modmail-types';
+import { useTranslation, Trans } from 'react-i18next';
 import { MemberState, Nullable } from '../../types';
 import { FetchState } from '../../state';
 import { getNameFromMemberState } from '../../util';
@@ -11,6 +13,7 @@ type Props = {
     user: string;
     total: number;
     fetch: () => Promise<Nullable<MemberState>>;
+    category: Nullable<Category>;
     className?: string;
 };
 
@@ -50,7 +53,8 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 function UserHistoryTitleCard(props: Partial<Props>) {
-    const { user, total, fetch } = props as Props;
+    const { user, total, fetch, category } = props as Props;
+    const { t, i18n } = useTranslation('pages');
     const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [userData, setUserData] = useState<Nullable<MemberState>>(null);
     const classes = useStyle();
@@ -65,27 +69,15 @@ function UserHistoryTitleCard(props: Partial<Props>) {
         });
     }, [user]);
 
-    useEffect(() => {
-        console.log(userData);
-    }, [userData]);
-
     const Container = ({ children: cn }: any) => (
         <Paper className={clsx(classes.root, props.className)}>{cn}</Paper>
     );
-
-    const userEl = (
-        <span className={classes.user}>
-            {fetchState === FetchState.LOADED
-                ? getNameFromMemberState(userData)
-                : 'Unknown'}
-        </span>
-    );
-    const threadCountEl = <span className={classes.threadCount}> {'x'} </span>;
 
     const parts: { [s: string]: JSX.Element | string } = {
         avatar: <Skeleton className={classes.avatar} variant={'circle'} />,
         historyFor: <Skeleton width={250} height={25} />,
         total: <Skeleton width={150} height={25} />,
+        categoryName: <Skeleton width={150} height={25} />,
     };
 
     if (fetchState === FetchState.LOADED && userData) {
@@ -94,24 +86,57 @@ function UserHistoryTitleCard(props: Partial<Props>) {
                 {getNameFromMemberState(userData).substr(0, 2)}
             </Avatar>
         );
-        parts.historyFor = `Viewing history for: ${getNameFromMemberState(userData)}`;
-        parts.total = `Total Threads: ${total}`;
+
+        parts.historyFor = (
+            <Trans
+                i18n={i18n}
+                ns={'pages'}
+                tOptions={{ user: getNameFromMemberState(userData) }}
+                i18nKey={'userHistory.profile.historyFor'}
+            />
+        );
+
+        parts.total = (
+            <Trans
+                i18n={i18n}
+                ns={'pages'}
+                tOptions={{ total }}
+                i18nKey={'userHistory.profile.total'}
+            />
+        );
+
+        parts.categoryName = (
+            <Trans
+                i18n={i18n}
+                ns={'pages'}
+                tOptions={{
+                    category: category?.name,
+                }}
+                i18nKey={'userHistory.profile.categoryName'}
+            />
+        );
     } else if (fetchState === FetchState.LOADED && userData === null) {
         parts.avatar = <Avatar className={classes.avatar}>N/A</Avatar>;
-        parts.historyFor = 'Unknown user selected.';
-        parts.total = 'Unknown user selected.';
+        parts.historyFor = t('userHistory.profile.unknownUser');
+        parts.total = t('userHistory.profile.unknownUser');
+        parts.categoryName = t('userHistory.profile.unknownCategory');
     }
 
     return (
         <Container className={clsx(props.className)}>
             <Typography variant={'h3'} className={classes.title}>
-                Thread history
+                {t('userHistory.profile.title')}
             </Typography>
             <div className={classes.body}>
                 <div className={classes.left}>{parts.avatar}</div>
                 <List className={classes.list}>
                     <ListItem>
                         <Typography variant={'subtitle1'}>{parts.historyFor}</Typography>
+                    </ListItem>
+                    <ListItem>
+                        <Typography variant={'subtitle1'}>
+                            {parts.categoryName}
+                        </Typography>
                     </ListItem>
                     <ListItem>
                         <Typography variant={'subtitle1'}>{parts.total}</Typography>
