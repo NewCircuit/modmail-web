@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function UnauthorizedPage() {
     const classes = useStyles();
     const location = useLocation();
-    const { t } = useTranslation('pages');
+    const { t } = useTranslation();
     const [redirect, setRedirect] = useState('');
 
     useEffect(() => {
@@ -85,10 +85,10 @@ export default function UnauthorizedPage() {
                 </div>
                 <div className={classes.content}>
                     <Typography className={classes.title} variant={'h3'}>
-                        {t('unauthorized.title', { ns: 'pages' })}
+                        {t('unauthorized.title')}
                     </Typography>
                     <Typography variant={'body1'}>
-                        {t('unauthorized.description', { ns: 'pages' })}
+                        {t('unauthorized.description')}
                     </Typography>
 
                     <Button
@@ -102,7 +102,7 @@ export default function UnauthorizedPage() {
                         className={classes.btn}
                         color={'primary'}
                     >
-                        {t('unauthorized.button', { ns: 'pages' })}
+                        {t('unauthorized.button')}
                     </Button>
                 </div>
             </Paper>

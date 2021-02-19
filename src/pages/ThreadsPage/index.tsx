@@ -27,7 +27,7 @@ const useStyle = makeStyles(() => ({
 }));
 
 function ThreadsPage(): JSX.Element {
-    const { t } = useTranslation('pages');
+    const { t } = useTranslation();
     const classes = useStyle();
     const { categoryId } = useParams<ThreadsPageParams>();
     const history = useHistory();
@@ -79,7 +79,6 @@ function ThreadsPage(): JSX.Element {
                 <Typography variant={'h2'} className={classes.title}>
                     <Trans
                         i18nKey={'category.title'}
-                        ns={'pages'}
                         tOptions={{
                             category: category ? category.name : 'Unknown',
                         }}

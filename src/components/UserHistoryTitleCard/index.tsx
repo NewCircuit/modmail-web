@@ -54,7 +54,7 @@ const useStyle = makeStyles((theme) => ({
 
 function UserHistoryTitleCard(props: Partial<Props>) {
     const { user, total, fetch, category } = props as Props;
-    const { t, i18n } = useTranslation('pages');
+    const { t, i18n } = useTranslation();
     const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [userData, setUserData] = useState<Nullable<MemberState>>(null);
     const classes = useStyle();
@@ -90,7 +90,6 @@ function UserHistoryTitleCard(props: Partial<Props>) {
         parts.historyFor = (
             <Trans
                 i18n={i18n}
-                ns={'pages'}
                 tOptions={{ user: getNameFromMemberState(userData) }}
                 i18nKey={'userHistory.profile.historyFor'}
             />
@@ -99,7 +98,6 @@ function UserHistoryTitleCard(props: Partial<Props>) {
         parts.total = (
             <Trans
                 i18n={i18n}
-                ns={'pages'}
                 tOptions={{ total }}
                 i18nKey={'userHistory.profile.total'}
             />
@@ -108,7 +106,6 @@ function UserHistoryTitleCard(props: Partial<Props>) {
         parts.categoryName = (
             <Trans
                 i18n={i18n}
-                ns={'pages'}
                 tOptions={{
                     category: category?.name,
                 }}

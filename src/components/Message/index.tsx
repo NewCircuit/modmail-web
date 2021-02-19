@@ -352,7 +352,7 @@ function Message(props: Props) {
                                                 tOptions={{
                                                     user: getNameFromMemberState(member),
                                                 }}
-                                                i18nKey={'message.nameTooltip'}
+                                                i18nKey={'tooltips.message.name'}
                                             />
                                         }
                                     >
@@ -376,7 +376,7 @@ function Message(props: Props) {
                                             avatar={<Lock />}
                                             className={classes.internalChip}
                                             size={'small'}
-                                            label={t('message.chips.internal')}
+                                            label={t('chips.internal')}
                                         />
                                     )}
                                     {isDeleted && (
@@ -384,7 +384,7 @@ function Message(props: Props) {
                                             avatar={<DeleteForever />}
                                             className={classes.deletedChip}
                                             size={'small'}
-                                            label={t('message.chips.deleted')}
+                                            label={t('chips.deleted')}
                                         />
                                     )}
                                     {isCreator && (
@@ -392,7 +392,7 @@ function Message(props: Props) {
                                             avatar={<Create />}
                                             className={classes.creatorChip}
                                             size={'small'}
-                                            label={t('message.chips.creator')}
+                                            label={t('chips.creator')}
                                         />
                                     )}
                                 </div>

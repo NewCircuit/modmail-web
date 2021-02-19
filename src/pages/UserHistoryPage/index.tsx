@@ -41,7 +41,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 function UserHistoryPage(props: Props) {
-    const { t } = useTranslation('pages');
+    const { t } = useTranslation();
     const classes = useStyle();
     const theme = useTheme();
     const history = useHistory();

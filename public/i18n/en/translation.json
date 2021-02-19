@@ -19,6 +19,25 @@
     "fetchRole": "$t(urls.base)/categories/{{category}}/roles/{{role}}",
     "fetchChannel": "$t(urls.base)/categories/{{category}}/channels/{{channel}}"
   },
+  "chips": {
+    "internal": "Internal",
+    "creator": "Creator",
+    "deleted": "Removed",
+    "active": "Active",
+    "inactive": "Inactive",
+    "public": "Shared Access",
+    "private": "Admin Only Access"
+  },
+  "tooltips": {
+    "category": {
+      "status": "{{category}} is currently {{status}}",
+      "public": "{{category}} is viewable by all mods",
+      "private": "{{category}} is viewable by admins only"
+    },
+    "message": {
+      "name": "Click to view <b>{{user}}</b>'s history"
+    }
+  },
   "drawer": {
     "tabs": {
       "categories": "Categories",
@@ -36,18 +55,48 @@
   },
   "message": {
     "unknownRole": "&lt;Unknown Role: '{{role}}'&gt;",
-    "unknownChannel": "&lt;Unknown Channel: '{{channel}}'&gt;",
-    "nameTooltip": "Click to view <b>{{user}}</b>'s history",
-    "chips": {
-      "internal": "Internal",
-      "creator": "Creator",
-      "deleted": "Removed"
-    }
+    "unknownChannel": "&lt;Unknown Channel: '{{channel}}'&gt;"
   },
   "errors": {
     "splash": {
       "noSelector": "You must specify a selector to use splash",
       "selectorNotFound": "The selected you entered could not be found in DOM."
+    }
+  },
+  "unauthorized": {
+    "title": "Discord Authenticated Required",
+    "description": "In order to use this web app, you must first login with Discord and authorize access to your account.",
+    "button": "Authorize Account"
+  },
+  "dashboard": {
+    "category": {
+      "title": "Select a Category",
+      "noItemsTitle": "No Categories",
+      "noItemsDesc": "There are currently no categories available. Please make them through the Modmail bot and then refresh this page."
+    }
+  },
+  "category": {
+    "title": "Select a Thread",
+    "title2": "List of all threads in the <b><u>{{category}}</u></b> category.",
+    "noThreadsTitle": "No threads",
+    "noThreadsDesc": "There are currently no threads in the {{category, emphasis}} category."
+  },
+  "thread": {
+    "eof": "<b>Ouh!</b><br />You've reached the end of the thread!"
+  },
+  "userHistory": {
+    "profile": {
+      "title": "Thread History",
+      "historyFor": "Viewing history for: <b>{{user}}</b>",
+      "categoryName": "Current Category: <b>{{category}}</b>",
+      "total": "Total Threads: <b>{{total}}</b>",
+      "unknownUser": "Unknown User",
+      "unknownCategory": "Unknown Category"
+    },
+    "actions": {
+      "title": "Actions",
+      "archive": "View Complete Archive",
+      "lookup": "Lookup User History"
     }
   }
 }

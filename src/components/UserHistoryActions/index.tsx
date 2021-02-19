@@ -32,7 +32,7 @@ const useStyle = makeStyles((theme: Theme) => ({
 
 function UserHistoryActions(props: Props) {
     const { actions } = props;
-    const { t } = useTranslation('pages');
+    const { t } = useTranslation();
     const classes = useStyle();
     const history = useHistory();
 

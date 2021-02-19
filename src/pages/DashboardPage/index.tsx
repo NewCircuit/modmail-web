@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function DashboardPage(): JSX.Element {
-    const { t } = useTranslation('pages');
+    const { t } = useTranslation();
     const { categories } = ModmailState.useContainer();
     const classes = useStyles();
     const history = useHistory();

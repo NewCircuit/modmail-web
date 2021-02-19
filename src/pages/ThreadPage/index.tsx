@@ -52,7 +52,7 @@ enum FetchState {
 }
 
 function ThreadPage() {
-    const { t, i18n } = useTranslation('pages');
+    const { t, i18n } = useTranslation();
     const classes = useStyle();
     const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [thread, setThread] = useState<MutatedThread | null>(null);
@@ -113,7 +113,7 @@ function ThreadPage() {
             <div className={classes.eof}>
                 <VerifiedUser className={classes.eofIcon} />
                 <p>
-                    <Trans i18n={i18n} i18nKey={'thread.eof'} ns={'pages'} />
+                    <Trans i18n={i18n} i18nKey={'thread.eof'} />
                 </p>
             </div>
         </div>
