@@ -94,7 +94,9 @@ export default function UnauthorizedPage() {
                     <Button
                         href={t('urls.oauth', {
                             ns: 'translation',
-                            redirect: `?redirect=${encodeURIComponent(redirect)}`,
+                            redirect: redirect
+                                ? `?redirect=${encodeURIComponent(redirect)}`
+                                : '',
                         })}
                         variant={'contained'}
                         className={classes.btn}
