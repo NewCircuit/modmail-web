@@ -8,11 +8,14 @@ import UserSearchDialog, {
     UserSearchDialog as UserSearchDialogClass,
 } from 'components/UserSearchDialog';
 import { Category } from '@Floor-Gang/modmail-types';
+import { Helmet } from 'react-helmet';
 import { FetchState, ModmailState, UserState } from '../../state';
 import ThreadsContainer from '../../components/ThreadsContainer';
 import ThreadListItem from '../../components/ThreadListItem';
 import { MemberState, MutatedThread, Nullable } from '../../types';
 import UserHistoryActions from '../../components/UserHistoryActions';
+import Async from '../../components/Async';
+import { getNameFromMemberState } from '../../util';
 
 type Props = any;
 
@@ -55,6 +58,7 @@ function UserHistoryPage(props: Props) {
         categoriesHandler.findById(categoryId)
     );
     const dialogRef = React.createRef<UserSearchDialogClass>();
+    const targetUser = memberHandler.members[targetUserId];
 
     useEffect(() => {
         const currentCategory = categoriesHandler.findById(categoryId);
@@ -117,6 +121,20 @@ function UserHistoryPage(props: Props) {
 
     return (
         <Container className={classes.root}>
+            {targetUser && targetUser.promise && (
+                <Async promise={targetUser.promise}>
+                    {(user) =>
+                        user && (
+                            <Helmet>
+                                <title>
+                                    {t('guildName', { ns: 'translation' })} |{' '}
+                                    {getNameFromMemberState(user)}
+                                </title>
+                            </Helmet>
+                        )
+                    }
+                </Async>
+            )}
             <UserSearchDialog ref={dialogRef} onSubmit={onSearch} />
             <Grid container spacing={4}>
                 <Grid item md={4} xs={12}>

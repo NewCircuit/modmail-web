@@ -5,6 +5,8 @@ import { Router } from 'react-router-dom';
 import { CircularProgress, CssBaseline } from '@material-ui/core';
 import Authenticator from 'components/Authenticator';
 import { GlobalConfiguration } from 'react-showdown';
+import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet';
 import theme from './theme';
 import LayoutHOC, { Layout } from './components/Layout';
 import Pages from './pages';
@@ -15,6 +17,7 @@ import { FG } from './types';
 const browserHistory = createBrowserHistory();
 
 function App(props: FG.AppProps): JSX.Element {
+    const { t } = useTranslation(undefined, { useSuspense: false });
     const [ready, _setReady] = useState(false);
     const { onReady } = props;
     const layoutRef: RefObject<Layout> = React.createRef();
@@ -40,6 +43,9 @@ function App(props: FG.AppProps): JSX.Element {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
+            <Helmet>
+                <title>{t('appName')}</title>
+            </Helmet>
             <React.Suspense fallback={fallback}>
                 <UserState.Provider>
                     <Router history={browserHistory}>

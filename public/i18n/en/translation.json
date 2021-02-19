@@ -1,5 +1,6 @@
 {
-  "appName": "Modmail",
+  "guildName": "Floor-Gang",
+  "appName": "$t(guildName) Modmail",
   "cookie": "connect.sid",
   "urls": {
     "base": "/api",

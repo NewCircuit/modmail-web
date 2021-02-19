@@ -5,11 +5,14 @@ import { useParams } from 'react-router-dom';
 import { VerifiedUser } from '@material-ui/icons';
 import { Trans, useTranslation } from 'react-i18next';
 import { CircularProgress } from '@material-ui/core';
+import Async from 'components/Async';
+import { Helmet } from 'react-helmet';
 import { Theme, APPBAR_HEIGHT } from '../../theme';
 import { ModmailState } from '../../state';
 import Message from '../../components/Message';
 import { MutatedThread } from '../../types';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
+import { getNameFromMemberState } from '../../util';
 
 type Params = {
     categoryId: string;
@@ -49,7 +52,7 @@ enum FetchState {
 }
 
 function ThreadPage() {
-    const { i18n } = useTranslation('pages');
+    const { t, i18n } = useTranslation('pages');
     const classes = useStyle();
     const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [thread, setThread] = useState<MutatedThread | null>(null);
@@ -84,6 +87,20 @@ function ThreadPage() {
 
     return (
         <div ref={pageRef} className={classes.root}>
+            {thread && thread.author.data && (
+                <Async promise={thread.author.data()}>
+                    {(user) =>
+                        user && (
+                            <Helmet>
+                                <title>
+                                    {t('guildName', { ns: 'translation' })} |{' '}
+                                    {getNameFromMemberState(user)}
+                                </title>
+                            </Helmet>
+                        )
+                    }
+                </Async>
+            )}
             {fetchState === FetchState.LOADING && <Loading />}
             <MessageContainer
                 author={thread?.author.id}

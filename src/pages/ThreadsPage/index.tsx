@@ -4,6 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { CircularProgress, Container, Paper, Typography } from '@material-ui/core';
 import { useTranslation, Trans } from 'react-i18next';
 import { Category, Thread } from '@Floor-Gang/modmail-types';
+import { Helmet } from 'react-helmet';
 import { ModmailState, FetchState } from '../../state';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 import ThreadsContainer from '../../components/ThreadsContainer';
@@ -18,6 +19,9 @@ const useStyle = makeStyles(() => ({
         position: 'relative',
         minHeight: '80vh',
         padding: '1rem',
+    },
+    titlePaper: {
+        marginBottom: '1rem',
     },
     title: { padding: '.5rem' },
 }));
@@ -44,7 +48,11 @@ function ThreadsPage(): JSX.Element {
     useEffect(() => {
         setFetchState(FetchState.EMPTY);
         threads.reset();
-        setCategory(categories.findById(categoryId));
+        const exists = categories.findById(categoryId);
+        if (exists) setCategory(exists);
+        else {
+            categories.fetchOne(categoryId).then((cat) => setCategory(cat));
+        }
     }, [categoryId]);
 
     const onThreadClicked = (evt: React.SyntheticEvent, thread: Thread) => {
@@ -60,7 +68,14 @@ function ThreadsPage(): JSX.Element {
 
     return (
         <Container className={classes.root}>
-            <Paper>
+            {category && (
+                <Helmet>
+                    <title>
+                        {t('guildName', { ns: 'translation' })} | {category.name}
+                    </title>
+                </Helmet>
+            )}
+            <Paper className={classes.titlePaper}>
                 <Typography variant={'h2'} className={classes.title}>
                     <Trans
                         i18nKey={'category.title'}
