@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createContainer } from 'unstated-next';
-import { FG, DiscordTag } from '../types';
+import { FG } from '../types';
 import { useMembers, useCategories, useThreads, useRoles, useChannels } from '../hooks';
 
 type State = FG.State.ModmailState;

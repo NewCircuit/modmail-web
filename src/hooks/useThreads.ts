@@ -16,6 +16,7 @@ export default function useThreads(props?: Props) {
     const [threads, setThreads] = useState<Optional<MutatedThread[]>>(undefined);
     const { axios } = useAxios();
 
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     function empty(...noop) {
         return () => Promise.resolve(null);
     }

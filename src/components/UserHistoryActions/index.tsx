@@ -1,10 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, ButtonGroup, lighten, Paper, Typography } from '@material-ui/core';
+import { Button, ButtonGroup, Paper, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Theme } from '../../theme';
 
 type Action = {
     render: JSX.Element | string;
@@ -17,7 +16,7 @@ type Props = {
     actions?: Action[];
 };
 
-const useStyle = makeStyles((theme: Theme) => ({
+const useStyle = makeStyles(() => ({
     root: {
         // padding: '.5rem',
         // background: lighten(theme.palette.background.paper, 0.025),

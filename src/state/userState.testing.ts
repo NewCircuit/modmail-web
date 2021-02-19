@@ -1,12 +1,11 @@
+/* eslint-disable */
 import { useState } from 'react';
 import { FG } from 'types';
 import { createContainer } from 'unstated-next';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
 
 type State = FG.State.UserState;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TEST_USER_DATA = JSON.parse(`{
   "id": "194024167052410880",
   "username": "XInfinite_",
@@ -23,7 +22,6 @@ function userState(): State {
     const { t } = useTranslation();
     const [authenticated, setAuthenticated] = useState<boolean | undefined>(undefined);
     const [processing, setProcessing] = useState(false);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [userData, setUserData] = useState<FG.Api.SelfResponse | undefined>();
 
     function logout() {

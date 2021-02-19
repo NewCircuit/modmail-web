@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useEffect, useState } from 'react';
 import { Category } from '@Floor-Gang/modmail-types';
 import { AxiosResponse } from 'axios';

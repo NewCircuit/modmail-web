@@ -14,7 +14,6 @@ import { Lock, DeleteForever, Create } from '@material-ui/icons';
 import MarkdownView, { ShowdownExtension } from 'react-showdown';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-import { ChannelState, RoleState } from '@Floor-Gang/modmail-types';
 import { Trans, useTranslation } from 'react-i18next';
 import { getNameFromMemberState, getTimestampFromSnowflake } from '../../util';
 import {
@@ -144,14 +143,10 @@ const useStyle = makeStyles((theme) => ({
 function Message(props: Props) {
     const {
         internal,
-        clientID,
         content,
-        edits,
-        files,
         isDeleted,
         modmailID,
         sender,
-        threadID,
         isDesktop,
         isLastMessage,
         bodyStyle,

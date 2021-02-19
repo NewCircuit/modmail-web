@@ -7,7 +7,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { CircularProgress } from '@material-ui/core';
 import Async from 'components/Async';
 import { Helmet } from 'react-helmet';
-import { Theme, APPBAR_HEIGHT } from '../../theme';
+import { APPBAR_HEIGHT } from '../../theme';
 import { ModmailState } from '../../state';
 import Message from '../../components/Message';
 import { MutatedThread } from '../../types';
@@ -19,7 +19,7 @@ type Params = {
     threadId: string;
 };
 
-const useStyle = makeStyles((theme: Theme) => ({
+const useStyle = makeStyles(() => ({
     root: {
         position: 'relative',
         height: `calc(100vh - ${APPBAR_HEIGHT}px)`,

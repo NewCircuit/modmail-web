@@ -9,8 +9,7 @@ import MuiCssBaseline from './MuiCssBaseline';
 import MuiBreadcrumbs from './MuiBreadcrumbs';
 import PrivateTabIndicator from './PrivateTabIndicator';
 
-// Shortcut because I'm too lazy to figure out all the mappings...
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// Shortcut because I'm too lazy to figure out all the mappings...=
 const overrides: any = {
     MuiButton,
     MuiIconButton,

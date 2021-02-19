@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useRef } from 'react';
 import { Semaphore } from 'async-mutex';
 import { FG, MemberState, Nullable, UserMap } from '../types';
@@ -74,7 +75,6 @@ export default function useMembers(props?: Props): FG.State.MembersState {
                     members[id] = {
                         id,
                         category,
-                        // eslint-disable-next-line no-plusplus
                         index: ++userIndex.current,
                     };
                 }
@@ -131,7 +131,6 @@ export default function useMembers(props?: Props): FG.State.MembersState {
                 members[user] = {
                     promise: Promise.resolve(users[user]),
                     id: users[user].id,
-                    // eslint-disable-next-line no-plusplus
                     index: ++userIndex.current,
                 };
             }

@@ -150,7 +150,6 @@ function ThreadListItem(props: Props) {
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const classes = useStyles();
-    const [fetching, setFetching] = useState(false);
     const [authorState, setAuthorState] = useState<Promise<MemberState | null> | null>(
         null
     );

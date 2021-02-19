@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useParams } from 'react-router-dom';
-import { Container, Grid, useTheme } from '@material-ui/core';
+import { Container, Grid } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import UserHistoryTitleCard from 'components/UserHistoryTitleCard';
 import UserSearchDialog, {
@@ -12,24 +12,17 @@ import { Helmet } from 'react-helmet';
 import { FetchState, ModmailState, UserState } from '../../state';
 import ThreadsContainer from '../../components/ThreadsContainer';
 import ThreadListItem from '../../components/ThreadListItem';
-import { MemberState, MutatedThread, Nullable } from '../../types';
+import { MutatedThread, Nullable } from '../../types';
 import UserHistoryActions from '../../components/UserHistoryActions';
 import Async from '../../components/Async';
 import { getNameFromMemberState } from '../../util';
-
-type Props = any;
 
 type Params = {
     categoryId: string;
     userId: 'me' | string;
 };
 
-type CurrentUserState = {
-    loaded: FetchState;
-    data?: Nullable<MemberState>;
-};
-
-const useStyle = makeStyles((theme) => ({
+const useStyle = makeStyles(() => ({
     root: {
         position: 'relative',
         minHeight: '80vh',
@@ -40,10 +33,9 @@ const useStyle = makeStyles((theme) => ({
     },
 }));
 
-function UserHistoryPage(props: Props) {
+function UserHistoryPage() {
     const { t } = useTranslation();
     const classes = useStyle();
-    const theme = useTheme();
     const history = useHistory();
     const { userId } = UserState.useContainer();
     const {
@@ -97,7 +89,7 @@ function UserHistoryPage(props: Props) {
         history.push(`/category/${categoryId}/threads/${thread.id}`);
     };
 
-    const handleLookup = (evt) => {
+    const handleLookup = () => {
         if (dialogRef.current) {
             const dialog = dialogRef.current;
             dialog.open();
@@ -171,5 +163,4 @@ function UserHistoryPage(props: Props) {
     );
 }
 
-export type UserHistoryPageProps = Props;
 export default UserHistoryPage;

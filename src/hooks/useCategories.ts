@@ -5,9 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useAxios } from './index';
 import { FG, Nullable, Optional } from '../types';
 
-type Props = any;
-
-export default function useCategories(props?: Props) {
+export default function useCategories() {
     const { t } = useTranslation();
     const [categories, setCategories] = useState<Optional<Category[]>>(undefined);
     const { axios } = useAxios();

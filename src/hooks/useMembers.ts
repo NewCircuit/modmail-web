@@ -4,10 +4,9 @@ import { Semaphore } from 'async-mutex';
 import { useTranslation } from 'react-i18next';
 import { FG, MemberState, Nullable, UserMap } from '../types';
 
-type Props = any;
 type Members = FG.State.MemberMap;
 
-export default function useMembers(props?: Props): FG.State.MembersState {
+export default function useMembers(): FG.State.MembersState {
     const { t } = useTranslation();
     const userIndex = useRef(0);
     const { current: semaphore } = useRef<Semaphore>(new Semaphore(1));

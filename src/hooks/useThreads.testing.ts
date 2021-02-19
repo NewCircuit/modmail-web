@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState } from 'react';
 import { AxiosResponse } from 'axios';
 import { Thread } from '@Floor-Gang/modmail-types';

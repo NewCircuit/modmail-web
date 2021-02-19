@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useLocation, Switch, Route, useHistory } from 'react-router-dom';
+import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 import { CircularProgress } from '@material-ui/core';
 import { UserState } from '../state';
 import LocalizedBackdrop from '../components/LocalizedBackdrop';

@@ -1,4 +1,4 @@
-import React, { ComponentType, RefObject } from 'react';
+import React, { RefObject } from 'react';
 import {
     Button,
     Dialog,
@@ -6,14 +6,10 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    styled,
     TextField,
 } from '@material-ui/core';
-import { Theme } from '../../theme';
 
 type Props = {
-    classes?: { [s: string]: string };
-    theme?: Theme;
     ref?: RefObject<UserSearchDialog>;
     onSubmit?: (evt: React.SyntheticEvent<HTMLButtonElement>, value: string) => unknown;
 };
@@ -22,8 +18,6 @@ type State = {
     open: boolean;
     value: string;
 };
-
-const styles = (theme: Theme) => ({});
 
 export class UserSearchDialog extends React.Component<Props, State> {
     constructor(props) {
@@ -87,6 +81,4 @@ export class UserSearchDialog extends React.Component<Props, State> {
 }
 
 export type UserSearchDialogProps = Props;
-export default styled(UserSearchDialog)(styles as never, {
-    withTheme: true,
-});
+export default UserSearchDialog;
