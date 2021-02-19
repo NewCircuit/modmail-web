@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import { init as initTextHandler } from './i18n';
 import * as serviceWorker from './serviceWorker';
-import executeSplash from './components/Splash';
 import reportWebVitals from './reportWebVitals';
 
 function destroyPreloader() {
@@ -16,17 +15,7 @@ function destroyPreloader() {
     }
 }
 function onReady(): void {
-    executeSplash({
-        selector: '#splash-container',
-        isReturning: sessionStorage.getItem('returning') !== null,
-    })
-        .then((splashed) => {
-            if (splashed) {
-                sessionStorage.setItem('returning', '1');
-            }
-            destroyPreloader();
-        })
-        .catch(alert);
+    destroyPreloader();
 }
 
 // TODO add service worker registration

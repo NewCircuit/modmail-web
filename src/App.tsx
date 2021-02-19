@@ -1,7 +1,6 @@
 import React, { RefObject, useEffect, useState } from 'react';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { createBrowserHistory } from 'history';
-import './theme/scss/global.scss';
 import { Router } from 'react-router-dom';
 import { CircularProgress, CssBaseline } from '@material-ui/core';
 import Authenticator from 'components/Authenticator';
