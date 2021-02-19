@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Container,
     Icon,
@@ -9,7 +9,9 @@ import {
 } from '@material-ui/core';
 import MoodBadIcon from '@material-ui/icons/MoodBad';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import { Theme, APPBAR_HEIGHT } from '../../theme';
+import { handleQuerystring } from '../../util';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -60,7 +62,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function UnauthorizedPage() {
     const classes = useStyles();
+    const location = useLocation();
     const { t } = useTranslation('pages');
+    const [redirect, setRedirect] = useState('');
+
+    useEffect(() => {
+        if (location.search) {
+            const { r } = handleQuerystring(location.search);
+            if (r) {
+                setRedirect(r);
+            }
+        }
+    }, [location]);
 
     return (
         <Container className={classes.root}>
@@ -79,7 +92,10 @@ export default function UnauthorizedPage() {
                     </Typography>
 
                     <Button
-                        href={t('urls.oauth', { ns: 'translation' })}
+                        href={t('urls.oauth', {
+                            ns: 'translation',
+                            redirect: `?redirect=${encodeURIComponent(redirect)}`,
+                        })}
                         variant={'contained'}
                         className={classes.btn}
                         color={'primary'}

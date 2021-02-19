@@ -13,13 +13,6 @@ const UserHistoryPage = React.lazy(() => import('./UserHistoryPage'));
 
 export default function Pages(): JSX.Element {
     const { authenticated } = UserState.useContainer();
-    const location = useLocation();
-    const history = useHistory();
-    useEffect(() => {
-        console.log('Path Changed! ', location.pathname);
-        if (typeof authenticated === 'boolean' && !authenticated)
-            history.push('/unauthorized');
-    }, [location.pathname]);
 
     const fallback = (
         <LocalizedBackdrop open>
@@ -30,7 +23,7 @@ export default function Pages(): JSX.Element {
     return (
         <Switch>
             <React.Suspense fallback={fallback}>
-                <Route exact path={'/unauthorized'} component={UnauthorizedPage} />
+                <Route path={'/unauthorized'} component={UnauthorizedPage} />
                 <Route exact path={'/oauth/callback'} component={OAuthPage} />
                 {authenticated && (
                     <React.Fragment>

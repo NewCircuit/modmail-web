@@ -4,7 +4,7 @@
   "urls": {
     "base": "/api",
     "discordBase": "https://discord.com/api",
-    "oauth": "$t(urls.base)/oauth",
+    "oauth": "$t(urls.base)/oauth{{redirect}}",
     "authenticate": "$t(urls.base)/self",
     "categories": "$t(urls.base)/categories",
     "categoriesOne": "$t(urls.base)/categories/{{category}}",

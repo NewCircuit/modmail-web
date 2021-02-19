@@ -19,3 +19,16 @@ export const discord = {
     getExtensions: DiscordParser.getExtensions,
     extensions: DiscordParser.extensions,
 };
+
+export function handleQuerystring(path: string): { [s: string]: string } {
+    const query = {};
+    if (path.charAt(0) === '?') {
+        path.substr(1)
+            .split('&')
+            .forEach((kvp) => {
+                const parts = kvp.split('=');
+                query[parts[0]] = typeof parts[1] === 'undefined' ? true : parts[1];
+            });
+    }
+    return query;
+}
