@@ -14,8 +14,13 @@ function userState(): State {
     const [userData, setUserData] = useState<FG.Api.SelfResponse | undefined>();
 
     function logout() {
-        setAuthenticated(false);
-        Cookies.set(t('cookie'), '', -1);
+        return axios.get(t('urls.logout')).then((response) => {
+            if (response.status === 200) {
+                setAuthenticated(false);
+            } else {
+                console.error('wtf happened dog?');
+            }
+        });
     }
 
     /**

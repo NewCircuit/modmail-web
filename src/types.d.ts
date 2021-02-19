@@ -124,7 +124,7 @@ declare namespace FG.State {
         processing: boolean;
         authenticate: () => Promise<boolean>;
         redirect: () => void;
-        logout: () => void;
+        logout: () => Promise<void>;
     };
 
     type NavigationState = {

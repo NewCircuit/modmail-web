@@ -29,7 +29,7 @@ function userState(): State {
 
     function logout() {
         setAuthenticated(false);
-        Cookies.set(t('cookie'), '', -1);
+        return Promise.resolve();
     }
 
     /**
