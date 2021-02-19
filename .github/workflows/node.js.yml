@@ -8,6 +8,8 @@ on:
   push:
     tags:
       - 'release-*'
+    branches:
+      - 'cleanup'
 
 jobs:
   build:
@@ -22,6 +24,10 @@ jobs:
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://npm.pkg.github.com/Floor-Gang
+          scope: '@Floor-Gang'
 
       - name: Cache node modules
         uses: actions/cache@v2
