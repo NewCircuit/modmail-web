@@ -14,7 +14,7 @@ function userState(): State {
     const [userData, setUserData] = useState<FG.Api.SelfResponse | undefined>();
 
     function logout() {
-        return axios.get(t('urls.logout')).then((response) => {
+        return axios.post(t('urls.logout')).then((response) => {
             if (response.status === 200) {
                 setAuthenticated(false);
             } else {
