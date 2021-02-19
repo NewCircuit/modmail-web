@@ -26,8 +26,8 @@ import {
     RoleTag,
 } from '../../types';
 import Async from '../Async';
-import { useDiscordParser } from '../../util/DiscordParser';
-import { MembersState, ModmailState } from '../../state';
+import { useDiscordParser } from '../../hooks';
+import { ModmailState } from '../../state';
 
 type Props = MutatedMessage & {
     category?: string;

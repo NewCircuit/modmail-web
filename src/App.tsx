@@ -9,7 +9,7 @@ import { GlobalConfiguration } from 'react-showdown';
 import theme from './theme';
 import LayoutHOC, { Layout } from './components/Layout';
 import Pages from './pages';
-import { UserState, ModmailState, MembersState } from './state';
+import { UserState, ModmailState } from './state';
 import LocalizedBackdrop from './components/LocalizedBackdrop';
 import { FG } from './types';
 
