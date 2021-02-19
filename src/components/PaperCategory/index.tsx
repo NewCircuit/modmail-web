@@ -1,8 +1,9 @@
 import React from 'react';
-import { Avatar, lighten, Paper, Typography } from '@material-ui/core';
+import { Avatar, Chip, lighten, Paper, Tooltip, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Category } from '@Floor-Gang/modmail-types';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     category: Category;
@@ -29,15 +30,39 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: lighten(theme.palette.background.paper, 0.3),
     },
     name: {
+        marginBottom: '-.25rem',
+    },
+    description: {
         marginBottom: 0,
+        fontSize: '1.25em',
     },
     p: {
         margin: 0,
     },
-    active: {},
+    chipContainer: {
+        marginTop: '.5rem',
+    },
+    chip: {
+        '&:not(:last-child)': {
+            marginRight: '.25rem',
+        },
+        padding: '.25rem',
+        boxShadow: theme.shadows[2],
+    },
+    chipActive: {
+        background: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+        fontWeight: 'bold',
+    },
+    chipPrivate: {
+        background: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+        fontWeight: 'bold',
+    },
 }));
 
 function PaperCategory(props: Props) {
+    const { t } = useTranslation();
     const { category, className, onClick, elevation } = props;
     const classes = useStyles();
 
@@ -60,15 +85,49 @@ function PaperCategory(props: Props) {
                 <Typography className={classes.name} variant={'h3'}>
                     {category.name}
                 </Typography>
-                <Typography
-                    className={clsx({
-                        [classes.active]: category.isActive,
-                    })}
-                    variant={'subtitle2'}
-                >
-                    This category is currently{' '}
-                    <b>{category.isActive ? 'active' : 'inactive'}</b>
+                <Typography className={classes.description} variant={'subtitle1'}>
+                    {category.description}
                 </Typography>
+                <div className={classes.chipContainer}>
+                    <Tooltip
+                        title={
+                            t('tooltips.category.status', {
+                                category: category.name,
+                                status: category.isActive ? 'active' : 'inactive',
+                            }) as string
+                        }
+                    >
+                        <Chip
+                            size={'small'}
+                            className={clsx(classes.chip, {
+                                [classes.chipActive]: category.isActive,
+                            })}
+                            label={t(
+                                category.isActive ? 'chips.active' : 'chips.inactive'
+                            )}
+                        />
+                    </Tooltip>
+                    <Tooltip
+                        title={
+                            t(
+                                `tooltips.category.${
+                                    category.isPrivate ? 'private' : 'public'
+                                }`,
+                                { category: category.name }
+                            ) as string
+                        }
+                    >
+                        <Chip
+                            size={'small'}
+                            className={clsx(classes.chip, {
+                                [classes.chipPrivate]: category.isPrivate,
+                            })}
+                            label={t(
+                                category.isPrivate ? 'chips.private' : 'chips.public'
+                            )}
+                        />
+                    </Tooltip>
+                </div>
             </div>
         </Paper>
     );
