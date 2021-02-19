@@ -1,25 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useRef, useState } from 'react';
-import { createContainer } from 'unstated-next';
-import { Category, ChannelState, RoleState, Thread } from '@Floor-Gang/modmail-types';
-import axiosRaw, { AxiosInstance, AxiosResponse } from 'axios';
+import { useState } from 'react';
+import { AxiosResponse } from 'axios';
+import { Thread } from '@Floor-Gang/modmail-types';
 import { useTranslation } from 'react-i18next';
-import {
-    FG,
-    Nullable,
-    Optional,
-    MutatedThread,
-    DiscordTag,
-    RoleTag,
-    ChannelTag,
-} from '../types';
-import { MembersState } from './index';
+import { useAxios } from './index';
+import { FG, MutatedThread, Nullable, Optional } from '../types';
 
-type State = FG.State.NavigationState;
+type MembersState = FG.State.MembersState;
 
-const TEST_CATEGORIES: FG.Api.CategoriesResponse = JSON.parse(
-    `[{"channelID":"806363000357257276","emojiID":"🍆","description":"bruuuuuuuh","guildID":"806083557352144916","id":"809687214488420352","isActive":true,"name":"test"}]`
-);
+type Props = {
+    members: MembersState;
+};
 
 const TEST_THREADS_FULL: FG.Api.ThreadsResponse = JSON.parse(`[]`);
 
@@ -36,75 +26,54 @@ const TEST_HISTORY_THREADS: FG.Api.UserHistoryResponse = JSON.parse(
     `{"threads":[{"author":{"id":"201600394353311744"},"channel":"809687475655016459","id":"809687479174168577","isAdminOnly":false,"isActive":false,"messages":[{"clientID":"809687568492134420","content":"t","edits":[],"files":[],"isDeleted":false,"modmailID":"809687569322868736","sender":"201600394353311744","internal":false,"threadID":"809687479174168577"}],"category":"809687214488420352"},{"author":{"id":"201600394353311744"},"channel":"809688120235917363","id":"809688123784167424","isAdminOnly":false,"isActive":false,"messages":[{"clientID":"809690602005987338","content":" test","edits":[],"files":[],"isDeleted":false,"modmailID":"809690600978120735","sender":"164837347156951040","internal":false,"threadID":"809688123784167424"}],"category":"809687214488420352"},{"author":{"id":"201600394353311744"},"channel":"809691407278800906","id":"809691410671468546","isAdminOnly":false,"isActive":false,"messages":[{"clientID":"809692592286466058","content":"t","edits":[],"files":[],"isDeleted":false,"modmailID":"809692593059135508","sender":"201600394353311744","internal":false,"threadID":"809691410671468546"}],"category":"809687214488420352"},{"author":{"id":"201600394353311744"},"channel":"809692824923537459","id":"809692827662548996","isAdminOnly":false,"isActive":false,"messages":[{"clientID":"809693089215021066","content":"t","edits":[],"files":[],"isDeleted":false,"modmailID":"809693089844822027","sender":"201600394353311744","internal":false,"threadID":"809692827662548996"}],"category":"809687214488420352"},{"author":{"id":"201600394353311744"},"channel":"809699806762500126","id":"809698276638064640","isAdminOnly":false,"isActive":false,"messages":[{"clientID":null,"content":"","edits":[],"files":[],"isDeleted":false,"modmailID":"809700473993035788","sender":"201600394353311744","internal":true,"threadID":"809698276638064640"}],"category":"809687214488420352"},{"author":{"id":"602569683543130113"},"channel":"809698388307607563","id":"809698392975474688","isAdminOnly":false,"isActive":false,"messages":[{"clientID":"810059127648682004","content":"https://cdn.discordapp.com/attachments/787448623351726080/809015752169619466/video0-9.mp4https://cdn.discordapp.com/attachments/787448623351726080/809015752169619466/video0-9.mp4","edits":[],"files":[],"isDeleted":false,"modmailID":"810059128520048680","sender":"602569683543130113","internal":false,"threadID":"809698392975474688"}],"category":"809687214488420352"},{"author":{"id":"201600394353311744"},"channel":"809709333117927474","id":"809709337365839874","isAdminOnly":false,"isActive":false,"messages":[{"clientID":"809717253443551262","content":"Lol","edits":[],"files":[],"isDeleted":false,"modmailID":"809717253820907532","sender":"201600394353311744","internal":false,"threadID":"809709337365839874"}],"category":"809687214488420352"},{"author":{"id":"201600394353311744"},"channel":"809709376495026198","id":"809709380256792579","isAdminOnly":false,"isActive":false,"messages":[{"clientID":null,"content":"wtf","edits":[],"files":[],"isDeleted":false,"modmailID":"809717147982102588","sender":"164837347156951040","internal":true,"threadID":"809709380256792579"}],"category":"809687214488420352"},{"author":{"id":"201600394353311744"},"channel":"809718503464370187","id":"809717652837761026","isAdminOnly":false,"isActive":false,"messages":[{"clientID":"809718621076193290","content":"bruh","edits":[],"files":[],"isDeleted":false,"modmailID":"809718621492215839","sender":"201600394353311744","internal":false,"threadID":"809717652837761026"}],"category":"809687214488420352"},{"author":{"id":"201600394353311744"},"channel":"809718447553642546","id":"809717676443303939","isAdminOnly":false,"isActive":false,"messages":[{"clientID":"809718543603728384","content":"y","edits":[],"files":[],"isDeleted":false,"modmailID":"809718544211640338","sender":"201600394353311744","internal":false,"threadID":"809717676443303939"}],"category":"809687214488420352"},{"author":{"id":"201600394353311744"},"channel":"809744117273329674","id":"809744121525829637","isAdminOnly":false,"isActive":false,"messages":[{"clientID":"809744170561830923","content":"Cool","edits":[],"files":[],"isDeleted":false,"modmailID":"809744171383914506","sender":"201600394353311744","internal":false,"threadID":"809744121525829637"}],"category":"809687214488420352"},{"author":{"id":"357918459058978816"},"channel":"809763590906445875","id":"809762303359713283","isAdminOnly":false,"isActive":false,"messages":[{"clientID":null,"content":"UwU","edits":[],"files":[],"isDeleted":false,"modmailID":"809765044090306572","sender":"357918459058978816","internal":true,"threadID":"809762303359713283"}],"category":"809687214488420352"},{"author":{"id":"357918459058978816"},"channel":"809765179021066320","id":"809765183823151104","isAdminOnly":false,"isActive":false,"messages":[{"clientID":"809765357564854352","content":"","edits":[],"files":[],"isDeleted":false,"modmailID":"809765356679594004","sender":"201600394353311744","internal":false,"threadID":"809765183823151104"}],"category":"809687214488420352"},{"author":{"id":"357918459058978816"},"channel":"810130470732955668","id":"810130474625269761","isAdminOnly":false,"isActive":true,"messages":[{"clientID":null,"content":"Ah","edits":[],"files":[],"isDeleted":false,"modmailID":"810139220470661142","sender":"357918459058978816","internal":true,"threadID":"810130474625269761"}],"category":"809687214488420352"},{"author":{"id":"602569683543130113"},"channel":"810162739779469373","id":"810162743322738690","isAdminOnly":false,"isActive":false,"messages":[{"clientID":"810836465331601478","content":"E","edits":[],"files":[],"isDeleted":false,"modmailID":"810836466514919424","sender":"602569683543130113","internal":false,"threadID":"810162743322738690"}],"category":"809687214488420352"},{"author":{"id":"164837347156951040"},"channel":"811149006594899998","id":"811149011225542656","isAdminOnly":false,"isActive":true,"messages":[{"clientID":"811347912943861830","content":"<https://t.co/jaUmDZT3XD?amp=1>","edits":[],"files":[],"isDeleted":false,"modmailID":"811347913800155166","sender":"164837347156951040","internal":false,"threadID":"811149011225542656"}],"category":"809687214488420352"},{"author":{"id":"201600394353311744"},"channel":"811152645510397972","id":"811152652590252033","isAdminOnly":false,"isActive":true,"messages":[{"clientID":null,"content":"t","edits":[],"files":[],"isDeleted":false,"modmailID":"811501555185352724","sender":"201600394353311744","internal":true,"threadID":"811152652590252033"}],"category":"809687214488420352"}],"users":{}}`
 );
 
-type DiscordTagHandlers = {
-    [s: string]: Promise<DiscordTag>;
-};
-// TODO Rename to ModmailState since this isn't actually navigation state at all anymore
-function navigationState(defaultProps: any): State {
+export default function useThreads(props?: Props) {
+    const { members } = props || {};
     const { t } = useTranslation();
-    const { getMember, addMembers } = MembersState.useContainer();
-    const [categories, setCategories] = useState<Optional<Category[]>>(undefined);
     const [threads, setThreads] = useState<Optional<MutatedThread[]>>(undefined);
-    const { current: discordTagPromises } = useRef<DiscordTagHandlers>({});
+    const { axios } = useAxios();
 
-    const { current: axios } = useRef<AxiosInstance>(
-        axiosRaw.create({
-            validateStatus: () => true,
-        })
-    );
-
-    useEffect(() => {
-        console.log({ defaultProps });
-    });
-
-    function findCategoryById(id: string): Nullable<Category> {
-        if (categories instanceof Array) {
-            return categories.find((cat) => cat.id === id) || null;
-        }
-        return null;
+    function empty(...noop) {
+        return () => Promise.resolve(null);
     }
 
-    function fetchCategories(): Promise<Category[]> {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                console.log('fetchCategories');
-                setCategories(TEST_CATEGORIES);
-                resolve(TEST_CATEGORIES);
-            }, 2000);
-        });
+    function cacheThreads(threadsToAdd: MutatedThread[]) {
+        // TODO handle this better..
+        setThreads(threadsToAdd);
     }
 
-    function fetchOneCategory(category: string): Promise<Nullable<Category>> {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(TEST_CATEGORIES.find((cat) => cat.id === category) || null);
-            }, 2000);
-        });
+    function resetThreads() {
+        setThreads([]);
+    }
+
+    function parseThread(thread: Thread): MutatedThread {
+        const fn = members?.get || empty;
+        return {
+            ...thread,
+            author: {
+                id: thread.author.id,
+                data: fn(thread.category, thread.author.id),
+            },
+            messages: thread.messages.map((message) => ({
+                ...message,
+                sender: {
+                    id: message.sender,
+                    data: fn(thread.category, message.sender),
+                },
+            })),
+        };
+    }
+
+    function parseThreads(unparsed: Thread[]): MutatedThread[] {
+        return unparsed.map(parseThread);
     }
 
     function fetchThreads(category: string): Promise<MutatedThread[]> {
         console.log('Fetch Threads Now!');
         return new Promise((resolve) => {
             setTimeout(() => {
-                const x = TEST_THREADS.threads.map((thread) => {
-                    return {
-                        ...thread,
-                        author: {
-                            id: thread.author.id,
-                            data: getMember(thread.category, thread.author.id),
-                        },
-                        messages: thread.messages.map((message) => ({
-                            ...message,
-                            sender: {
-                                id: message.sender,
-                                data: getMember(thread.category, message.sender),
-                            },
-                        })),
-                    } as MutatedThread;
-                }) as MutatedThread[];
-                console.log(x);
-                addMembers(TEST_THREADS.users);
-                setThreads(x);
+                const x = parseThreads(TEST_THREADS.threads) as MutatedThread[];
+                if (members) members.cache(TEST_THREADS.users);
+                cacheThreads(x);
                 resolve(x);
             }, 2000);
         });
@@ -121,38 +90,12 @@ function navigationState(defaultProps: any): State {
                 //     (th) => th.id === thread
                 // );
                 if (newThread) {
-                    addMembers(newThread.users);
-                    resolve({
-                        ...newThread,
-                        author: {
-                            id: newThread.author.id,
-                            data: getMember(category, newThread.author.id),
-                        },
-                        messages: newThread.messages.map((message) => ({
-                            ...message,
-                            sender: {
-                                id: message.sender,
-                                data: getMember(category, message.sender),
-                            },
-                        })),
-                    });
+                    if (members) members.cache(newThread.users);
+                    resolve(parseThread(newThread));
                 } else {
                     const th = TEST_THREADS_FULL[0];
-                    addMembers(th.users);
-                    resolve({
-                        ...th,
-                        author: {
-                            id: th.author.id,
-                            data: getMember(category, th.author.id),
-                        },
-                        messages: th.messages.map((message) => ({
-                            ...message,
-                            sender: {
-                                id: message.sender,
-                                data: getMember(category, message.sender),
-                            },
-                        })),
-                    });
+                    if (members) members.cache(th.users);
+                    resolve(parseThread(th));
                 }
             }, 2000);
         });
@@ -164,26 +107,9 @@ function navigationState(defaultProps: any): State {
     ): Promise<MutatedThread[]> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const x = TEST_HISTORY_THREADS.threads.map((thread) => {
-                    return {
-                        ...thread,
-                        author: {
-                            id: thread.author.id,
-                            data: getMember(thread.category, thread.author.id),
-                        },
-                        messages: thread.messages.map((message) => ({
-                            ...message,
-                            sender: {
-                                id: message.sender,
-                                data: getMember(thread.category, message.sender),
-                            },
-                        })),
-                    } as MutatedThread;
-                }) as MutatedThread[];
-                console.log(x);
-                addMembers(TEST_THREADS.users);
-                // setThreads(x);
-                resolve(x);
+                const mutated = parseThreads(TEST_HISTORY_THREADS.threads);
+                if (members) members.cache(TEST_THREADS.users);
+                resolve(mutated);
             }, Math.random() * 1000 + 1000);
         });
     }
@@ -199,114 +125,12 @@ function navigationState(defaultProps: any): State {
         return null;
     }
 
-    function fetchRole(category: string, role: string): Promise<RoleTag> {
-        const promise = axios
-            .get<FG.Api.RoleResponse>(t('urls.fetchRole', { category, role }))
-            .then((response) => {
-                if (response.status === 200 && response.data) {
-                    return {
-                        ...response.data,
-                        color: response.data.color.toString(16),
-                        exists: true,
-                    };
-                }
-                return {
-                    exists: false,
-                    id: role,
-                };
-            });
-        discordTagPromises[`role-${role}`] = promise;
-        return promise;
-    }
-
-    function fetchChannel(category: string, channel: string): Promise<ChannelTag> {
-        const promise = axios
-            .get<FG.Api.ChannelResponse>(t('urls.fetchChannel', { category, channel }))
-            .then((response) => {
-                if (response.status === 200 && response.data) {
-                    return {
-                        ...response.data,
-                        exists: true,
-                    };
-                }
-                return {
-                    exists: false,
-                    id: channel,
-                };
-            });
-        discordTagPromises[`channel-${channel}`] = promise;
-        return promise;
-    }
-
-    function getRole(category: string, role: string): Promise<RoleTag> {
-        return new Promise((resolve) => {
-            if (typeof discordTagPromises[`role-${role}`] !== 'undefined') {
-                discordTagPromises[`role-${role}`].then((response) => {
-                    resolve(response as RoleTag);
-                });
-                return;
-            }
-            const promise = fetchRole(category, role);
-            discordTagPromises[`role-${role}`] = promise;
-            promise.then((response) => {
-                resolve(response);
-            });
-        });
-    }
-
-    function getChannel(category: string, channel: string): Promise<ChannelTag> {
-        return new Promise((resolve) => {
-            if (typeof discordTagPromises[`channel-${channel}`] !== 'undefined') {
-                discordTagPromises[`channel-${channel}`].then((response) => {
-                    resolve(response as ChannelTag);
-                });
-                return;
-            }
-            const promise = fetchChannel(category, channel);
-            discordTagPromises[`channel-${channel}`] = promise;
-            promise.then((response) => {
-                resolve(response);
-            });
-        });
-    }
-
-    function resetThreads() {
-        setThreads([]);
-    }
-
-    function resetCategories() {
-        setCategories([]);
-    }
-
     return {
-        threads: {
-            items: threads,
-            fetch: fetchThreads,
-            fetchOne: fetchOneThread,
-            findById: findThreadById,
-            fetchByUserId: fetchThreadsByUserId,
-            reset: resetThreads,
-        },
-        categories: {
-            items: categories,
-            fetch: fetchCategories,
-            fetchOne: fetchOneCategory,
-            findById: findCategoryById,
-            reset: resetCategories,
-        },
-        roles: {
-            fetch: fetchRole,
-            get: getRole,
-        },
-        channels: {
-            fetch: fetchChannel,
-            get: getChannel,
-        },
+        items: threads,
+        fetch: fetchThreads,
+        fetchOne: fetchOneThread,
+        findById: findThreadById,
+        fetchByUserId: fetchThreadsByUserId,
+        reset: resetThreads,
     };
 }
-
-export function useNavigationState() {
-    return createContainer(navigationState);
-}
-
-export default useNavigationState();

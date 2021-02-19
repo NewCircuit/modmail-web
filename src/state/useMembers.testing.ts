@@ -1,11 +1,9 @@
-import { useState, useRef } from 'react';
-import { FG, MemberState, Nullable, UserMap } from 'types';
-import { createContainer } from 'unstated-next';
-import { useTranslation } from 'react-i18next';
-import axios, { AxiosResponse } from 'axios';
+import { useRef } from 'react';
 import { Semaphore } from 'async-mutex';
+import { FG, MemberState, Nullable, UserMap } from '../types';
 
-type State = FG.State.MembersState;
+type Props = any;
+type Members = FG.State.MemberMap;
 
 const TEST_MEMBERS: MemberState[] = JSON.parse(`{
     "default": {
@@ -61,11 +59,8 @@ const TEST_MEMBERS: MemberState[] = JSON.parse(`{
     }
   }`);
 
-type Members = FG.State.MemberMap;
-
-let num = 0;
-function membersState(): State {
-    const { t } = useTranslation();
+export default function useMembers(props?: Props): FG.State.MembersState {
+    const userIndex = useRef(0);
     const { current: semaphore } = useRef<Semaphore>(new Semaphore(1));
     const { current: members } = useRef<Members>({});
 
@@ -80,7 +75,7 @@ function membersState(): State {
                         id,
                         category,
                         // eslint-disable-next-line no-plusplus
-                        index: ++num,
+                        index: ++userIndex.current,
                     };
                 }
                 console.log('Promise Executed');
@@ -137,7 +132,7 @@ function membersState(): State {
                     promise: Promise.resolve(users[user]),
                     id: users[user].id,
                     // eslint-disable-next-line no-plusplus
-                    index: ++num,
+                    index: ++userIndex.current,
                 };
             }
         });
@@ -147,14 +142,8 @@ function membersState(): State {
 
     return {
         members,
-        get: getMember,
-        fetch: fetchMember,
         cache: addMembers,
+        fetch: fetchMember,
+        get: getMember,
     };
 }
-
-export function useMembersState() {
-    return createContainer(membersState);
-}
-
-export default useMembersState();

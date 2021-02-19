@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { Slide } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import ThreadListItem from '../../ThreadListItem';
-import { NavigationState } from '../../../state';
+import { ModmailState } from '../../../state';
 import { MutatedThread } from '../../../types';
 
 export default function ThreadDrawer() {
     const history = useHistory();
-    const { threads } = NavigationState.useContainer();
+    const { threads } = ModmailState.useContainer();
     useEffect(() => {
         console.log('ThreadsDrawer');
     }, []);

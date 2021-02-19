@@ -6,7 +6,7 @@ import { VerifiedUser } from '@material-ui/icons';
 import { Trans, useTranslation } from 'react-i18next';
 import { CircularProgress } from '@material-ui/core';
 import { Theme, APPBAR_HEIGHT } from '../../theme';
-import { NavigationState } from '../../state';
+import { ModmailState } from '../../state';
 import Message from '../../components/Message';
 import { MutatedThread } from '../../types';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
@@ -54,7 +54,7 @@ function ThreadPage() {
     const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [thread, setThread] = useState<MutatedThread | null>(null);
     const { categoryId, threadId } = useParams<Params>();
-    const { threads } = NavigationState.useContainer();
+    const { threads } = ModmailState.useContainer();
     const pageRef: RefObject<HTMLDivElement> = React.createRef();
 
     useEffect(() => {

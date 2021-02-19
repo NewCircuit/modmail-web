@@ -1,19 +1,15 @@
-import { useState, useRef } from 'react';
-import { FG, MemberState, Nullable, UserMap } from 'types';
-import { createContainer } from 'unstated-next';
-import { useTranslation } from 'react-i18next';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
+import { useRef } from 'react';
 import { Semaphore } from 'async-mutex';
-import { UserState } from './index';
+import { useTranslation } from 'react-i18next';
+import { FG, MemberState, Nullable, UserMap } from '../types';
 
-type State = FG.State.MembersState;
-
+type Props = any;
 type Members = FG.State.MemberMap;
 
-let num = 0;
-function membersState(): State {
+export default function useMembers(props?: Props): FG.State.MembersState {
     const { t } = useTranslation();
-    const { token } = UserState.useContainer();
+    const userIndex = useRef(0);
     const { current: semaphore } = useRef<Semaphore>(new Semaphore(1));
     const { current: members } = useRef<Members>({});
 
@@ -28,7 +24,7 @@ function membersState(): State {
                         id,
                         category,
                         // eslint-disable-next-line no-plusplus
-                        index: ++num,
+                        index: ++userIndex.current,
                     };
                 }
                 console.log('Promise Executed');
@@ -36,12 +32,7 @@ function membersState(): State {
                 semaphore
                     .runExclusive(async () => {
                         const data = await axios.get<FG.Api.MemberResponse>(
-                            t('urls.fetchMember', { member: id, category }),
-                            {
-                                headers: {
-                                    Authorization: `Bearer ${token}`,
-                                },
-                            }
+                            t('urls.fetchMember', { member: id, category })
                         );
                         return data;
                     })
@@ -76,7 +67,7 @@ function membersState(): State {
                     promise: Promise.resolve(users[user]),
                     id: users[user].id,
                     // eslint-disable-next-line no-plusplus
-                    index: ++num,
+                    index: ++userIndex.current,
                 };
             }
         });
@@ -86,14 +77,8 @@ function membersState(): State {
 
     return {
         members,
-        get: getMember,
-        fetch: fetchMember,
         cache: addMembers,
+        fetch: fetchMember,
+        get: getMember,
     };
 }
-
-export function useMembersState() {
-    return createContainer(membersState);
-}
-
-export default useMembersState();

@@ -9,7 +9,7 @@ import { GlobalConfiguration } from 'react-showdown';
 import theme from './theme';
 import LayoutHOC, { Layout } from './components/Layout';
 import Pages from './pages';
-import { UserState, NavigationState, MembersState } from './state';
+import { UserState, ModmailState, MembersState } from './state';
 import LocalizedBackdrop from './components/LocalizedBackdrop';
 import { FG } from './types';
 
@@ -44,17 +44,15 @@ function App(props: FG.AppProps): JSX.Element {
             <React.Suspense fallback={fallback}>
                 <UserState.Provider>
                     <Router history={browserHistory}>
-                        <MembersState.Provider>
-                            <NavigationState.Provider>
-                                <Authenticator setReady={setReady}>
-                                    <React.Suspense fallback={fallback}>
-                                        <LayoutHOC layoutRef={layoutRef}>
-                                            <Pages />
-                                        </LayoutHOC>
-                                    </React.Suspense>
-                                </Authenticator>
-                            </NavigationState.Provider>
-                        </MembersState.Provider>
+                        <ModmailState.Provider>
+                            <Authenticator setReady={setReady}>
+                                <React.Suspense fallback={fallback}>
+                                    <LayoutHOC layoutRef={layoutRef}>
+                                        <Pages />
+                                    </LayoutHOC>
+                                </React.Suspense>
+                            </Authenticator>
+                        </ModmailState.Provider>
                     </Router>
                 </UserState.Provider>
             </React.Suspense>

@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { CircularProgress, Container, Paper, Typography } from '@material-ui/core';
 import { useTranslation, Trans } from 'react-i18next';
 import { Category, Thread } from '@Floor-Gang/modmail-types';
-import { NavigationState, FetchState } from '../../state';
+import { ModmailState, FetchState } from '../../state';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 import ThreadsContainer from '../../components/ThreadsContainer';
 import ThreadListItem from '../../components/ThreadListItem';
@@ -27,7 +27,7 @@ function ThreadsPage(): JSX.Element {
     const classes = useStyle();
     const { categoryId } = useParams<ThreadsPageParams>();
     const history = useHistory();
-    const { threads, categories } = NavigationState.useContainer();
+    const { threads, categories } = ModmailState.useContainer();
     const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [category, setCategory] = useState<Category | null>(null);
     const isThreadsLoaded = threads.items instanceof Array;

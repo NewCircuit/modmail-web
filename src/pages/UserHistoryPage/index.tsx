@@ -8,7 +8,7 @@ import UserSearchDialog, {
     UserSearchDialog as UserSearchDialogClass,
 } from 'components/UserSearchDialog';
 import { Category } from '@Floor-Gang/modmail-types';
-import { FetchState, MembersState, NavigationState, UserState } from '../../state';
+import { FetchState, ModmailState, UserState } from '../../state';
 import ThreadsContainer from '../../components/ThreadsContainer';
 import ThreadListItem from '../../components/ThreadListItem';
 import { MemberState, MutatedThread, Nullable } from '../../types';
@@ -42,12 +42,12 @@ function UserHistoryPage(props: Props) {
     const classes = useStyle();
     const theme = useTheme();
     const history = useHistory();
-    const { getMember } = MembersState.useContainer();
     const { userId } = UserState.useContainer();
     const {
         threads: threadsHandler,
         categories: categoriesHandler,
-    } = NavigationState.useContainer();
+        members: memberHandler,
+    } = ModmailState.useContainer();
     const { userId: targetUserId, categoryId } = useParams<Params>();
     const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [threads, setThreads] = useState<MutatedThread[]>([]);
@@ -128,7 +128,7 @@ function UserHistoryPage(props: Props) {
                         total={threads.length}
                         user={targetUserId}
                         category={category}
-                        fetch={getMember(categoryId, targetUserId)}
+                        fetch={memberHandler.get(categoryId, targetUserId)}
                     />
 
                     <ThreadsContainer

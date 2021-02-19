@@ -27,7 +27,7 @@ import {
 } from '../../types';
 import Async from '../Async';
 import { useDiscordParser } from '../../util/DiscordParser';
-import { MembersState, NavigationState } from '../../state';
+import { MembersState, ModmailState } from '../../state';
 
 type Props = MutatedMessage & {
     category?: string;
@@ -160,11 +160,11 @@ function Message(props: Props) {
     } = props;
     const { t, i18n } = useTranslation();
     const classes = useStyle();
-    const { getMember } = MembersState.useContainer();
     const {
         roles: { get: fetchRole },
         channels: { get: fetchChannel },
-    } = NavigationState.useContainer();
+        members: { get: getMember },
+    } = ModmailState.useContainer();
     const [memberPromise, setMemberPromise] = useState<
         Nullable<Promise<Nullable<MemberState>>>
     >(null);

@@ -30,6 +30,9 @@ export type ChannelTag = Partial<ChannelState> & {
 };
 
 export type DiscordTag = RoleTag | ChannelTag;
+export type DiscordTagMap = {
+    [s: string]: Promise<DiscordTag>;
+};
 
 export type Modify<T, R> = Omit<T, keyof R> & R;
 export type Nullable<T> = T | null;
@@ -112,9 +115,9 @@ declare namespace FG.State {
 
     type MembersState = {
         members: MemberMap;
-        addMembers: (members: UserMap) => void;
-        fetchMember: (category: string, id: string) => Promise<Nullable<MemberState>>;
-        getMember: (category: string, id: string) => () => Promise<Nullable<MemberState>>;
+        cache: (members: UserMap) => void;
+        fetch: (category: string, id: string) => Promise<Nullable<MemberState>>;
+        get: (category: string, id: string) => () => Promise<Nullable<MemberState>>;
     };
 
     type UserState = {
@@ -127,7 +130,7 @@ declare namespace FG.State {
         logout: () => Promise<void>;
     };
 
-    type NavigationState = {
+    type ModmailState = {
         threads: {
             items?: Array<MutatedThread>;
             fetch: (category: string) => Promise<MutatedThread[]>;
@@ -142,25 +145,32 @@ declare namespace FG.State {
                 cache?: boolean
             ) => Promise<MutatedThread[]>;
             reset: () => void;
-            // TODO add ability to cancel fetch requests
-            // cancel?: (message: string) => void;
         };
         categories: {
             items?: Array<Category>;
             fetch: () => Promise<Category[]>;
             fetchOne: (category: string) => Promise<Nullable<Category>>;
-            // TODO add ability to cancel fetch requests
-            // cancel?: (message: string) => void;
             findById: (category: string) => Nullable<Category>;
             reset: () => void;
         };
         roles: {
-            fetch: (category: string, role: string) => Promise<RoleTag>;
-            get: (category: string, role: string) => Promise<RoleTag>;
+            roles: DiscordTagMap;
+            fetch: (category: string, role: string, cache?: boolean) => Promise<RoleTag>;
+            get: (category: string, role: string, cache?: boolean) => Promise<RoleTag>;
         };
         channels: {
-            fetch: (category: string, channel: string) => Promise<ChannelTag>;
-            get: (category: string, channel: string) => Promise<ChannelTag>;
+            channels: DiscordTagMap;
+            fetch: (
+                category: string,
+                channel: string,
+                cache?: boolean
+            ) => Promise<ChannelTag>;
+            get: (
+                category: string,
+                channel: string,
+                cache?: boolean
+            ) => Promise<ChannelTag>;
         };
+        members: MembersState;
     };
 }

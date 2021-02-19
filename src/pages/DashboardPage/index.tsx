@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import { Category } from '@Floor-Gang/modmail-types';
 import { useTranslation } from 'react-i18next';
-import { NavigationState } from '../../state';
+import { ModmailState } from '../../state';
 import PaperCategory from '../../components/PaperCategory';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 import Alert from '../../components/Alert';
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DashboardPage(): JSX.Element {
     const { t } = useTranslation('pages');
-    const { categories } = NavigationState.useContainer();
+    const { categories } = ModmailState.useContainer();
     const classes = useStyles();
     const history = useHistory();
 
@@ -57,10 +57,11 @@ export default function DashboardPage(): JSX.Element {
     }, []);
 
     useEffect(() => {
+        console.log({ items: categories.items });
         if (typeof categories.items === 'undefined') {
-            categories.fetch();
+            categories.fetch().then((r) => console.log(r));
         }
-    }, [categories.items]);
+    }, [categories]);
 
     const onCategorySelected = (evt: React.SyntheticEvent, category: Category) => {
         console.log({ evt, category });
