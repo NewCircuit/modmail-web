@@ -1,7 +1,6 @@
 {
   "guildName": "Floor-Gang",
   "appName": "$t(guildName) Modmail",
-  "cookie": "connect.sid",
   "urls": {
     "base": "/api",
     "discordBase": "https://discord.com/api",
@@ -56,12 +55,6 @@
   "message": {
     "unknownRole": "&lt;Unknown Role: '{{role}}'&gt;",
     "unknownChannel": "&lt;Unknown Channel: '{{channel}}'&gt;"
-  },
-  "errors": {
-    "splash": {
-      "noSelector": "You must specify a selector to use splash",
-      "selectorNotFound": "The selected you entered could not be found in DOM."
-    }
   },
   "unauthorized": {
     "title": "Discord Authenticated Required",

@@ -3,7 +3,6 @@ import { FG } from 'types';
 import { createContainer } from 'unstated-next';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import Cookies from '../util/Cookies';
 
 type State = FG.State.UserState;
 

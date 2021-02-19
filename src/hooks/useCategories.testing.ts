@@ -8,7 +8,7 @@ import { FG, Nullable, Optional } from '../types';
 type Props = any;
 
 const TEST_CATEGORIES: FG.Api.CategoriesResponse = JSON.parse(
-    `[{"channelID":"806363000357257276","emojiID":"🍆","description":"bruuuuuuuh","guildID":"806083557352144916","id":"809687214488420352","isActive":true,"name":"test"}]`
+    `[{"isPrivate":false,"channelID":"806363000357257276","emojiID":"🍆","description":"bruuuuuuuh","guildID":"806083557352144916","id":"809687214488420352","isActive":true,"name":"test"}]`
 );
 
 export default function useCategories(props?: Props) {
