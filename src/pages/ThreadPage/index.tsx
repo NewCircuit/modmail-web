@@ -65,7 +65,7 @@ function ThreadPage() {
     useEffect(() => {
         if (fetchState === FetchState.EMPTY) {
             const exists = threads.findById(categoryId, threadId);
-            if (exists) {
+            if (exists && exists.messages.length > 0) {
                 setThread(exists);
                 setFetchState(FetchState.LOADED);
             } else {
