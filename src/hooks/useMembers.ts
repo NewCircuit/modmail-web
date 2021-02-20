@@ -16,7 +16,9 @@ export default function useMembers(): FG.State.MembersState {
     const { logout } = UserState.useContainer();
     const { axios } = useAxios();
     const userIndex = useRef(0);
-    const { current: semaphore } = useRef<Semaphore>(new Semaphore(1));
+    const { current: semaphore } = useRef<Semaphore>(
+        new Semaphore(t('maxConcurrentRequests') as never)
+    );
     const { current: members } = useRef<Members>({});
 
     const fetchMember = (category: string, id: string) => {
