@@ -38,6 +38,10 @@ export class Logger {
         return this.logger.debug(args);
     }
 
+    fatal(args: any) {
+        return this.logger.fatal(args);
+    }
+
     getLogger(name: string): Logger {
         if (typeof Logger.loggers[name] === 'undefined')
             Logger.loggers[name] = new Logger(name);

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ChannelTag, DiscordTagMap, FG } from '../types';
 import { useAxios } from './index';
 import { Logger } from '../util';
+import { UserState } from '../state';
 
 const logger = Logger.getLogger('useChannels');
 
@@ -17,6 +18,7 @@ const defaultProps = {
 export default function useChannels(props: Props = defaultProps) {
     const { cache: universalCache } = props;
     const { t } = useTranslation();
+    const { logout } = UserState.useContainer();
     const { axios } = useAxios();
     const { current: tags } = useRef<DiscordTagMap>({});
 
@@ -34,6 +36,16 @@ export default function useChannels(props: Props = defaultProps) {
                         ...response.data,
                         exists: true,
                     };
+                }
+                return {
+                    exists: false,
+                    id: channel,
+                };
+            })
+            .catch((err) => {
+                if (err.response && err.response.status === 401) {
+                    logger.info('user got 401. no longer authenticated');
+                    logout();
                 }
                 return {
                     exists: false,

@@ -234,6 +234,12 @@ function Message(props: Props) {
                             attachedDiscordPromises.current[parts[1]] = role;
                             setHack((n) => n + 1);
                         });
+                        promise.catch((err) => {
+                            logger.fatal({
+                                message: 'Role Error',
+                                data: err,
+                            });
+                        });
                     }
                 }
             }

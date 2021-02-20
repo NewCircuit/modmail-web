@@ -1,10 +1,10 @@
 import { useRef } from 'react';
-import axiosRaw, { AxiosInstance } from 'axios';
+import axiosRaw, { AxiosError, AxiosInstance } from 'axios';
 
-export default function useAxios() {
+export default function useAxios(invalidStatus = [401, 404]) {
     const { current: axios } = useRef<AxiosInstance>(
         axiosRaw.create({
-            validateStatus: () => true,
+            validateStatus: (status) => invalidStatus.indexOf(status) === -1,
         })
     );
 

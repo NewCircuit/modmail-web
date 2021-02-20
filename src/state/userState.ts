@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { FG } from 'types';
 import { createContainer } from 'unstated-next';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
 import { Logger } from '../util';
+import { useAxios } from '../hooks';
 
 const logger = Logger.getLogger('userState');
 
@@ -11,19 +11,31 @@ type State = FG.State.UserState;
 
 function userState(): State {
     const { t } = useTranslation();
+    const { axios } = useAxios();
     const [authenticated, setAuthenticated] = useState<boolean | undefined>(undefined);
     const [processing, setProcessing] = useState(false);
     const [userData, setUserData] = useState<FG.Api.SelfResponse | undefined>();
 
     function logout() {
         logger.verbose(`logging user out`);
-        return axios.post(t('urls.logout')).then((response) => {
-            if (response.status === 200) {
-                setAuthenticated(false);
-            } else {
-                console.error('wtf happened dog?');
-            }
-        });
+        return axios
+            .post(t('urls.logout'))
+            .then((response) => {
+                if (response.status === 200) {
+                    setAuthenticated(false);
+                } else {
+                    logger.fatal({
+                        message: 'unable to log out',
+                        data: response,
+                    });
+                }
+            })
+            .catch((err) => {
+                logger.fatal({
+                    message: 'unable to log out',
+                    data: err,
+                });
+            });
     }
 
     /**
@@ -50,7 +62,11 @@ function userState(): State {
                 setProcessing(false);
                 return response.status === 200;
             })
-            .catch(() => {
+            .catch((err) => {
+                logger.fatal({
+                    message: 'unable to authenticate',
+                    data: err,
+                });
                 setAuthenticated(false);
                 setProcessing(false);
                 return false;

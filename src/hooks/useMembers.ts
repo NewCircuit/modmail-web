@@ -1,9 +1,11 @@
-import axios from 'axios';
 import { useRef } from 'react';
 import { Semaphore } from 'async-mutex';
 import { useTranslation } from 'react-i18next';
+import { AxiosError } from 'axios';
 import { FG, MemberState, Nullable, UserMap } from '../types';
 import { Logger } from '../util';
+import { useAxios } from './index';
+import { UserState } from '../state';
 
 const logger = Logger.getLogger('useMembers');
 
@@ -11,6 +13,8 @@ type Members = FG.State.MemberMap;
 
 export default function useMembers(): FG.State.MembersState {
     const { t } = useTranslation();
+    const { logout } = UserState.useContainer();
+    const { axios } = useAxios();
     const userIndex = useRef(0);
     const { current: semaphore } = useRef<Semaphore>(new Semaphore(1));
     const { current: members } = useRef<Members>({});
@@ -21,7 +25,7 @@ export default function useMembers(): FG.State.MembersState {
         if (typeof members[id] !== 'undefined' && members[id].promise) {
             promise = members[id].promise as Promise<Nullable<MemberState>>;
         } else {
-            promise = new Promise((resolve) => {
+            promise = new Promise((resolve, reject) => {
                 if (typeof members[id] === 'undefined') {
                     members[id] = {
                         id,
@@ -32,14 +36,18 @@ export default function useMembers(): FG.State.MembersState {
                 }
 
                 semaphore
-                    .runExclusive(async () => {
-                        const data = await axios.get<FG.Api.MemberResponse>(
+                    .runExclusive(() => {
+                        return axios.get<FG.Api.MemberResponse>(
                             t('urls.fetchMember', { member: id, category })
                         );
-                        return data;
                     })
-                    .then((response) => {
-                        resolve(response.data);
+                    .then(({ data, status }) => resolve(status === 200 ? data : null))
+                    .catch((err: AxiosError) => {
+                        if (err.response && err.response.status === 401) {
+                            logger.info('user got 401. no longer authenticated');
+                            logout();
+                        }
+                        return null;
                     });
             });
             members[id].promise = promise;
@@ -53,13 +61,17 @@ export default function useMembers(): FG.State.MembersState {
     ): () => Promise<Nullable<MemberState>> {
         logger.verbose(`get member ${id}`);
         return () =>
-            new Promise((resolveMember) => {
+            new Promise((resolveMember, reject) => {
                 if (members[id] && members[id].promise) {
-                    members[id].promise?.then((r) => resolveMember(r));
+                    members[id].promise
+                        ?.then((r) => resolveMember(r))
+                        .catch((err) => reject(err));
                     return;
                 }
 
-                fetchMember(category, id).then((response) => resolveMember(response));
+                fetchMember(category, id)
+                    .then((response) => resolveMember(response))
+                    .catch((err) => reject(err));
             });
     }
 

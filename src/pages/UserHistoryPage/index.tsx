@@ -39,7 +39,7 @@ function UserHistoryPage() {
     const { t } = useTranslation();
     const classes = useStyle();
     const history = useHistory();
-    const { userId } = UserState.useContainer();
+    const { userId, logout } = UserState.useContainer();
     const {
         threads: threadsHandler,
         categories: categoriesHandler,

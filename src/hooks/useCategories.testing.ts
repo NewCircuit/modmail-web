@@ -22,8 +22,9 @@ export default function useCategories(props?: Props) {
 
     function fetchCategories(): Promise<Category[]> {
         logger.verbose(`fetching categories`);
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             setTimeout(() => {
+                // reject(new AuthenticationError())
                 setCategories(TEST_CATEGORIES);
                 resolve(TEST_CATEGORIES);
             }, 2000);

@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { Thread } from '@Floor-Gang/modmail-types';
 import { useTranslation } from 'react-i18next';
 import { useAxios } from './index';
 import { FG, MutatedThread, Nullable, Optional } from '../types';
 import { Logger } from '../util';
+import { UserState } from '../state';
 
 const logger = Logger.getLogger('useThreads');
 
@@ -16,6 +17,7 @@ type Props = {
 export default function useThreads(props?: Props) {
     const { members } = props || {};
     const { t } = useTranslation();
+    const { logout } = UserState.useContainer();
     const [threads, setThreads] = useState<Optional<MutatedThread[]>>(undefined);
     const { axios } = useAxios();
 
@@ -60,7 +62,6 @@ export default function useThreads(props?: Props) {
         return axios
             .get(t('urls.threads', { category }))
             .then((response: AxiosResponse<FG.Api.ThreadsResponse>) => {
-                console.log(response);
                 if (response.status === 200) {
                     const mutated = parseThreads(response.data.threads);
                     if (members) members.cache(response.data.users);
@@ -70,8 +71,11 @@ export default function useThreads(props?: Props) {
                 resetThreads();
                 return [];
             })
-            .catch((err) => {
-                console.error(err);
+            .catch((err: AxiosError) => {
+                if (err.response && err.response.status === 401) {
+                    logger.info('user got 401. no longer authenticated');
+                    logout();
+                }
                 resetThreads();
                 return [];
             });
@@ -90,8 +94,11 @@ export default function useThreads(props?: Props) {
                 }
                 return null;
             })
-            .catch((err) => {
-                console.error(err);
+            .catch((err: AxiosError) => {
+                if (err.response && err.response.status === 401) {
+                    logger.info('user got 401. no longer authenticated');
+                    logout();
+                }
                 return null;
             });
     }
@@ -115,8 +122,11 @@ export default function useThreads(props?: Props) {
                 }
                 return [];
             })
-            .catch((err) => {
-                console.error(err);
+            .catch((err: AxiosError) => {
+                if (err.response && err.response.status === 401) {
+                    logger.info('user got 401. no longer authenticated');
+                    logout();
+                }
                 return [];
             });
     }

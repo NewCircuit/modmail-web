@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { Category } from '@Floor-Gang/modmail-types';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useAxios } from './index';
 import { FG, Nullable, Optional } from '../types';
 import { Logger } from '../util';
+import { UserState } from '../state';
 
 const logger = Logger.getLogger('useCategories');
 
 export default function useCategories() {
     const { t } = useTranslation();
+    const { logout } = UserState.useContainer();
     const [categories, setCategories] = useState<Optional<Category[]>>(undefined);
     const { axios } = useAxios();
 
@@ -18,7 +20,6 @@ export default function useCategories() {
         return axios
             .get(t('urls.categories'))
             .then((response: AxiosResponse<FG.Api.CategoriesResponse>) => {
-                console.log(response);
                 if (response.status === 200) {
                     setCategories(response.data);
                     return response.data;
@@ -26,8 +27,11 @@ export default function useCategories() {
                 setCategories([]);
                 return [];
             })
-            .catch((err) => {
-                console.error(err);
+            .catch((err: AxiosError) => {
+                if (err.response && err.response.status === 401) {
+                    logger.info('user got 401. no longer authenticated');
+                    logout();
+                }
                 setCategories([]);
                 return [];
             });
@@ -43,8 +47,11 @@ export default function useCategories() {
                 }
                 return null;
             })
-            .catch((err) => {
-                console.error(err);
+            .catch((err: AxiosError) => {
+                if (err.response && err.response.status === 401) {
+                    logger.info('user got 401. no longer authenticated');
+                    logout();
+                }
                 return null;
             });
     }
@@ -62,7 +69,7 @@ export default function useCategories() {
     }
 
     return {
-        categories,
+        items: categories,
         fetch: fetchCategories,
         fetchOne: fetchOneCategory,
         findById: findCategoryById,

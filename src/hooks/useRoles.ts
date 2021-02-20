@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { useRef } from 'react';
+import { AxiosError } from 'axios';
 import { useAxios } from './index';
 import { DiscordTagMap, FG, RoleTag } from '../types';
 import { Logger } from '../util';
+import { UserState } from '../state';
 
 const logger = Logger.getLogger('useRoles');
 
@@ -17,6 +19,7 @@ const defaultProps = {
 export default function useRoles(props: Props = defaultProps) {
     const { cache: universalCache } = props;
     const { t } = useTranslation();
+    const { logout } = UserState.useContainer();
     const { axios } = useAxios();
     const { current: tags } = useRef<DiscordTagMap>({});
 
@@ -40,6 +43,13 @@ export default function useRoles(props: Props = defaultProps) {
                     exists: false,
                     id: role,
                 };
+            })
+            .catch((err: AxiosError) => {
+                if (err.response && err.response.status === 401) {
+                    logger.info('user got 401. no longer authenticated');
+                    logout();
+                }
+                return { exists: false, id: role };
             });
         if (cache) tags[role] = promise;
         return promise;
@@ -59,7 +69,7 @@ export default function useRoles(props: Props = defaultProps) {
         role: string,
         cache = universalCache as boolean
     ): Promise<RoleTag> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             if (cache && typeof tags[role] !== 'undefined') {
                 tags[role].then((response) => {
                     resolve(response as RoleTag);
@@ -68,9 +78,11 @@ export default function useRoles(props: Props = defaultProps) {
             }
             const promise = fetchRole(category, role);
             if (cache) tags[role] = promise;
-            promise.then((response) => {
-                resolve(response);
-            });
+            promise
+                .then((response) => {
+                    resolve(response);
+                })
+                .catch((err) => reject(err));
         });
     }
 
