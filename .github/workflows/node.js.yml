@@ -7,9 +7,9 @@ name: Node.js CI
 on:
   push:
     tags:
-      - 'release-*'
-    branches:
-      - 'cleanup'
+      - 'banana-*'
+#    branches:
+#      - 'cleanup'
 
 jobs:
   build:
