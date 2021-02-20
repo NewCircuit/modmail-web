@@ -7,7 +7,10 @@ export class Logger {
 
     private logger: JL.JSNLogLogger;
 
-    constructor(name?: string, expose = process.env.NODE_ENV === 'development') {
+    constructor(
+        name?: string,
+        expose = process.env.REACT_APP_DEBUG_MODE === 'development'
+    ) {
         const appenders: JL.JSNLogAppender[] = [];
         if (name && expose) {
             let inline = JL.createConsoleAppender(name);
