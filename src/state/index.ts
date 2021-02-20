@@ -1,4 +1,4 @@
-export { useUserState, default as UserState } from './userState.testing';
+export { useUserState, default as UserState } from './userState';
 export { useModmailState, default as ModmailState } from './modmailState';
 
 export enum FetchState {

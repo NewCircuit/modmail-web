@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import { Category } from '@Floor-Gang/modmail-types';
 import { useTranslation } from 'react-i18next';
-import { ModmailState, UserState } from '../../state';
+import { ModmailState } from '../../state';
 import PaperCategory from '../../components/PaperCategory';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 import Alert from '../../components/Alert';
@@ -47,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DashboardPage(): JSX.Element {
     const { t } = useTranslation();
-    const { logout } = UserState.useContainer();
     const { categories } = ModmailState.useContainer();
     const classes = useStyles();
     const history = useHistory();

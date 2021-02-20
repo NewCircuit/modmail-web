@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import axiosRaw, { AxiosError, AxiosInstance } from 'axios';
+import axiosRaw, { AxiosInstance } from 'axios';
 
 export default function useAxios(invalidStatus = [401, 404]) {
     const { current: axios } = useRef<AxiosInstance>(

@@ -25,7 +25,7 @@ export default function useMembers(): FG.State.MembersState {
         if (typeof members[id] !== 'undefined' && members[id].promise) {
             promise = members[id].promise as Promise<Nullable<MemberState>>;
         } else {
-            promise = new Promise((resolve, reject) => {
+            promise = new Promise((resolve) => {
                 if (typeof members[id] === 'undefined') {
                     members[id] = {
                         id,
