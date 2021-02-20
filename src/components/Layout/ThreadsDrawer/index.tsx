@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Slide } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import ThreadListItem from '../../ThreadListItem';

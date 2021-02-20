@@ -6,7 +6,7 @@ import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { Thread } from '@Floor-Gang/modmail-types';
 import clsx from 'clsx';
 import Alert from '../Alert';
-import { MemberState, MutatedThread, Nullable, RequiredArgs } from '../../types';
+import { MutatedThread, RequiredArgs } from '../../types';
 import LocalizedBackdrop from '../LocalizedBackdrop';
 
 type Child = ComponentType<RequiredArgs<{ thread: MutatedThread }>>;
