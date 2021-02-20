@@ -22,7 +22,7 @@ export default function ThreadDrawer() {
                     category: thread.category,
                 },
             });
-            history.push(`/category/${thread.category}/${thread.id}`);
+            history.push(`/category/${thread.category}/threads/${thread.id}`);
         }
     };
 
