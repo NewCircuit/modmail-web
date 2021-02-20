@@ -4,16 +4,24 @@ import { useHistory } from 'react-router-dom';
 import ThreadListItem from '../../ThreadListItem';
 import { ModmailState } from '../../../state';
 import { MutatedThread } from '../../../types';
+import { Logger } from '../../../util';
+
+const logger = Logger.getLogger('ThreadsDrawer');
 
 export default function ThreadDrawer() {
     const history = useHistory();
     const { threads } = ModmailState.useContainer();
-    useEffect(() => {
-        console.log('ThreadsDrawer');
-    }, []);
 
     const onThreadClicked = (evt: React.SyntheticEvent, thread?: MutatedThread) => {
         if (thread) {
+            logger.verbose({
+                message: 'Thread Clicked',
+                data: {
+                    id: thread.id,
+                    authorId: thread.author.id,
+                    category: thread.category,
+                },
+            });
             history.push(`/category/${thread.category}/${thread.id}`);
         }
     };

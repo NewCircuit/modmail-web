@@ -22,9 +22,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DrawerFooter(): JSX.Element {
     const classes = useStyles();
-    useEffect(() => {
-        console.log('DrawerFooter');
-    }, []);
     return (
         <Toolbar disableGutters className={classes.root}>
             <Tooltip title={'Time to refresh'}>

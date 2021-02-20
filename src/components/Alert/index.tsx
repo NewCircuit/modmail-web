@@ -50,10 +50,6 @@ function Alert(props: Props) {
     } = props;
     const classes = useStyle();
 
-    useEffect(() => {
-        console.log(props, classes[`alert-${color}`]);
-    });
-
     if (typeof children !== 'undefined') {
         return (
             <Paper

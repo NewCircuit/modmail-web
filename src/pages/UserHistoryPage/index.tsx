@@ -15,7 +15,9 @@ import ThreadListItem from '../../components/ThreadListItem';
 import { MutatedThread, Nullable } from '../../types';
 import UserHistoryActions from '../../components/UserHistoryActions';
 import Async from '../../components/Async';
-import { getNameFromMemberState } from '../../util';
+import { getNameFromMemberState, Logger } from '../../util';
+
+const logger = Logger.getLogger('UserHistoryPage');
 
 type Params = {
     categoryId: string;
@@ -55,7 +57,6 @@ function UserHistoryPage() {
     useEffect(() => {
         const currentCategory = categoriesHandler.findById(categoryId);
         if (currentCategory === null) {
-            console.log('Collecting current category...');
             categoriesHandler.fetchOne(categoryId).then((response) => {
                 setCategory(response);
             });
@@ -85,7 +86,14 @@ function UserHistoryPage() {
     }, [targetUserId]);
 
     const onThreadClicked = (evt, thread: MutatedThread) => {
-        console.log({ evt, thread });
+        logger.verbose({
+            message: `Thread Clicked`,
+            data: {
+                id: thread.id,
+                authorId: thread.author.id,
+                category: thread.category,
+            },
+        });
         history.push(`/category/${categoryId}/threads/${thread.id}`);
     };
 
@@ -97,6 +105,7 @@ function UserHistoryPage() {
     };
 
     const onSearch = (evt, value) => {
+        logger.verbose(`searching user history ${value}`);
         history.push(`/category/${categoryId}/users/${value}/history`);
     };
 

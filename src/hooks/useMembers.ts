@@ -3,6 +3,9 @@ import { useRef } from 'react';
 import { Semaphore } from 'async-mutex';
 import { useTranslation } from 'react-i18next';
 import { FG, MemberState, Nullable, UserMap } from '../types';
+import { Logger } from '../util';
+
+const logger = Logger.getLogger('useMembers');
 
 type Members = FG.State.MemberMap;
 
@@ -13,6 +16,7 @@ export default function useMembers(): FG.State.MembersState {
     const { current: members } = useRef<Members>({});
 
     const fetchMember = (category: string, id: string) => {
+        logger.verbose(`fetching member ${id}`);
         let promise: Promise<Nullable<MemberState>>;
         if (typeof members[id] !== 'undefined' && members[id].promise) {
             promise = members[id].promise as Promise<Nullable<MemberState>>;
@@ -26,7 +30,6 @@ export default function useMembers(): FG.State.MembersState {
                         index: ++userIndex.current,
                     };
                 }
-                console.log('Promise Executed');
 
                 semaphore
                     .runExclusive(async () => {
@@ -48,6 +51,7 @@ export default function useMembers(): FG.State.MembersState {
         category: string,
         id: string
     ): () => Promise<Nullable<MemberState>> {
+        logger.verbose(`get member ${id}`);
         return () =>
             new Promise((resolveMember) => {
                 if (members[id] && members[id].promise) {
@@ -70,8 +74,6 @@ export default function useMembers(): FG.State.MembersState {
                 };
             }
         });
-
-        console.log(members);
     }
 
     return {

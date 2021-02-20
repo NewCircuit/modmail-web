@@ -14,10 +14,8 @@ function Authenticator(props: Props) {
     const location = useLocation();
 
     useEffect(() => {
-        console.log({ authenticated, processing });
         if (!processing) {
             if (typeof authenticated === 'undefined') {
-                console.log('authenticate');
                 authenticate();
             } else {
                 if (setReady) setReady();
@@ -26,7 +24,6 @@ function Authenticator(props: Props) {
                     if (location.pathname !== '/') {
                         search = `?r=${location.pathname}`;
                     }
-                    console.log('fired');
                     history.push(`/unauthorized${search}`);
                 }
             }

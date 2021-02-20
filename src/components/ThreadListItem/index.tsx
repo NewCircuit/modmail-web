@@ -246,7 +246,6 @@ function ThreadListItem(props: Props) {
                 })}
             >
                 <div className={clsx(classes.panelContainer, classes.flex)}>
-                    {/* TODO implement channel name instead of author name */}
                     <Async promise={authorState}>
                         {(author: MemberState | null) =>
                             author ? (

@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { FG } from 'types';
 import { createContainer } from 'unstated-next';
 import { useTranslation } from 'react-i18next';
+import { Logger } from '../util';
+
+const logger = Logger.getLogger('userState.testing');
 
 type State = FG.State.UserState;
 
@@ -35,6 +38,7 @@ function userState(): State {
      * @returns Promise<boolean>
      */
     function authenticate(update = true): Promise<boolean> {
+        logger.verbose(`authorizing access`);
         if (authenticated && !update) return Promise.resolve(true);
         setProcessing(true);
 

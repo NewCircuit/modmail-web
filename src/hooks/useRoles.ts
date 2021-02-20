@@ -2,6 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { useRef } from 'react';
 import { useAxios } from './index';
 import { DiscordTagMap, FG, RoleTag } from '../types';
+import { Logger } from '../util';
+
+const logger = Logger.getLogger('useRoles');
 
 type Props = {
     cache?: boolean;
@@ -22,6 +25,7 @@ export default function useRoles(props: Props = defaultProps) {
         role: string,
         cache = universalCache as boolean
     ): Promise<RoleTag> {
+        logger.verbose(`fetch role ${role}`);
         const promise = axios
             .get<FG.Api.RoleResponse>(t('urls.fetchRole', { category, role }))
             .then((response) => {

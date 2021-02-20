@@ -2,6 +2,9 @@ import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChannelTag, DiscordTagMap, FG } from '../types';
 import { useAxios } from './index';
+import { Logger } from '../util';
+
+const logger = Logger.getLogger('useChannels');
 
 type Props = {
     cache?: boolean;
@@ -22,6 +25,7 @@ export default function useChannels(props: Props = defaultProps) {
         channel: string,
         cache = universalCache as boolean
     ): Promise<ChannelTag> {
+        logger.verbose(`fetch channel ${channel}`);
         const promise = axios
             .get<FG.Api.ChannelResponse>(t('urls.fetchChannel', { category, channel }))
             .then((response) => {

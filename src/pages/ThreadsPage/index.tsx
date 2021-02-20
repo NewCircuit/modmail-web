@@ -9,6 +9,9 @@ import { ModmailState, FetchState } from '../../state';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 import ThreadsContainer from '../../components/ThreadsContainer';
 import ThreadListItem from '../../components/ThreadListItem';
+import { Logger } from '../../util';
+
+const logger = Logger.getLogger('ThreadsPage');
 
 type ThreadsPageParams = {
     categoryId: string;
@@ -56,7 +59,14 @@ function ThreadsPage(): JSX.Element {
     }, [categoryId]);
 
     const onThreadClicked = (evt: React.SyntheticEvent, thread: Thread) => {
-        console.log({ evt, thread });
+        logger.verbose({
+            message: 'Thread Clicked',
+            data: {
+                id: thread.id,
+                authorId: thread.author.id,
+                category: thread.category,
+            },
+        });
         history.push(`/category/${categoryId}/threads/${thread.id}`);
     };
 

@@ -4,6 +4,9 @@ import { Thread } from '@Floor-Gang/modmail-types';
 import { useTranslation } from 'react-i18next';
 import { useAxios } from './index';
 import { FG, MutatedThread, Nullable, Optional } from '../types';
+import { Logger } from '../util';
+
+const logger = Logger.getLogger('useThreads');
 
 type MembersState = FG.State.MembersState;
 
@@ -27,6 +30,7 @@ export default function useThreads(props?: Props) {
     }
 
     function resetThreads() {
+        logger.verbose(`reset threads`);
         setThreads([]);
     }
 
@@ -53,7 +57,6 @@ export default function useThreads(props?: Props) {
     }
 
     function fetchThreads(category: string): Promise<MutatedThread[]> {
-        console.log('Fetch Threads Now!');
         return axios
             .get(t('urls.threads', { category }))
             .then((response: AxiosResponse<FG.Api.ThreadsResponse>) => {
@@ -81,7 +84,6 @@ export default function useThreads(props?: Props) {
         return axios
             .get(t('urls.threadsOne', { category, thread }))
             .then((response: AxiosResponse<FG.Api.ThreadsOneResponse>) => {
-                console.log(response);
                 if (response.status === 200) {
                     if (members) members.cache(response.data.users);
                     return parseThread(response.data);
@@ -99,6 +101,7 @@ export default function useThreads(props?: Props) {
         user: string,
         cache = false
     ): Promise<MutatedThread[]> {
+        logger.verbose(`fetch threads for user ${user}`);
         return axios
             .get<FG.Api.UserHistoryResponse>(
                 t('urls.fetchThreadsByUser', { category, user })

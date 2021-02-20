@@ -5,6 +5,9 @@ import { Thread } from '@Floor-Gang/modmail-types';
 import { useTranslation } from 'react-i18next';
 import { useAxios } from './index';
 import { FG, MutatedThread, Nullable, Optional } from '../types';
+import { Logger } from '../util';
+
+const logger = Logger.getLogger('useThreads.testing');
 
 type MembersState = FG.State.MembersState;
 
@@ -43,6 +46,7 @@ export default function useThreads(props?: Props) {
     }
 
     function resetThreads() {
+        logger.verbose(`reset threads`);
         setThreads([]);
     }
 
@@ -69,7 +73,6 @@ export default function useThreads(props?: Props) {
     }
 
     function fetchThreads(category: string): Promise<MutatedThread[]> {
-        console.log('Fetch Threads Now!');
         return new Promise((resolve) => {
             setTimeout(() => {
                 const x = parseThreads(TEST_THREADS.threads) as MutatedThread[];
@@ -87,9 +90,6 @@ export default function useThreads(props?: Props) {
         return new Promise((resolve) => {
             setTimeout(() => {
                 const newThread: FG.Api.ThreadsOneResponse = TEST_THREAD;
-                // const newThread: Thread | undefined = TEST_THREADS_FULL.threads.find(
-                //     (th) => th.id === thread
-                // );
                 if (newThread) {
                     if (members) members.cache(newThread.users);
                     resolve(parseThread(newThread));

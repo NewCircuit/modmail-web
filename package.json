@@ -83,6 +83,7 @@
     "history": "^4.10.1",
     "i18next": "^19.8.4",
     "i18next-http-backend": "^1.0.21",
+    "jsnlog": "^2.30.0",
     "lodash": "^4.17.20",
     "luxon": "^1.25.0",
     "react": "^17.0.1",

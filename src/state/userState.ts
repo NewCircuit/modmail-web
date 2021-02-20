@@ -3,6 +3,9 @@ import { FG } from 'types';
 import { createContainer } from 'unstated-next';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { Logger } from '../util';
+
+const logger = Logger.getLogger('userState');
 
 type State = FG.State.UserState;
 
@@ -13,6 +16,7 @@ function userState(): State {
     const [userData, setUserData] = useState<FG.Api.SelfResponse | undefined>();
 
     function logout() {
+        logger.verbose(`logging user out`);
         return axios.post(t('urls.logout')).then((response) => {
             if (response.status === 200) {
                 setAuthenticated(false);
@@ -28,6 +32,7 @@ function userState(): State {
      * @returns Promise<boolean>
      */
     function authenticate(update = true): Promise<boolean> {
+        logger.verbose(`authenticating user`);
         if (authenticated && !update) return Promise.resolve(true);
         setProcessing(true);
 

@@ -15,6 +15,9 @@ import { ModmailState } from '../../state';
 import PaperCategory from '../../components/PaperCategory';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 import Alert from '../../components/Alert';
+import { Logger } from '../../util';
+
+const logger = Logger.getLogger('DashboardPage');
 
 const useStyles = makeStyles((theme) => ({
     categoryRoot: {
@@ -53,18 +56,19 @@ export default function DashboardPage(): JSX.Element {
         typeof categories.items !== 'undefined' && categories.items.length === 0;
 
     useEffect(() => {
-        console.log('DashboardPage');
-    }, []);
-
-    useEffect(() => {
-        console.log({ items: categories.items });
         if (typeof categories.items === 'undefined') {
-            categories.fetch().then((r) => console.log(r));
+            categories.fetch();
         }
     }, [categories]);
 
     const onCategorySelected = (evt: React.SyntheticEvent, category: Category) => {
-        console.log({ evt, category });
+        logger.verbose({
+            message: `category selected`,
+            data: {
+                id: category.id,
+                name: category.name,
+            },
+        });
         history.push(`/category/${category.id}/users/me/history`);
     };
 

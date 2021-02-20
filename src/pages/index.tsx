@@ -6,7 +6,6 @@ import LocalizedBackdrop from '../components/LocalizedBackdrop';
 
 const DashboardPage = React.lazy(() => import('./DashboardPage'));
 const UnauthorizedPage = React.lazy(() => import('./UnauthorizedPage'));
-const OAuthPage = React.lazy(() => import('./OAuthPage'));
 const ThreadsPage = React.lazy(() => import('./ThreadsPage'));
 const ThreadPage = React.lazy(() => import('./ThreadPage'));
 const UserHistoryPage = React.lazy(() => import('./UserHistoryPage'));
@@ -24,7 +23,6 @@ export default function Pages(): JSX.Element {
         <Switch>
             <React.Suspense fallback={fallback}>
                 <Route path={'/unauthorized'} component={UnauthorizedPage} />
-                <Route exact path={'/oauth/callback'} component={OAuthPage} />
                 {authenticated && (
                     <React.Fragment>
                         <Route exact path={'/'} component={DashboardPage} />

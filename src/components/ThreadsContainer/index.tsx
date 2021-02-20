@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
         marginTop: '.5rem',
     },
 }));
-type FetchMember = (id: string) => Promise<Nullable<MemberState>>;
 
 function itemRenderer(Component: Child, itemProps: any) {
     return function Item(props: ListChildComponentProps) {

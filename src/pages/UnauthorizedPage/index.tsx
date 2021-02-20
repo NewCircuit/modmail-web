@@ -11,7 +11,9 @@ import MoodBadIcon from '@material-ui/icons/MoodBad';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Theme, APPBAR_HEIGHT } from '../../theme';
-import { handleQuerystring } from '../../util';
+import { handleQuerystring, Logger } from '../../util';
+
+const logger = Logger.getLogger('UnauthorizedPage');
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -70,6 +72,7 @@ export default function UnauthorizedPage() {
         if (location.search) {
             const { r } = handleQuerystring(location.search);
             if (r) {
+                logger.verbose(`setting redirect path to '${r}'`);
                 setRedirect(r);
             }
         }

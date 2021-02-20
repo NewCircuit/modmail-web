@@ -12,7 +12,9 @@ import { ModmailState } from '../../state';
 import Message from '../../components/Message';
 import { MutatedThread } from '../../types';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
-import { getNameFromMemberState } from '../../util';
+import { getNameFromMemberState, Logger } from '../../util';
+
+const logger = Logger.getLogger('ThreadPage');
 
 type Params = {
     categoryId: string;
@@ -62,23 +64,20 @@ function ThreadPage() {
 
     useEffect(() => {
         if (fetchState === FetchState.EMPTY) {
-            setFetchState(FetchState.LOADING);
-            console.log('Fetching thread');
-            threads.fetchOne(categoryId, threadId).then((currentThread) => {
+            const exists = threads.findById(categoryId, threadId);
+            if (exists) {
+                setThread(exists);
                 setFetchState(FetchState.LOADED);
-                if (currentThread) setThread(currentThread);
-            });
+            } else {
+                setFetchState(FetchState.LOADING);
+                logger.verbose(`fetching thread ${threadId}`);
+                threads.fetchOne(categoryId, threadId).then((currentThread) => {
+                    setFetchState(FetchState.LOADED);
+                    if (currentThread) setThread(currentThread);
+                });
+            }
         }
-    }, [fetchState]);
-
-    // This is a failsafe to load the specific thread if this is a direct load or a refresh
-    useEffect(() => {
-        if (typeof threads.items === 'undefined') {
-            threads.fetchOne(categoryId, threadId).then((currentThread) => {
-                if (currentThread) setThread(currentThread);
-            });
-        }
-    }, [threads.items]);
+    }, [fetchState, threads.items]);
 
     useEffect(() => {
         setFetchState(FetchState.EMPTY);

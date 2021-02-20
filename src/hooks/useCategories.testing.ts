@@ -5,6 +5,9 @@ import { AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useAxios } from './index';
 import { FG, Nullable, Optional } from '../types';
+import { Logger } from '../util';
+
+const logger = Logger.getLogger('useCategories.testing');
 
 type Props = any;
 
@@ -17,14 +20,10 @@ export default function useCategories(props?: Props) {
     const [categories, setCategories] = useState<Optional<Category[]>>(undefined);
     const { axios } = useAxios();
 
-    useEffect(() => {
-        console.log({ categories });
-    }, [categories]);
-
     function fetchCategories(): Promise<Category[]> {
+        logger.verbose(`fetching categories`);
         return new Promise((resolve) => {
             setTimeout(() => {
-                console.log('fetchCategories');
                 setCategories(TEST_CATEGORIES);
                 resolve(TEST_CATEGORIES);
             }, 2000);
@@ -32,6 +31,7 @@ export default function useCategories(props?: Props) {
     }
 
     function fetchOneCategory(category: string): Promise<Nullable<Category>> {
+        logger.verbose(`fetching category ${category}`);
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(TEST_CATEGORIES.find((cat) => cat.id === category) || null);
@@ -47,6 +47,7 @@ export default function useCategories(props?: Props) {
     }
 
     function resetCategories() {
+        logger.verbose(`categories reset`);
         setCategories([]);
     }
 

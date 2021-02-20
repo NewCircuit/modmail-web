@@ -15,7 +15,7 @@ import MarkdownView, { ShowdownExtension } from 'react-showdown';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Trans, useTranslation } from 'react-i18next';
-import { getNameFromMemberState, getTimestampFromSnowflake } from '../../util';
+import { getNameFromMemberState, getTimestampFromSnowflake, Logger } from '../../util';
 import {
     ChannelTag,
     DiscordTag,
@@ -27,6 +27,8 @@ import {
 import Async from '../Async';
 import { useDiscordParser } from '../../hooks';
 import { ModmailState } from '../../state';
+
+const logger = Logger.getLogger('Message');
 
 type Props = MutatedMessage & {
     category?: string;
@@ -214,7 +216,6 @@ function Message(props: Props) {
             const parts = /<@&(\d+)>/gim.exec(matched);
             if (parts) {
                 const currentRole = attachedDiscordPromises.current[parts[1]] as RoleTag;
-                console.log({ currentRole });
                 if (currentRole) {
                     let body = t('message.unknownRole', { role: currentRole.id });
                     let style = '';
@@ -248,7 +249,6 @@ function Message(props: Props) {
                 const currentChannel = attachedDiscordPromises.current[
                     parts[1]
                 ] as ChannelTag;
-                console.log({ currentChannel });
                 if (currentChannel) {
                     let body = t('message.unknownChannel', {
                         channel: currentChannel.id,
@@ -302,6 +302,8 @@ function Message(props: Props) {
         }
     }, [sender, memberPromise]);
 
+    const onGoToHistory = (id) => logger.verbose(`redirecting to user history ${id}`);
+
     return (
         <Async promise={memberPromise}>
             {(member: Nullable<MemberState>) => (
@@ -352,6 +354,7 @@ function Message(props: Props) {
                                         }
                                     >
                                         <Link
+                                            onClick={() => onGoToHistory(member.id)}
                                             to={`/category/${category}/users/${member.id}/history`}
                                         >
                                             <Typography
