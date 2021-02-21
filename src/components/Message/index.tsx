@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useRef, useState } from 'react';
+import React, { RefObject, useEffect, useState } from 'react';
 import { makeStyles, lighten } from '@material-ui/core/styles';
 import {
     Skeleton,

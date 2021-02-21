@@ -1,5 +1,5 @@
 import React, { RefObject, useEffect, useRef } from 'react';
-import { makeStyles, darken, lighten } from '@material-ui/core/styles';
+import { makeStyles, lighten } from '@material-ui/core/styles';
 import { Timeline } from '@material-ui/lab';
 import { useMediaQuery, useTheme } from '@material-ui/core';
 import { MessageProps } from '../Message';

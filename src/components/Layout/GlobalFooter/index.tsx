@@ -4,8 +4,6 @@ import { Link, Tooltip, Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { GitHub } from '@material-ui/icons';
 
-type Props = any;
-
 const useStyle = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -37,7 +35,7 @@ const useStyle = makeStyles((theme) => ({
     },
 }));
 
-function GlobalFooter(props: Props) {
+function GlobalFooter() {
     const { t } = useTranslation();
     const classes = useStyle();
     return (
@@ -71,5 +69,4 @@ function GlobalFooter(props: Props) {
     );
 }
 
-export type GlobalFooterProps = Props;
 export default GlobalFooter;

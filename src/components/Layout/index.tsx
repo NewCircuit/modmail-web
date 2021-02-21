@@ -1,19 +1,16 @@
 import React, { ForwardedRef, RefObject } from 'react';
 import { makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
 import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
 import { FG } from 'types';
 import Drawer from './Drawer';
 import CommonDrawerItems from './CommonDrawerItems';
 import { UserState } from '../../state';
-import { APPBAR_HEIGHT, DRAWER_WIDTH, FOOTER_HEIGHT, Theme } from '../../theme';
+import { APPBAR_HEIGHT, DRAWER_WIDTH, Theme } from '../../theme';
 import PrimaryAppBar from './PrimaryAppBar';
 import GlobalFooter from './GlobalFooter';
 
 type Props = {
     ref: ForwardedRef<Layout>;
-    i18n: TFunction;
     classes: { [s: string]: string };
     theme: Theme;
     isDesktop: boolean;
@@ -26,7 +23,6 @@ type State = {
 };
 
 const toolbarHeight = APPBAR_HEIGHT;
-const footerHeight = FOOTER_HEIGHT;
 const drawerWidth = DRAWER_WIDTH.mobile;
 const drawerWidthDesktop = DRAWER_WIDTH.desktop;
 
@@ -102,7 +98,7 @@ export class Layout extends React.Component<Props, State> {
 
     render() {
         const { onHandleMenuClick } = this;
-        const { classes, isDesktop, children, i18n: t, user } = this.props;
+        const { classes, isDesktop, children, user } = this.props;
         const { drawerOpen } = this.state;
 
         return (
@@ -145,13 +141,11 @@ export default function LayoutHOC(props: LayoutHOCProps) {
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const classes = useStyles();
     const userState = UserState.useContainer();
-    const { t } = useTranslation();
     const ForwardedLayout = React.forwardRef(
         (forwardedProps: LayoutHOCProps, ref: ForwardedRef<Layout>) => (
             <Layout
                 ref={ref}
                 {...forwardedProps}
-                i18n={t}
                 user={userState}
                 classes={classes}
                 theme={theme}

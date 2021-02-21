@@ -1,5 +1,4 @@
 import React, { RefObject, useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import MessageContainer from 'components/MessageContainer';
 import { useParams } from 'react-router-dom';
@@ -8,7 +7,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import { CircularProgress } from '@material-ui/core';
 import Async from 'components/Async';
 import { Helmet } from 'react-helmet';
-import { APPBAR_HEIGHT, FOOTER_HEIGHT } from '../../theme';
 import { ModmailState } from '../../state';
 import Message from '../../components/Message';
 import { MutatedThread } from '../../types';
