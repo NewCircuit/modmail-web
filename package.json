@@ -1,6 +1,6 @@
 {
   "name": "modmail-web",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Modmail Web interface",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "start": "react-scripts start",
-    "serve": "serve -s ./build",
+    "serve": "npm run build && serve -s ./build -p 80",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src/",

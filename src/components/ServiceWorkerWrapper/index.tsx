@@ -43,7 +43,7 @@ const ServiceWorkerWrapper: FC = () => {
     const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
 
     const onSWUpdate = (registration: ServiceWorkerRegistration) => {
-        logger.info('Application update detected. notifying user??');
+        logger.info('Application update detected.');
         setShowReload(true);
         setWaitingWorker(registration.waiting);
     };
