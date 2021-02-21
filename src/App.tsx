@@ -4,7 +4,7 @@ import { createBrowserHistory } from 'history';
 import { Router } from 'react-router-dom';
 import { CircularProgress, CssBaseline } from '@material-ui/core';
 import Authenticator from 'components/Authenticator';
-import { GlobalConfiguration } from 'react-showdown';
+import { GlobalConfiguration } from '@demitchell14/react-showdown';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
 import theme from './theme';

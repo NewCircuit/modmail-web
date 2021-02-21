@@ -36,6 +36,14 @@
     },
     "message": {
       "name": "Click to view <b>{{user}}</b>'s history"
+    },
+    "discord": {
+      "emptyChannel": "Channel '{{id}}' could not be found",
+      "foundChannel": "Channel ID: {{id}}",
+      "emptyRole": "Role '{{id}}' could not be found",
+      "foundRole": "Role ID: {{id}}",
+      "emptyUser": "User '{{id}}' could not be found",
+      "foundUser": "User ID: {{id}}"
     }
   },
   "drawer": {

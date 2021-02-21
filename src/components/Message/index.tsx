@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { makeStyles, lighten, fade } from '@material-ui/core/styles';
+import React, { useEffect, useState } from 'react';
+import { makeStyles, lighten } from '@material-ui/core/styles';
 import {
     Skeleton,
     TimelineConnector,
@@ -11,22 +11,14 @@ import {
 } from '@material-ui/lab';
 import { Avatar, Chip, darken, Paper, Tooltip, Typography } from '@material-ui/core';
 import { Lock, DeleteForever, Create } from '@material-ui/icons';
-import MarkdownView, { ShowdownExtension } from 'react-showdown';
+import MarkdownView, { ShowdownExtension } from '@demitchell14/react-showdown';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Trans, useTranslation } from 'react-i18next';
 import { getNameFromMemberState, getTimestampFromSnowflake, Logger } from '../../util';
-import {
-    ChannelTag,
-    DiscordTag,
-    MemberState,
-    MutatedMessage,
-    Nullable,
-    RoleTag,
-} from '../../types';
+import { MemberState, MutatedMessage, Nullable } from '../../types';
 import Async from '../Async';
 import { useDiscordParser } from '../../hooks';
-import { ModmailState } from '../../state';
 
 const logger = Logger.getLogger('Message');
 
@@ -123,23 +115,6 @@ const useStyle = makeStyles((theme) => ({
         border: `2px solid ${theme.palette.primary.main}`,
         boxShadow: theme.shadows[3],
     },
-    mdUser: {
-        background: 'grey',
-        fontWeight: 'bold',
-        padding: '0.05rem .1rem',
-    },
-    mdRole: {
-        fontWeight: 'bold',
-        padding: '0.05rem .1rem',
-    },
-    mdChannel: {
-        color: '#7289da',
-        fontWeight: 'bold',
-        padding: '0.05rem .1rem',
-    },
-    mdNotExists: {
-        color: fade('#f00', 0.5),
-    },
 }));
 
 function Message(props: Props) {
@@ -157,150 +132,38 @@ function Message(props: Props) {
     } = props;
     const { t, i18n } = useTranslation();
     const classes = useStyle();
-    const {
-        roles: { get: fetchRole },
-        channels: { get: fetchChannel },
-        members: { get: getMember },
-    } = ModmailState.useContainer();
     const [memberPromise, setMemberPromise] = useState<
         Nullable<Promise<Nullable<MemberState>>>
     >(null);
-    const attachedMemberPromises = useRef<{
-        [s: string]: Nullable<MemberState>;
-    }>({});
-    const attachedDiscordPromises = useRef<{
-        [s: string]: DiscordTag;
-    }>({});
-    const [hack, setHack] = useState(0);
-    const discordParser = useDiscordParser();
+    const discordParser = useDiscordParser({
+        components: ['DiscordRole', 'DiscordChannel', 'DiscordUser'],
+        extensions: [
+            {
+                type: 'lang',
+                regex: /<@&(\d+)>/,
+                replace: `<DiscordRole category="${category}" id="$1" />`,
+            },
+            {
+                type: 'lang',
+                regex: /<#(\d+)>/,
+                replace: `<DiscordChannel category="${category}" id="$1" />`,
+            },
+            {
+                type: 'lang',
+                regex: /<@!?(\d+)>/,
+                replace: `<DiscordUser category="${category}" id="$1" />`,
+            },
+            {
+                type: 'lang',
+                regex: /<:[a-z0-9]+:(\d+)>/i,
+                replace: `<img src="https://cdn.discordapp.com/emojis/$1.png" height="32" />`,
+            },
+        ],
+    });
 
     const dateSent = getTimestampFromSnowflake(modmailID);
     const date = dateSent?.toFormat('MM/dd/yyyy');
     const time = dateSent?.toFormat('hh:mm a');
-
-    const imageParser = React.useCallback((matched) => {
-        const parts = /<:[a-z0-9]+:(\d+)>/gim.exec(matched);
-        if (parts) {
-            const url = `https://cdn.discordapp.com/emojis/${parts[1]}.png`;
-            const size = 32;
-            return `<img src="${url}?size=${size}" height="${size}" />`;
-        }
-        return matched;
-    }, []);
-
-    const memberParser = React.useCallback(
-        (matched) => {
-            const parts = /<@!?(\d+)>/gim.exec(matched);
-            if (parts) {
-                const currentMember = attachedMemberPromises.current[parts[1]];
-                if (currentMember) {
-                    return `<span data-id="${currentMember.id}" class="${classes.mdUser}">${currentMember.username}#${currentMember.discriminator}</span>`;
-                }
-
-                const promise = getMember(category || '', parts[1])();
-                if (promise) {
-                    promise.then((member) => {
-                        setHack((n) => n + 1);
-                        attachedMemberPromises.current[parts[1]] = member;
-                    });
-                }
-                return matched;
-            }
-            return matched;
-        },
-        [attachedMemberPromises, category, getMember, hack]
-    );
-
-    const roleParser = React.useCallback(
-        (matched) => {
-            const parts = /<@&(\d+)>/gim.exec(matched);
-            if (parts) {
-                const currentRole = attachedDiscordPromises.current[parts[1]] as RoleTag;
-                if (currentRole) {
-                    let body = t('message.unknownRole', { role: currentRole.id });
-                    let style = '';
-                    if (currentRole.exists) {
-                        style = `color: #${currentRole.color}`;
-                        body = `@${currentRole.name}`;
-                    }
-                    return `<span style="${style}" class="${clsx(classes.mdRole, {
-                        [classes.mdNotExists]: !currentRole.exists,
-                    })}" data-id="${currentRole.id}">${body}</span>`;
-                }
-                if (category) {
-                    const promise = fetchRole(category, parts[1]);
-                    if (promise) {
-                        promise.then((role) => {
-                            attachedDiscordPromises.current[parts[1]] = role;
-                            setHack((n) => n + 1);
-                        });
-                        promise.catch((err) => {
-                            logger.fatal({
-                                message: 'Role Error',
-                                data: err,
-                            });
-                        });
-                    }
-                }
-            }
-            return matched;
-        },
-        [attachedDiscordPromises, category, getMember, hack]
-    );
-
-    const channelParser = React.useCallback(
-        (matched) => {
-            const parts = /<#(\d+)>/gim.exec(matched);
-            if (parts) {
-                const currentChannel = attachedDiscordPromises.current[
-                    parts[1]
-                ] as ChannelTag;
-                if (currentChannel) {
-                    let body = t('message.unknownChannel', {
-                        channel: currentChannel.id,
-                    });
-                    if (currentChannel.exists) {
-                        body = `#${currentChannel.name}`;
-                    }
-                    return `<span class="${clsx(classes.mdChannel, {
-                        [classes.mdNotExists]: !currentChannel.exists,
-                    })}" data-id="${currentChannel.id}">${body}</span>`;
-                }
-                if (category) {
-                    const promise = fetchChannel(category, parts[1]);
-                    if (promise) {
-                        promise.then((channel) => {
-                            attachedDiscordPromises.current[parts[1]] = channel;
-                            setHack((n) => n + 1);
-                        });
-                    }
-                }
-            }
-            return matched;
-        },
-        [attachedDiscordPromises, category, getMember, hack]
-    );
-
-    useEffect(() => {
-        discordParser.attachExtensions([
-            {
-                pattern: /<:[a-z0-9]+:\d+>/gim,
-                callback: imageParser,
-            },
-            {
-                pattern: /<@!?\d+>/gim,
-                callback: memberParser,
-            },
-            {
-                pattern: /<@&\d+>/gim,
-                callback: roleParser,
-            },
-            {
-                pattern: /<#\d+>/gim,
-                callback: channelParser,
-            },
-        ]);
-    }, []);
 
     useEffect(() => {
         if (sender && sender.data && memberPromise === null) {
@@ -403,9 +266,8 @@ function Message(props: Props) {
                             </div>
                             <MarkdownView
                                 extensions={discordParser.extensions}
-                                // extensions={discord.getExtensions()}
+                                components={discordParser.components}
                                 markdown={content}
-                                dangerouslySetInnerHTML
                             />
 
                             {!isDesktop && (
