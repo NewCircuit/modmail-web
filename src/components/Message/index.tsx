@@ -140,22 +140,22 @@ function Message(props: Props) {
         extensions: [
             {
                 type: 'lang',
-                regex: /<@&(\d+)>/,
+                regex: /<@&(\d+)>/gim,
                 replace: `<DiscordRole category="${category}" id="$1" />`,
             },
             {
                 type: 'lang',
-                regex: /<#(\d+)>/,
+                regex: /<#(\d+)>/gim,
                 replace: `<DiscordChannel category="${category}" id="$1" />`,
             },
             {
                 type: 'lang',
-                regex: /<@!?(\d+)>/,
+                regex: /<@!?(\d+)>/gim,
                 replace: `<DiscordUser category="${category}" id="$1" />`,
             },
             {
                 type: 'lang',
-                regex: /<:[a-z0-9]+:(\d+)>/i,
+                regex: /<:[a-z0-9]+:(\d+)>/gim,
                 replace: `<img src="https://cdn.discordapp.com/emojis/$1.png" height="32" />`,
             },
         ],

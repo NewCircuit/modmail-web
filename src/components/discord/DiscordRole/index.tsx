@@ -46,7 +46,7 @@ function DiscordRole(props: Props) {
             <Tooltip
                 PopperProps={commonPopperProps}
                 arrow
-                title={t('tooltips.discord.foundRol', { id }) as string}
+                title={t('tooltips.discord.foundRole', { id }) as string}
             >
                 <span
                     style={{
