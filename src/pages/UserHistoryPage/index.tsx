@@ -158,7 +158,6 @@ function UserHistoryPage() {
                         itemProps={{
                             full: true,
                             style: { height: 150 },
-                            replied: true,
                             onClick: onThreadClicked,
                         }}
                         empty={{

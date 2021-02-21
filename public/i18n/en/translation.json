@@ -45,22 +45,23 @@
       "foundRole": "Role ID: {{id}}",
       "emptyUser": "User '{{id}}' could not be found",
       "foundUser": "User ID: {{id}}"
+    },
+    "thread": {
+      "active": "This thread is currently active",
+      "inactive": "This thread is currently inactive",
+      "locked": "This thread is Admin Only",
+      "unlocked": "This thread is available to all mods"
     }
   },
   "drawer": {
     "tabs": {
       "categories": "Categories",
       "threads": "Threads"
-    },
-    "threadListItem": {
-      "newLabel": "New!",
-      "respondedByLabel": "Last Response By",
-      "createdDateLabel": "Thread Created At",
-      "new": "This thread has new messages!",
-      "replied": "This thread has been replied to.",
-      "important": "This thread requires attention.",
-      "question": "This thread requires attention."
     }
+  },
+  "threadListItem": {
+    "respondedByLabel": "Last Response By",
+    "createdDateLabel": "Thread Created At"
   },
   "message": {
     "unknownRole": "&lt;Unknown Role: '{{role}}'&gt;",

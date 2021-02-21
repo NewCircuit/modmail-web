@@ -8,11 +8,10 @@ import {
     useMediaQuery,
     useTheme,
 } from '@material-ui/core';
-import NotRepliedToIcon from '@material-ui/icons/AssignmentLateOutlined';
-import RepliedToIcon from '@material-ui/icons/AssignmentTurnedIn';
-import ExclamationIcon from '@material-ui/icons/ErrorOutline';
-import QuestionIcon from '@material-ui/icons/HelpOutlineOutlined';
-import MailIcon from '@material-ui/icons/MailOutlined';
+import LockedIcon from '@material-ui/icons/Https';
+import UnlockedIcon from '@material-ui/icons/NoEncryption';
+import LoopIcon from '@material-ui/icons/Loop';
+import CompleteIcon from '@material-ui/icons/CheckCircle';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { Skeleton } from '@material-ui/lab';
@@ -142,6 +141,13 @@ const useStyles = makeStyles((theme) => ({
         textOverflow: 'ellipsis',
         overflow: 'hidden show',
     },
+    highlight: {
+        opacity: 1,
+        color: theme.palette.secondary.main,
+    },
+    spin: {
+        animation: 'spin 2000ms infinite linear',
+    },
 }));
 
 function ThreadListItem(props: Props) {
@@ -157,8 +163,6 @@ function ThreadListItem(props: Props) {
         lastResponseState,
         setLastResponseState,
     ] = useState<Promise<MemberState | null> | null>(null);
-
-    const RepliedIcon = replied ? RepliedToIcon : NotRepliedToIcon;
 
     const timestamp =
         getTimestampFromSnowflake(thread?.id)?.toFormat('MM/dd/yyyy hh:mm a') || 'N/A';
@@ -178,6 +182,44 @@ function ThreadListItem(props: Props) {
             setLastResponseState(thread.messages[0].sender.data());
         }
     }, [thread, thread?.messages, lastResponseState]);
+
+    const modifiersBlock = (
+        <div className={classes.modifiers}>
+            <Tooltip
+                title={
+                    t(
+                        `tooltips.thread.${thread?.isActive ? 'active' : 'inactive'}`
+                    ) as string
+                }
+            >
+                {thread?.isActive ? (
+                    <LoopIcon
+                        className={clsx(
+                            classes.modifier,
+                            classes.spin,
+                            classes.highlight
+                        )}
+                    />
+                ) : (
+                    <CompleteIcon className={classes.modifier} />
+                )}
+            </Tooltip>
+
+            <Tooltip
+                title={
+                    t(
+                        `tooltips.thread.${thread?.isAdminOnly ? 'locked' : 'unlocked'}`
+                    ) as string
+                }
+            >
+                {thread?.isAdminOnly ? (
+                    <LockedIcon className={classes.modifier} />
+                ) : (
+                    <UnlockedIcon className={classes.modifier} />
+                )}
+            </Tooltip>
+        </div>
+    );
 
     return (
         <div className={classes.root} onClick={onHandleClick} {...otherProps}>
@@ -215,29 +257,7 @@ function ThreadListItem(props: Props) {
                         </Avatar>
                     )}
                 </Async>
-                {!full && isDesktop && (
-                    <div className={classes.modifiers}>
-                        <Tooltip
-                            title={
-                                t(
-                                    `drawer.threadListItem.${replied ? 'replied' : 'new'}`
-                                ) as string
-                            }
-                        >
-                            <RepliedIcon
-                                className={clsx(classes.modifier, {
-                                    [classes.active]: !replied,
-                                })}
-                            />
-                        </Tooltip>
-                        <Tooltip title={t('drawer.threadListItem.important') as string}>
-                            <ExclamationIcon className={clsx(classes.modifier)} />
-                        </Tooltip>
-                        <Tooltip title={t('drawer.threadListItem.question') as string}>
-                            <QuestionIcon className={clsx(classes.modifier)} />
-                        </Tooltip>
-                    </div>
-                )}
+                {!full && isDesktop && modifiersBlock}
             </div>
             <div
                 className={clsx({
@@ -264,19 +284,10 @@ function ThreadListItem(props: Props) {
                             )
                         }
                     </Async>
-
-                    {!replied && (
-                        <div className={classes.newModifier}>
-                            <MailIcon />
-                            <span style={{ marginLeft: '.25rem' }}>
-                                {t('drawer.threadListItem.newLabel') as string}
-                            </span>
-                        </div>
-                    )}
                 </div>
                 <div className={classes.panelContainer}>
                     <Typography className={classes.label}>
-                        {t('drawer.threadListItem.respondedByLabel') as string}
+                        {t('threadListItem.respondedByLabel') as string}
                     </Typography>
                     <Async promise={lastResponseState}>
                         {(member) =>
@@ -292,33 +303,11 @@ function ThreadListItem(props: Props) {
                 </div>
                 <div className={classes.panelContainer}>
                     <Typography className={classes.label}>
-                        {t('drawer.threadListItem.createdDateLabel') as string}
+                        {t('threadListItem.createdDateLabel') as string}
                     </Typography>
                     <Typography className={classes.value}>{timestamp}</Typography>
                 </div>
-                {full && (
-                    <div className={classes.panelContainer}>
-                        <Tooltip
-                            title={
-                                t(
-                                    `drawer.threadListItem.${replied ? 'replied' : 'new'}`
-                                ) as string
-                            }
-                        >
-                            <RepliedIcon
-                                className={clsx(classes.fullModifier, {
-                                    [classes.active]: !replied,
-                                })}
-                            />
-                        </Tooltip>
-                        <Tooltip title={t('drawer.threadListItem.important') as string}>
-                            <ExclamationIcon className={clsx(classes.fullModifier)} />
-                        </Tooltip>
-                        <Tooltip title={t('drawer.threadListItem.question') as string}>
-                            <QuestionIcon className={clsx(classes.fullModifier)} />
-                        </Tooltip>
-                    </div>
-                )}
+                {full && modifiersBlock}
             </div>
         </div>
     );
