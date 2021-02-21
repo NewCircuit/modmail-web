@@ -14,13 +14,10 @@ type Action = {
 
 type Props = {
     actions?: Action[];
+    className?: string;
 };
 
 const useStyle = makeStyles(() => ({
-    root: {
-        // padding: '.5rem',
-        // background: lighten(theme.palette.background.paper, 0.025),
-    },
     title: {
         padding: '.5rem 1rem',
     },
@@ -46,7 +43,7 @@ function UserHistoryActions(props: Props) {
     }
 
     return (
-        <Paper className={classes.root}>
+        <Paper className={props.className}>
             <Typography className={classes.title} variant={'h2'}>
                 {t('userHistory.actions.title')}
             </Typography>

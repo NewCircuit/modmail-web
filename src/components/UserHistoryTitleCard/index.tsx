@@ -120,7 +120,7 @@ function UserHistoryTitleCard(props: Partial<Props>) {
     }
 
     return (
-        <Container className={clsx(props.className)}>
+        <Container className={props.className}>
             <Typography variant={'h3'} className={classes.title}>
                 {t('userHistory.profile.title')}
             </Typography>

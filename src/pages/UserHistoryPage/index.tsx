@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useParams } from 'react-router-dom';
-import { Container, Grid } from '@material-ui/core';
+import { Container, Grid, useMediaQuery, useTheme } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import UserHistoryTitleCard from 'components/UserHistoryTitleCard';
 import UserSearchDialog, {
@@ -32,10 +32,13 @@ const useStyle = makeStyles(() => ({
     title: {
         marginBottom: '1rem',
     },
+    actions: {},
 }));
 
 function UserHistoryPage() {
     const { t } = useTranslation();
+    const theme = useTheme();
+    const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
     const classes = useStyle();
     const history = useHistory();
     const { userId } = UserState.useContainer();
@@ -136,9 +139,9 @@ function UserHistoryPage() {
                 </Async>
             )}
             <UserSearchDialog ref={dialogRef} onSubmit={onSearch} />
-            <Grid container spacing={4}>
+            <Grid container spacing={isDesktop ? 4 : 2}>
                 <Grid item md={4} xs={12}>
-                    <UserHistoryActions actions={actions} />
+                    <UserHistoryActions className={classes.actions} actions={actions} />
                 </Grid>
                 <Grid item md={8} xs={12}>
                     <UserHistoryTitleCard
