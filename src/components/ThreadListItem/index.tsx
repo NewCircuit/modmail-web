@@ -151,7 +151,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ThreadListItem(props: Props) {
-    const { replied, thread, full, onClick, ...otherProps } = props;
+    const { thread, full, onClick, ...otherProps } = props;
     const { t } = useTranslation();
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));

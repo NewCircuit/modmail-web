@@ -13,6 +13,7 @@ import Pages from './pages';
 import { UserState, ModmailState } from './state';
 import LocalizedBackdrop from './components/LocalizedBackdrop';
 import { FG } from './types';
+import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 
 const browserHistory = createBrowserHistory();
 
@@ -46,6 +47,7 @@ function App(props: FG.AppProps): JSX.Element {
             <Helmet>
                 <title>{t('appName')}</title>
             </Helmet>
+            <ServiceWorkerWrapper />
             <React.Suspense fallback={fallback}>
                 <UserState.Provider>
                     <Router history={browserHistory}>

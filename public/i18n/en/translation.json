@@ -102,5 +102,10 @@
       "archive": "View Complete Archive",
       "lookup": "Lookup User History"
     }
+  },
+  "serviceworker": {
+    "title": "An update is available!",
+    "description": "There has been an update to Modmail! If you wish to use to to date version, click the button below, otherwise we automatically send you the update later.",
+    "button": "Update Now!"
   }
 }
