@@ -47,13 +47,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DashboardPage(): JSX.Element {
     const { t } = useTranslation();
-    const { categories } = ModmailState.useContainer();
+    const { categories, threads } = ModmailState.useContainer();
     const classes = useStyles();
     const history = useHistory();
 
     const isCategoriesLoaded = typeof categories.items !== 'undefined';
     const isCategoriesEmpty =
         typeof categories.items !== 'undefined' && categories.items.length === 0;
+
+    useEffect(() => {
+        threads.reset();
+    }, []);
 
     useEffect(() => {
         if (typeof categories.items === 'undefined') {
