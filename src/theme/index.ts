@@ -57,6 +57,7 @@ const generateLightTheme = () =>
     } as CustomThemeOptions) as LightTheme;
 
 export const APPBAR_HEIGHT = 64;
+export const FOOTER_HEIGHT = 40;
 export const DRAWER_WIDTH = {
     mobile: 240,
     desktop: 300,

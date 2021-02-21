@@ -20,7 +20,6 @@ type ThreadsPageParams = {
 const useStyle = makeStyles(() => ({
     root: {
         position: 'relative',
-        minHeight: '80vh',
         padding: '1rem',
     },
     titlePaper: {

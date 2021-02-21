@@ -1,6 +1,7 @@
 {
   "guildName": "Floor-Gang",
   "appName": "$t(guildName) Modmail",
+  "viewGithub": "View this projects Github repository!",
   "maxConcurrentRequests": 2,
   "urls": {
     "base": "/api",

@@ -7,8 +7,9 @@ import { FG } from 'types';
 import Drawer from './Drawer';
 import CommonDrawerItems from './CommonDrawerItems';
 import { UserState } from '../../state';
-import { APPBAR_HEIGHT, DRAWER_WIDTH, Theme } from '../../theme';
+import { APPBAR_HEIGHT, DRAWER_WIDTH, FOOTER_HEIGHT, Theme } from '../../theme';
 import PrimaryAppBar from './PrimaryAppBar';
+import GlobalFooter from './GlobalFooter';
 
 type Props = {
     ref: ForwardedRef<Layout>;
@@ -25,6 +26,7 @@ type State = {
 };
 
 const toolbarHeight = APPBAR_HEIGHT;
+const footerHeight = FOOTER_HEIGHT;
 const drawerWidth = DRAWER_WIDTH.mobile;
 const drawerWidthDesktop = DRAWER_WIDTH.desktop;
 
@@ -50,12 +52,19 @@ const useStyles = makeStyles((theme) => ({
             width: drawerWidthDesktop,
         },
     },
-    container: {
+    wrapper: {
         transition: 'ease margin-left .5s',
         marginLeft: 0,
         height: `100vh`,
         position: 'relative',
-        overflowX: 'hidden',
+        overflow: 'hidden',
+    },
+    container: {
+        position: 'relative',
+        height: `calc(100% - ${toolbarHeight}px)`,
+        overflowY: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
     },
     open: {
         marginLeft: drawerWidthDesktop,
@@ -112,12 +121,15 @@ export class Layout extends React.Component<Props, State> {
                     </Drawer>
                 )}
                 <div
-                    className={clsx(classes.container, {
+                    className={clsx(classes.wrapper, {
                         [classes.open]: drawerOpen && isDesktop && user.authenticated,
                     })}
                 >
                     <div className={classes.toolbar} />
-                    {children}
+                    <div id={'main-container'} className={classes.container}>
+                        {children}
+                        <GlobalFooter />
+                    </div>
                 </div>
             </>
         );

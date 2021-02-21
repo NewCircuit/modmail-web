@@ -12,6 +12,9 @@ const styles = {
             background: gradient,
             backgroundColor: 'unset',
         },
+        '#root': {
+            overflow: 'hidden',
+        },
     },
 };
 
