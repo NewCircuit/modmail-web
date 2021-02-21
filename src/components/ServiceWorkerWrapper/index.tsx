@@ -3,6 +3,7 @@ import { Button, Typography, lighten, Slide } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import * as serviceWorker from '../../serviceWorker';
 import { Logger } from '../../util';
 
@@ -39,6 +40,7 @@ const useStyle = makeStyles((theme) => ({
 const ServiceWorkerWrapper: FC = () => {
     const { t } = useTranslation(undefined, { useSuspense: false });
     const classes = useStyle();
+    const location = useLocation();
     const [showReload, setShowReload] = React.useState(false);
     const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
 
@@ -47,6 +49,12 @@ const ServiceWorkerWrapper: FC = () => {
         setShowReload(true);
         setWaitingWorker(registration.waiting);
     };
+
+    useEffect(() => {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then((sw) => sw.update());
+        }
+    }, [location]);
 
     useEffect(() => {
         serviceWorker.register({ onUpdate: onSWUpdate });

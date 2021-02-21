@@ -27,7 +27,7 @@ type Config = {
 
 function registerValidSW(swUrl: string, config?: Config): void {
     navigator.serviceWorker
-        .register(swUrl)
+        .register(swUrl, { updateViaCache: 'none' })
         .then((registration) => {
             if (registration.waiting) {
                 // Execute callback

@@ -47,10 +47,10 @@ function App(props: FG.AppProps): JSX.Element {
             <Helmet>
                 <title>{t('appName')}</title>
             </Helmet>
-            <ServiceWorkerWrapper />
             <React.Suspense fallback={fallback}>
                 <UserState.Provider>
                     <Router history={browserHistory}>
+                        <ServiceWorkerWrapper />
                         <ModmailState.Provider>
                             <Authenticator setReady={setReady}>
                                 <React.Suspense fallback={fallback}>
