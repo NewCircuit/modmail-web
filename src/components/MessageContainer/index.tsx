@@ -13,22 +13,12 @@ type Props = {
     children: (child: MessageProps, index: number) => JSX.Element;
 };
 
-const useStyle = makeStyles((theme) => ({
+const useStyle = makeStyles(() => ({
     root: {
         flexGrow: 1,
         margin: 'auto 0 0',
         // justifyContent: 'flex-end',
     },
-    person0: { background: darken(theme.palette.background.paper, 0) },
-    person1: { background: lighten(theme.palette.background.paper, 0.05) },
-    person2: { background: lighten(theme.palette.background.paper, 0.1) },
-    // person3: { background: darken('yellow', 0.5) },
-    // person4: { background: darken('blue', 0.5) },
-    // person5: { background: darken('cyan', 0.5) },
-    // person6: { background: darken('orange', 0.5) },
-    // person7: { background: darken('purple', 0.5) },
-    // person8: { background: darken('pink', 0.5) },
-    // person9: { background: darken('teal', 0.5) },
 }));
 
 type ColorMap = {
@@ -45,9 +35,6 @@ function MessageContainer(props: Props) {
     useEffect(() => {
         if (pageRef?.current) {
             colorMap.current = {};
-            pageRef.current.scrollBy({
-                top: pageRef.current.scrollHeight - window.innerHeight - 20,
-            });
         }
     }, [messages]);
 

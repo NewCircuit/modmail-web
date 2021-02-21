@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { RefObject, useEffect, useRef, useState } from 'react';
 import { makeStyles, lighten } from '@material-ui/core/styles';
 import {
     Skeleton,
@@ -160,6 +160,7 @@ function Message(props: Props) {
             },
         ],
     });
+    const currentRef: RefObject<HTMLDivElement> = React.createRef();
 
     const dateSent = getTimestampFromSnowflake(modmailID);
     const date = dateSent?.toFormat('MM/dd/yyyy');
@@ -171,12 +172,28 @@ function Message(props: Props) {
         }
     }, [sender, memberPromise]);
 
+    useEffect(() => {
+        if (isLastMessage && currentRef.current) {
+            // hack to scroll to last message
+            const container = document.querySelector('#main-container');
+            if (container) {
+                container.scrollTo({
+                    top:
+                        currentRef.current.getBoundingClientRect().top -
+                        window.innerHeight +
+                        300,
+                });
+            }
+        }
+    }, []);
+
     const onGoToHistory = (id) => logger.verbose(`redirecting to user history ${id}`);
 
     return (
         <Async promise={memberPromise}>
             {(member: Nullable<MemberState>) => (
                 <TimelineItem
+                    ref={currentRef}
                     classes={{
                         missingOppositeContent: classes.missingOppositeContent,
                     }}
