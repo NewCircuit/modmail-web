@@ -4,6 +4,9 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import * as serviceWorker from '../../serviceWorker';
+import { Logger } from '../../util';
+
+const logger = Logger.getLogger('ServiceWorkerWrapper');
 
 const useStyle = makeStyles((theme) => ({
     root: {
@@ -40,6 +43,7 @@ const ServiceWorkerWrapper: FC = () => {
     const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
 
     const onSWUpdate = (registration: ServiceWorkerRegistration) => {
+        logger.info('Application update detected. notifying user??');
         setShowReload(true);
         setWaitingWorker(registration.waiting);
     };
@@ -57,8 +61,6 @@ const ServiceWorkerWrapper: FC = () => {
     const close = () => {
         setShowReload(false);
     };
-
-    console.log(showReload);
 
     return (
         <Slide direction={'right'} in={showReload} unmountOnExit>
