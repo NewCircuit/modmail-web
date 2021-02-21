@@ -29,6 +29,12 @@ function registerValidSW(swUrl: string, config?: Config): void {
     navigator.serviceWorker
         .register(swUrl)
         .then((registration) => {
+            if (registration.waiting) {
+                // Execute callback
+                if (config && config.onUpdate) {
+                    config.onUpdate(registration);
+                }
+            }
             // eslint-disable-next-line no-param-reassign
             registration.onupdatefound = (): void => {
                 const installingWorker = registration.installing;
