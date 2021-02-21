@@ -5,6 +5,7 @@ import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { Category } from '@Floor-Gang/modmail-types';
 import { useTranslation, Trans } from 'react-i18next';
+import UnescapedTrans from 'components/UnescapedTrans';
 import { MemberState, Nullable } from '../../types';
 import { FetchState } from '../../state';
 import { getNameFromMemberState } from '../../util';
@@ -52,6 +53,15 @@ const useStyle = makeStyles((theme) => ({
     },
 }));
 
+const dec = (a: any) => {
+    console.log(a);
+    if (a) {
+        // eslint-disable-next-line no-param-reassign
+        a = a.replace('<', '\\003C');
+    }
+    return a;
+};
+
 function UserHistoryTitleCard(props: Partial<Props>) {
     const { user, total, fetch, category } = props as Props;
     const { t, i18n } = useTranslation();
@@ -60,6 +70,7 @@ function UserHistoryTitleCard(props: Partial<Props>) {
     const classes = useStyle();
 
     useEffect(() => {
+        console.log({ t, i18n });
         if (user === 'me') return;
         setUserData(null);
         setFetchState(FetchState.LOADING);
@@ -88,24 +99,22 @@ function UserHistoryTitleCard(props: Partial<Props>) {
         );
 
         parts.historyFor = (
-            <Trans
-                i18n={i18n}
-                tOptions={{ user: getNameFromMemberState(userData) }}
+            <UnescapedTrans
+                t={t}
+                values={{
+                    user: getNameFromMemberState(userData),
+                }}
                 i18nKey={'userHistory.profile.historyFor'}
             />
         );
 
         parts.total = (
-            <Trans
-                i18n={i18n}
-                tOptions={{ total }}
-                i18nKey={'userHistory.profile.total'}
-            />
+            <Trans t={t} tOptions={{ total }} i18nKey={'userHistory.profile.total'} />
         );
 
         parts.categoryName = (
-            <Trans
-                i18n={i18n}
+            <UnescapedTrans
+                t={t}
                 tOptions={{
                     category: category?.name,
                 }}
