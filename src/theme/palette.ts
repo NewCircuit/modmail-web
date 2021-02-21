@@ -6,6 +6,10 @@ const pdpRedLight = '#e93030';
 const pdpRedMain = '#bc0707';
 const pdpRedDark = '#750202';
 
+const secondaryLight = '#7289da';
+const secondaryMain = '#3358d7';
+const secondaryDark = '#162a6e';
+
 const palette: CustomPalette = {
     primary: {
         contrastText: colors.common.white,
@@ -15,9 +19,9 @@ const palette: CustomPalette = {
     },
     secondary: {
         contrastText: colors.common.white,
-        dark: colors.blue[900],
-        main: colors.blue.A400,
-        light: colors.blue.A400,
+        light: secondaryLight,
+        main: secondaryMain,
+        dark: secondaryDark,
     },
     success: {
         contrastText: colors.common.white,
