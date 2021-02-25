@@ -59,6 +59,18 @@
       "threads": "Threads"
     }
   },
+  "dialogs": {
+    "userLookup": {
+      "title": "User History Lookup",
+      "description": "Search for a specific user by entering the user's ID and pressing pressing Go!",
+      "label": "User ID",
+      "placeholder": "Enter a user ID and press Enter",
+      "helperText": "",
+      "cancel": "Cancel",
+      "go": "Go",
+      "validation": "User IDs must be numeric and cannot be blank."
+    }
+  },
   "threadListItem": {
     "respondedByLabel": "Last Response By",
     "createdDateLabel": "Thread Created At"
