@@ -12,8 +12,8 @@ ___
 #### `yarn create react-app modmail-web-ui --template typescript-eslint-prettier`
 
 
-####[Modmail](https://github.com/Floor-Gang/modmail)
-####[Used endpoints provided by the Modmail Server](./resources/Endpoints.md)
+#### [Modmail](https://github.com/Floor-Gang/modmail)
+#### [Used endpoints provided by the Modmail Server](./resources/Endpoints.md)
 
 ___
 
