@@ -1,6 +1,6 @@
 # Modmail Web App
 
-![modmail-web](https://img.shields.io/github/package-json/v/Floor-Gang/modmail-web) ![lines](https://img.shields.io/tokei/lines/github/Floor-Gang/modmail-web) ![chat](https://img.shields.io/discord/718433475828645928)
+[![Version][version-image]](/) [![Lines][lines-image]](/) [![Come Chat][chat-image]][discord-link]
 
 ![Logo](./public/icon/96.png)
 
@@ -46,5 +46,9 @@ ___
 
 ## Floor-Gang
 
-[icon]: ./public/icon/96.png
+[discord-link]: https://discord.gg/pewdiepie
+[chat-image]: https://img.shields.io/discord/718433475828645928
+[lines-image]: https://img.shields.io/tokei/lines/github/Floor-Gang/modmail-web
+[version-image]: https://img.shields.io/github/package-json/v/Floor-Gang/modmail-web
 [modmail-web]: https://github.com/Floor-Gang/modmail-web
+[icon]: ./public/icon/96.png
