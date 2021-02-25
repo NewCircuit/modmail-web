@@ -9,7 +9,7 @@ import { UserState } from '../state';
 
 const logger = Logger.getLogger('useCategories');
 
-export default function useCategories() {
+export default function useCategories(): FG.State.CategoriesState {
     const { t } = useTranslation();
     const { logout } = UserState.useContainer();
     const [categories, setCategories] = useState<Optional<Category[]>>(undefined);

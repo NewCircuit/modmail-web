@@ -14,7 +14,7 @@ type MembersState = FG.State.MembersState;
 type Props = {
     members: MembersState;
 };
-export default function useThreads(props?: Props) {
+export default function useThreads(props?: Props): FG.State.ThreadsState {
     const { members } = props || {};
     const { t } = useTranslation();
     const { logout } = UserState.useContainer();

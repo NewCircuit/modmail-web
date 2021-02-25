@@ -55,17 +55,6 @@ type MutatedMessage = Omit<Message, 'sender'> & {
     };
 };
 
-type TempModmailUser = ModmailUser & {
-    username: string;
-    avatar: string;
-    discriminator: string;
-    public_flags: number;
-    flags: number;
-    locale: string;
-    token: string;
-    mfa_enabled: bolean;
-};
-
 export type UserMap = {
     [s: string]: MemberState;
 };
@@ -82,7 +71,9 @@ declare namespace FG {
 }
 
 declare namespace FG.Api {
-    type SelfResponse = TempModmailUser;
+    type SelfResponse = MemberState & {
+        token: string;
+    };
 
     type CategoryOneResponse = Category;
     type CategoriesResponse = Category[];
@@ -120,6 +111,43 @@ declare namespace FG.State {
         get: (category: string, id: string) => () => Promise<Nullable<MemberState>>;
     };
 
+    type ThreadsState = {
+        items?: Array<MutatedThread>;
+        fetch: (category: string) => Promise<MutatedThread[]>;
+        fetchOne: (category: string, thread: string) => Promise<Nullable<MutatedThread>>;
+        findById: (category: string, thread: string) => Nullable<MutatedThread>;
+        fetchByUserId: (
+            category: string,
+            user: string,
+            cache?: boolean
+        ) => Promise<MutatedThread[]>;
+        reset: () => void;
+    };
+
+    type CategoriesState = {
+        items?: Array<Category>;
+        fetch: () => Promise<Category[]>;
+        fetchOne: (category: string) => Promise<Nullable<Category>>;
+        findById: (category: string) => Nullable<Category>;
+        reset: () => void;
+    };
+
+    type RolesState = {
+        roles: DiscordTagMap;
+        fetch: (category: string, role: string, cache?: boolean) => Promise<RoleTag>;
+        get: (category: string, role: string, cache?: boolean) => Promise<RoleTag>;
+    };
+
+    type ChannelsState = {
+        channels: DiscordTagMap;
+        fetch: (
+            category: string,
+            channel: string,
+            cache?: boolean
+        ) => Promise<ChannelTag>;
+        get: (category: string, channel: string, cache?: boolean) => Promise<ChannelTag>;
+    };
+
     type UserState = {
         token: ReadOnly<Nullable<string>>;
         userId: ReadOnly<Nullable<string>>;
@@ -131,46 +159,10 @@ declare namespace FG.State {
     };
 
     type ModmailState = {
-        threads: {
-            items?: Array<MutatedThread>;
-            fetch: (category: string) => Promise<MutatedThread[]>;
-            fetchOne: (
-                category: string,
-                thread: string
-            ) => Promise<Nullable<MutatedThread>>;
-            findById: (category: string, thread: string) => Nullable<MutatedThread>;
-            fetchByUserId: (
-                category: string,
-                user: string,
-                cache?: boolean
-            ) => Promise<MutatedThread[]>;
-            reset: () => void;
-        };
-        categories: {
-            items?: Array<Category>;
-            fetch: () => Promise<Category[]>;
-            fetchOne: (category: string) => Promise<Nullable<Category>>;
-            findById: (category: string) => Nullable<Category>;
-            reset: () => void;
-        };
-        roles: {
-            roles: DiscordTagMap;
-            fetch: (category: string, role: string, cache?: boolean) => Promise<RoleTag>;
-            get: (category: string, role: string, cache?: boolean) => Promise<RoleTag>;
-        };
-        channels: {
-            channels: DiscordTagMap;
-            fetch: (
-                category: string,
-                channel: string,
-                cache?: boolean
-            ) => Promise<ChannelTag>;
-            get: (
-                category: string,
-                channel: string,
-                cache?: boolean
-            ) => Promise<ChannelTag>;
-        };
+        threads: ThreadsState;
+        categories: CategoriesState;
+        roles: RolesState;
+        channels: ChannelsState;
         members: MembersState;
     };
 }

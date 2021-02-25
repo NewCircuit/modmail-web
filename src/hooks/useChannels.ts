@@ -15,7 +15,7 @@ const defaultProps = {
     cache: true,
 };
 
-export default function useChannels(props: Props = defaultProps) {
+export default function useChannels(props: Props = defaultProps): FG.State.ChannelsState {
     const { cache: universalCache } = props;
     const { t } = useTranslation();
     const { logout } = UserState.useContainer();

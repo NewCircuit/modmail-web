@@ -16,7 +16,7 @@ const defaultProps = {
     cache: true,
 };
 
-export default function useRoles(props: Props = defaultProps) {
+export default function useRoles(props: Props = defaultProps): FG.State.RolesState {
     const { cache: universalCache } = props;
     const { t } = useTranslation();
     const { logout } = UserState.useContainer();
