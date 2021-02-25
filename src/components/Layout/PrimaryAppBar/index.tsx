@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Button, IconButton, Toolbar, Typography } from '@material-ui/core';
-import { ExitToApp, Menu as MenuIcon } from '@material-ui/icons';
+import { AppBar, Button, Toolbar, Typography } from '@material-ui/core';
+import ExitToApp from '@material-ui/icons/ExitToApp';
 import { Link, useLocation } from 'react-router-dom';
 import UrlPattern from 'url-pattern';
 import { useTranslation } from 'react-i18next';
@@ -46,7 +46,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 function PrimaryAppBar(props: Props) {
-    const { user, onHandleMenuClick } = props;
+    const { user } = props;
     const { t } = useTranslation();
     const classes = useStyle();
     const location = useLocation();
@@ -68,12 +68,13 @@ function PrimaryAppBar(props: Props) {
     return (
         <AppBar>
             <Toolbar className={classes.toolbar}>
-                <IconButton
-                    onClick={user.authenticated ? onHandleMenuClick : undefined}
-                    className={classes.icon}
-                >
-                    <MenuIcon />
-                </IconButton>
+                {/* Disabled for V1 since there is no real use for the menu right now */}
+                {/* <IconButton */}
+                {/*    onClick={user.authenticated ? onHandleMenuClick : undefined} */}
+                {/*    className={classes.icon} */}
+                {/* > */}
+                {/*    <MenuIcon /> */}
+                {/* </IconButton> */}
                 {user.authenticated ? (
                     <Link to={homeLink} className={classes.title}>
                         {t('appName')}
