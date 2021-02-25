@@ -228,7 +228,7 @@ function Message(props: Props) {
                                 {member ? (
                                     <Tooltip
                                         arrow
-                                        placement={'right'}
+                                        placement={isDesktop ? 'right' : 'bottom'}
                                         title={
                                             <Trans
                                                 i18n={i18n}

@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { PropsWithChildren, useEffect } from 'react';
 import { Button, Typography, lighten, Slide } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
@@ -8,6 +8,10 @@ import * as serviceWorker from '../../serviceWorker';
 import { Logger } from '../../util';
 
 const logger = Logger.getLogger('ServiceWorkerWrapper');
+
+type Props = PropsWithChildren<{
+    initialize?: boolean;
+}>;
 
 const useStyle = makeStyles((theme) => ({
     root: {
@@ -37,7 +41,7 @@ const useStyle = makeStyles((theme) => ({
     },
 }));
 
-const ServiceWorkerWrapper: FC = () => {
+function ServiceWorkerWrapper({ initialize }: Props) {
     const { t } = useTranslation(undefined, { useSuspense: false });
     const classes = useStyle();
     const location = useLocation();
@@ -57,8 +61,10 @@ const ServiceWorkerWrapper: FC = () => {
     }, [location]);
 
     useEffect(() => {
-        serviceWorker.register({ onUpdate: onSWUpdate });
-    }, []);
+        if (initialize) {
+            serviceWorker.register({ onUpdate: onSWUpdate });
+        }
+    }, [initialize]);
 
     const reloadPage = () => {
         waitingWorker?.postMessage({ type: 'SKIP_WAITING' });
@@ -96,6 +102,9 @@ const ServiceWorkerWrapper: FC = () => {
             </div>
         </Slide>
     );
+}
+ServiceWorkerWrapper.defaultProps = {
+    initialize: false,
 };
 
 export default ServiceWorkerWrapper;

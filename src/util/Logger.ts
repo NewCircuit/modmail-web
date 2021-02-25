@@ -38,6 +38,14 @@ export class Logger {
         return this.logger.debug(args);
     }
 
+    warn(args: any) {
+        return this.logger.warn(args);
+    }
+
+    error(args: any) {
+        return this.logger.error(args);
+    }
+
     fatal(args: any) {
         return this.logger.fatal(args);
     }

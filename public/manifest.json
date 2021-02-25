@@ -2,6 +2,11 @@
   "short_name": "Modmail",
   "name": "Floor-Gang Modmail",
   "description": "A web interface used to view modmail threads and messages",
+  "intent_filters": {
+    "scope_url_scheme": "https",
+    "scope_url_host": "discord.com",
+    "scope_url_path": "/channels"
+  },
   "icons": [
     {
       "src": "icon/favicon.ico",

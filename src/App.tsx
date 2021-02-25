@@ -25,7 +25,6 @@ function App(props: FG.AppProps): JSX.Element {
     useEffect(() => {
         GlobalConfiguration.setOption('emoji', true);
         GlobalConfiguration.setOption('openLinksInNewWindow', true);
-        // if (onReady) onReady();
     }, []);
 
     const setReady = () => {
@@ -50,7 +49,7 @@ function App(props: FG.AppProps): JSX.Element {
             <React.Suspense fallback={fallback}>
                 <UserState.Provider>
                     <Router history={browserHistory}>
-                        <ServiceWorkerWrapper />
+                        <ServiceWorkerWrapper initialize />
                         <ModmailState.Provider>
                             <Authenticator setReady={setReady}>
                                 <React.Suspense fallback={fallback}>

@@ -17,7 +17,6 @@ const useStyle = makeStyles(() => ({
     root: {
         flexGrow: 1,
         margin: 'auto 0 0',
-        // justifyContent: 'flex-end',
     },
 }));
 

@@ -1,5 +1,10 @@
+/**
+ * utility component for i18next.
+ * escaping string values don't work correctly by default,
+ * this wrapper has a workaround for it
+ */
 import React from 'react';
-import { Trans } from 'react-i18next';
+import { Trans, TransProps } from 'react-i18next';
 import { unescape } from 'lodash';
 
 const getUnescapeChildrenRef = (ref: any) =>
@@ -15,7 +20,7 @@ const getUnescapeChildrenRef = (ref: any) =>
         node.innerText = unescape(node.innerText);
     });
 
-const UnescapedTrans = (props) => (
+const UnescapedTrans = (props: TransProps<any>) => (
     <div ref={getUnescapeChildrenRef}>
         <Trans {...props} tOptions={{ interpolation: { escapeValue: true } }} />
     </div>

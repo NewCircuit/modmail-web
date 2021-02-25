@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, PropsWithChildren } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, List, ListItem, Paper, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
@@ -9,6 +9,10 @@ import UnescapedTrans from 'components/UnescapedTrans';
 import { MemberState, Nullable } from '../../types';
 import { FetchState } from '../../state';
 import { getNameFromMemberState } from '../../util';
+
+type PaperContainer = PropsWithChildren<{
+    className?: string;
+}>;
 
 type Props = {
     user: string;
@@ -53,24 +57,14 @@ const useStyle = makeStyles((theme) => ({
     },
 }));
 
-const dec = (a: any) => {
-    console.log(a);
-    if (a) {
-        // eslint-disable-next-line no-param-reassign
-        a = a.replace('<', '\\003C');
-    }
-    return a;
-};
-
 function UserHistoryTitleCard(props: Partial<Props>) {
     const { user, total, fetch, category } = props as Props;
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [userData, setUserData] = useState<Nullable<MemberState>>(null);
     const classes = useStyle();
 
     useEffect(() => {
-        console.log({ t, i18n });
         if (user === 'me') return;
         setUserData(null);
         setFetchState(FetchState.LOADING);
@@ -80,8 +74,8 @@ function UserHistoryTitleCard(props: Partial<Props>) {
         });
     }, [user]);
 
-    const Container = ({ children: cn }: any) => (
-        <Paper className={clsx(classes.root, props.className)}>{cn}</Paper>
+    const Container = ({ children: cn, className }: PaperContainer) => (
+        <Paper className={clsx(classes.root, className)}>{cn}</Paper>
     );
 
     const parts: { [s: string]: JSX.Element | string } = {
@@ -115,7 +109,7 @@ function UserHistoryTitleCard(props: Partial<Props>) {
         parts.categoryName = (
             <UnescapedTrans
                 t={t}
-                tOptions={{
+                values={{
                     category: category?.name,
                 }}
                 i18nKey={'userHistory.profile.categoryName'}

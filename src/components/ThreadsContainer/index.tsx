@@ -3,16 +3,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import { CircularProgress, Paper } from '@material-ui/core';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
-import { Thread } from '@Floor-Gang/modmail-types';
 import clsx from 'clsx';
 import Alert from '../Alert';
 import { MutatedThread, RequiredArgs } from '../../types';
 import LocalizedBackdrop from '../LocalizedBackdrop';
+import { ThreadListItemProps } from '../ThreadListItem';
 
 type Child = ComponentType<RequiredArgs<{ thread: MutatedThread }>>;
 type Props = {
     threads?: MutatedThread[];
-    itemProps?: any;
+    itemProps?: Partial<ThreadListItemProps>;
     loaded?: boolean;
     empty?: {
         title?: React.ReactNode;
@@ -20,7 +20,6 @@ type Props = {
     };
     className?: string;
     children: Child;
-    // children: (props: any) => React.Component;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -37,9 +36,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function itemRenderer(Component: Child, itemProps: any) {
+function itemRenderer(Component: Child, itemProps?: Partial<ThreadListItemProps>) {
     return function Item(props: ListChildComponentProps) {
-        const threads: Thread[] = props.data;
+        const threads: MutatedThread[] = props.data;
         const currentThread = threads[props.index];
 
         return (
