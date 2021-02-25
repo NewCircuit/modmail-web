@@ -1,7 +1,7 @@
 export const commonPopperProps = {
     modifiers: {
         offset: {
-            offset: '25, -10px',
+            offset: '0, -10px',
         },
         flip: {
             enabled: false,

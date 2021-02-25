@@ -5,8 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { ParserProps } from '../../../hooks/useDiscordParser';
 import { MemberState } from '../../../types';
 import { FetchState, ModmailState } from '../../../state';
-import { getNameFromMemberState } from '../../../util';
+import { getNameFromMemberState, Logger } from '../../../util';
 import { commonPopperProps } from '../index';
+
+const logger = Logger.getLogger('Parser.DiscordUser');
 
 type Props = ParserProps;
 
@@ -41,6 +43,7 @@ function DiscordUser(props: Props) {
                     data: response,
                 });
             } else {
+                logger.warn(`Message Parser failed to parse user id ${id}`);
                 setUser({ status: FetchState.EMPTY });
             }
         });
@@ -51,6 +54,7 @@ function DiscordUser(props: Props) {
             <Tooltip
                 PopperProps={commonPopperProps}
                 arrow
+                placement={'bottom-start'}
                 title={t('tooltips.discord.foundUser', { id }) as string}
             >
                 <span
@@ -71,6 +75,7 @@ function DiscordUser(props: Props) {
         <Tooltip
             PopperProps={commonPopperProps}
             arrow
+            placement={'bottom-start'}
             title={t('tooltips.discord.emptyUser', { id }) as string}
         >
             <span

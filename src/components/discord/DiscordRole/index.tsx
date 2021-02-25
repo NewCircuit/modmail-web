@@ -6,6 +6,9 @@ import { ParserProps } from '../../../hooks/useDiscordParser';
 import { RoleTag } from '../../../types';
 import { FetchState, ModmailState } from '../../../state';
 import { commonPopperProps } from '../index';
+import { Logger } from '../../../util';
+
+const logger = Logger.getLogger('Parser.DiscordRole');
 
 type Props = ParserProps;
 
@@ -35,9 +38,12 @@ function DiscordRole(props: Props) {
         setRole({ status: FetchState.LOADING });
         get(category, id).then((response) => {
             setRole({
-                status: response.exists ? FetchState.LOADED : FetchState.EMPTY,
+                status: response?.exists ? FetchState.LOADED : FetchState.EMPTY,
                 data: response,
             });
+            if (!response.exists) {
+                logger.warn(`Message Parser failed to parse role id ${id}`);
+            }
         });
     }, [id]);
 
@@ -46,6 +52,7 @@ function DiscordRole(props: Props) {
             <Tooltip
                 PopperProps={commonPopperProps}
                 arrow
+                placement={'bottom-start'}
                 title={t('tooltips.discord.foundRole', { id }) as string}
             >
                 <span
@@ -63,6 +70,7 @@ function DiscordRole(props: Props) {
         <Tooltip
             PopperProps={commonPopperProps}
             arrow
+            placement={'bottom-start'}
             title={t('tooltips.discord.emptyRole', { id }) as string}
         >
             <span

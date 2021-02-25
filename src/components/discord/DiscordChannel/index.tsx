@@ -6,6 +6,9 @@ import { ParserProps } from '../../../hooks/useDiscordParser';
 import { ChannelTag } from '../../../types';
 import { FetchState, ModmailState } from '../../../state';
 import { commonPopperProps } from '../index';
+import { Logger } from '../../../util';
+
+const logger = Logger.getLogger('Parser.DiscordChannel');
 
 type Props = ParserProps;
 
@@ -38,6 +41,9 @@ function DiscordChannel(props: Props) {
                 status: response.exists ? FetchState.LOADED : FetchState.EMPTY,
                 data: response,
             });
+            if (!response.exists) {
+                logger.warn(`Message Parser failed to parse user id ${id}`);
+            }
         });
     }, [id]);
 
@@ -46,6 +52,7 @@ function DiscordChannel(props: Props) {
             <Tooltip
                 PopperProps={commonPopperProps}
                 arrow
+                placement={'bottom-start'}
                 title={t('tooltips.discord.foundChannel', { id }) as string}
             >
                 <span
@@ -65,6 +72,7 @@ function DiscordChannel(props: Props) {
         <Tooltip
             PopperProps={commonPopperProps}
             arrow
+            placement={'bottom-start'}
             title={t('tooltips.discord.emptyChannel', { id }) as string}
         >
             <span
