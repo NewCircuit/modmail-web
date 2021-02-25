@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     Avatar,
     darken,
+    lighten,
     Tooltip,
     Typography,
     useMediaQuery,
@@ -15,20 +16,23 @@ import CompleteIcon from '@material-ui/icons/CheckCircle';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { Skeleton } from '@material-ui/lab';
+import { Link } from 'react-router-dom';
 import { getNameFromMemberState, getTimestampFromSnowflake } from '../../util';
 import { MemberState, MutatedThread } from '../../types';
 import Async from '../Async';
 
 type DivElem = React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
+    React.HTMLAttributes<HTMLLinkElement>,
+    HTMLLinkElement
 >;
 
 type Props = Omit<DivElem, 'onClick'> & {
     thread?: MutatedThread;
     full?: boolean;
-    replied?: boolean;
-    onClick?: (evt: React.SyntheticEvent<HTMLDivElement>, thread?: MutatedThread) => void;
+    onClick?: (
+        evt: React.SyntheticEvent<HTMLLinkElement>,
+        thread?: MutatedThread
+    ) => void;
 };
 
 const avatarDimensions = {
@@ -38,9 +42,20 @@ const avatarDimensions = {
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        color: theme.palette.text.primary,
+        textDecoration: 'none',
         display: 'flex',
         cursor: 'pointer',
         borderBottom: `1px solid ${darken(theme.palette.divider, 0.5)}`,
+        background: 'inherit',
+        transition: '.2s ease background',
+        '&:hover, &:focus': {
+            background: lighten(theme.palette.background.paper, 0.025),
+            // color: theme.palette.text.secondary,
+        },
+        '&:active': {
+            background: lighten(theme.palette.background.paper, 0.05),
+        },
     },
     leftPanel: {
         display: 'flex',
@@ -111,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
         textOverflow: 'ellipsis',
         fontSize: '1.3em',
         overflow: 'hidden',
-        color: theme.palette.text.primary,
+        color: 'inherit',
     },
     fullName: {
         [theme.breakpoints.up('sm')]: {
@@ -167,7 +182,7 @@ function ThreadListItem(props: Props) {
     const timestamp =
         getTimestampFromSnowflake(thread?.id)?.toFormat('MM/dd/yyyy hh:mm a') || 'N/A';
 
-    const onHandleClick = (evt: React.SyntheticEvent<HTMLDivElement>) => {
+    const onHandleClick = (evt: React.SyntheticEvent<HTMLLinkElement>) => {
         if (onClick) onClick(evt, thread);
     };
 
@@ -222,7 +237,12 @@ function ThreadListItem(props: Props) {
     );
 
     return (
-        <div className={classes.root} onClick={onHandleClick} {...otherProps}>
+        <Link
+            to={`/category/${thread?.category}/threads/${thread?.id}`}
+            className={classes.root}
+            onClick={onHandleClick as any}
+            {...(otherProps as any)}
+        >
             <div
                 className={clsx({
                     [classes.leftPanel]: !full,
@@ -309,14 +329,14 @@ function ThreadListItem(props: Props) {
                 </div>
                 {full && modifiersBlock}
             </div>
-        </div>
+        </Link>
     );
 }
 
 ThreadListItem.defaultProps = {
-    replied: false,
     full: false,
     thread: {},
 } as never;
 
+export type ThreadListItemProps = Props;
 export default ThreadListItem;

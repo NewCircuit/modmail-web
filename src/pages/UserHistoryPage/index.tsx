@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ForwardedRef, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useParams } from 'react-router-dom';
 import { Container, Grid, useMediaQuery, useTheme } from '@material-ui/core';
@@ -53,15 +53,14 @@ function UserHistoryPage() {
     const [category, setCategory] = useState<Nullable<Category>>(
         categoriesHandler.findById(categoryId)
     );
-    const dialogRef = React.createRef<UserSearchDialogClass>();
+    const dialogRef: ForwardedRef<UserSearchDialogClass> = React.createRef<UserSearchDialogClass>();
     const targetUser = memberHandler.members[targetUserId];
 
     useEffect(() => {
-        const currentCategory = categoriesHandler.findById(categoryId);
-        if (currentCategory === null) {
-            categoriesHandler.fetchOne(categoryId).then((response) => {
-                setCategory(response);
-            });
+        if (category === null) {
+            categoriesHandler
+                .fetchOne(categoryId)
+                .then((response) => setCategory(response));
         }
     }, []);
 
@@ -87,17 +86,15 @@ function UserHistoryPage() {
         }
     }, [targetUserId]);
 
-    const onThreadClicked = (evt, thread: MutatedThread) => {
+    const onThreadClicked = (evt: React.SyntheticEvent, thread?: MutatedThread) =>
         logger.verbose({
-            message: `Thread Clicked`,
+            message: 'Thread Clicked',
             data: {
-                id: thread.id,
-                authorId: thread.author.id,
-                category: thread.category,
+                id: thread?.id,
+                authorId: thread?.author.id,
+                category: thread?.category,
             },
         });
-        history.push(`/category/${categoryId}/threads/${thread.id}`);
-    };
 
     const handleLookup = () => {
         if (dialogRef.current) {

@@ -8,7 +8,6 @@ import {
     Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
 import { Category } from '@Floor-Gang/modmail-types';
 import { useTranslation } from 'react-i18next';
 import { ModmailState } from '../../state';
@@ -39,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
         margin: '1rem 1rem 0 1rem',
     },
     divider: {
-        // borderStyle: 'solid',
         borderColor: lighten(theme.palette.divider, 0),
         margin: '.15rem 1rem',
     },
@@ -49,7 +47,6 @@ export default function DashboardPage(): JSX.Element {
     const { t } = useTranslation();
     const { categories, threads } = ModmailState.useContainer();
     const classes = useStyles();
-    const history = useHistory();
 
     const isCategoriesLoaded = typeof categories.items !== 'undefined';
     const isCategoriesEmpty =
@@ -65,7 +62,7 @@ export default function DashboardPage(): JSX.Element {
         }
     }, [categories.items]);
 
-    const onCategorySelected = (evt: React.SyntheticEvent, category: Category) => {
+    const onCategorySelected = (evt: React.SyntheticEvent, category: Category) =>
         logger.verbose({
             message: `category selected`,
             data: {
@@ -73,8 +70,6 @@ export default function DashboardPage(): JSX.Element {
                 name: category.name,
             },
         });
-        history.push(`/category/${category.id}/users/me/history`);
-    };
 
     const renderGridItems = () => {
         if (isCategoriesLoaded) {

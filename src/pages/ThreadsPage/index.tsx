@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { CircularProgress, Container, Paper, Typography } from '@material-ui/core';
 import { useTranslation, Trans } from 'react-i18next';
-import { Category, Thread } from '@Floor-Gang/modmail-types';
+import { Category } from '@Floor-Gang/modmail-types';
 import { Helmet } from 'react-helmet';
 import { ModmailState, FetchState } from '../../state';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';
 import ThreadsContainer from '../../components/ThreadsContainer';
 import ThreadListItem from '../../components/ThreadListItem';
 import { Logger } from '../../util';
+import { MutatedThread } from '../../types';
 
 const logger = Logger.getLogger('ThreadsPage');
 
@@ -32,7 +33,6 @@ function ThreadsPage(): JSX.Element {
     const { t } = useTranslation();
     const classes = useStyle();
     const { categoryId } = useParams<ThreadsPageParams>();
-    const history = useHistory();
     const { threads, categories } = ModmailState.useContainer();
     const [fetchState, setFetchState] = useState<FetchState>(FetchState.EMPTY);
     const [category, setCategory] = useState<Category | null>(null);
@@ -57,17 +57,15 @@ function ThreadsPage(): JSX.Element {
         }
     }, [categoryId]);
 
-    const onThreadClicked = (evt: React.SyntheticEvent, thread: Thread) => {
+    const onThreadClicked = (evt: React.SyntheticEvent, thread?: MutatedThread) =>
         logger.verbose({
             message: 'Thread Clicked',
             data: {
-                id: thread.id,
-                authorId: thread.author.id,
-                category: thread.category,
+                id: thread?.id,
+                authorId: thread?.author.id,
+                category: thread?.category,
             },
         });
-        history.push(`/category/${categoryId}/threads/${thread.id}`);
-    };
 
     const renderLoading = (
         <LocalizedBackdrop open fadeOut>
@@ -101,7 +99,6 @@ function ThreadsPage(): JSX.Element {
                     itemProps={{
                         full: true,
                         style: { height: 150 },
-                        replied: true,
                         onClick: onThreadClicked,
                     }}
                     empty={{
