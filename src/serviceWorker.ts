@@ -27,8 +27,14 @@ type Config = {
 
 function registerValidSW(swUrl: string, config?: Config): void {
     navigator.serviceWorker
-        .register(swUrl)
+        .register(swUrl, { updateViaCache: 'none' })
         .then((registration) => {
+            if (registration.waiting) {
+                // Execute callback
+                if (config && config.onUpdate) {
+                    config.onUpdate(registration);
+                }
+            }
             // eslint-disable-next-line no-param-reassign
             registration.onupdatefound = (): void => {
                 const installingWorker = registration.installing;
@@ -54,7 +60,7 @@ function registerValidSW(swUrl: string, config?: Config): void {
                             // At this point, everything has been precached.
                             // It's the perfect time to display a
                             // "Content is cached for offline use." message.
-                            console.log('Content is cached for offline use.');
+                            console.debug('Content is cached for offline use.');
 
                             // Execute callback
                             if (config && config.onSuccess) {
@@ -121,27 +127,25 @@ export function register(config?: Config): void {
             return;
         }
 
-        window.addEventListener('load', () => {
-            const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+        const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
 
-            if (isLocalhost) {
-                // This is running on localhost. Let's check if a service worker still exists or not.
-                // eslint-disable-next-line @typescript-eslint/no-use-before-define
-                checkValidServiceWorker(swUrl, config);
+        if (isLocalhost) {
+            // This is running on localhost. Let's check if a service worker still exists or not.
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            checkValidServiceWorker(swUrl, config);
 
-                // Add some additional logging to localhost, pointing developers to the
-                // service worker/PWA documentation.
-                navigator.serviceWorker.ready.then(() => {
-                    console.log(
-                        'This web app is being served cache-first by a service ' +
-                            'worker. To learn more, visit https://bit.ly/CRA-PWA'
-                    );
-                });
-            } else {
-                // Is not localhost. Just register service worker
-                // eslint-disable-next-line @typescript-eslint/no-use-before-define
-                registerValidSW(swUrl, config);
-            }
-        });
+            // Add some additional logging to localhost, pointing developers to the
+            // service worker/PWA documentation.
+            navigator.serviceWorker.ready.then(() => {
+                console.log(
+                    'This web app is being served cache-first by a service ' +
+                        'worker. To learn more, visit https://bit.ly/CRA-PWA'
+                );
+            });
+        } else {
+            // Is not localhost. Just register service worker
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            registerValidSW(swUrl, config);
+        }
     }
 }

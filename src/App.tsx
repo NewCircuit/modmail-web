@@ -1,36 +1,67 @@
-import React, { RefObject, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { RefObject, useEffect, useState } from 'react';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { createBrowserHistory } from 'history';
-import './theme/scss/global.scss';
 import { Router } from 'react-router-dom';
-import { CssBaseline } from '@material-ui/core';
+import { CircularProgress, CssBaseline } from '@material-ui/core';
+import Authenticator from 'components/Authenticator';
+import { GlobalConfiguration } from '@demitchell14/react-showdown';
+import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet';
 import theme from './theme';
 import LayoutHOC, { Layout } from './components/Layout';
 import Pages from './pages';
-import { UserState } from './state';
+import { UserState, ModmailState } from './state';
+import LocalizedBackdrop from './components/LocalizedBackdrop';
+import { FG } from './types';
+import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 
 const browserHistory = createBrowserHistory();
 
 function App(props: FG.AppProps): JSX.Element {
+    const { t } = useTranslation(undefined, { useSuspense: false });
+    const [ready, _setReady] = useState(false);
     const { onReady } = props;
-    const { t } = useTranslation('common');
     const layoutRef: RefObject<Layout> = React.createRef();
-    useEffect(onReady, []);
     useEffect(() => {
-        console.log(layoutRef);
-    });
+        GlobalConfiguration.setOption('emoji', true);
+        GlobalConfiguration.setOption('openLinksInNewWindow', true);
+    }, []);
+
+    const setReady = () => {
+        if (!ready) {
+            if (onReady) onReady();
+            _setReady(true);
+        }
+    };
+
+    const fallback = (
+        <LocalizedBackdrop open>
+            <CircularProgress variant={'indeterminate'} />
+        </LocalizedBackdrop>
+    );
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <UserState.Provider>
-                <Router history={browserHistory}>
-                    <LayoutHOC layoutRef={layoutRef}>
-                        <Pages />
-                    </LayoutHOC>
-                </Router>
-            </UserState.Provider>
+            <Helmet>
+                <title>{t('appName')}</title>
+            </Helmet>
+            <React.Suspense fallback={fallback}>
+                <UserState.Provider>
+                    <Router history={browserHistory}>
+                        <ServiceWorkerWrapper initialize />
+                        <ModmailState.Provider>
+                            <Authenticator setReady={setReady}>
+                                <React.Suspense fallback={fallback}>
+                                    <LayoutHOC layoutRef={layoutRef}>
+                                        <Pages />
+                                    </LayoutHOC>
+                                </React.Suspense>
+                            </Authenticator>
+                        </ModmailState.Provider>
+                    </Router>
+                </UserState.Provider>
+            </React.Suspense>
         </ThemeProvider>
     );
 }

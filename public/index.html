@@ -2,16 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" href="%PUBLIC_URL%/icon/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#191919" />
+    <meta property="og:image" content="%PUBLIC_URL%/icon/logo256.png" />
+    <meta property="og:title" content="Modmail" />
+    <meta property="og:url" content="https://modmail.pewdiemc.com/" />
+    <meta property="og:description" content="A web interface used to view modmail threads and messages" />
     <meta
       name="description"
       content="A web interface used to view modmail threads and messages"
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/icon/logo256.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>Floor-Gang Modmail</title>
+    <title>Modmail</title>
     <style>
       html {
         margin: 0;
@@ -28,17 +32,22 @@
         background: #000;
       }
 
-      .d-none {
-        display: none;
-      }
-
       #splash-container {
-        /*display: none;*/
+        display: block;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: #181818;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        overflow:hidden;
+        transition: 0.4s opacity ease;
       }
 
       .circle-white {
-        width: 3em;
-        height: 3em;
+        width: 8em;
+        height: 8em;
         border: 2px dashed #f6f6f6;
         border-radius: 50%;
       }
@@ -54,7 +63,6 @@
       }
 
       .preloader .circle {
-        transition: ease-out all .6s;
         animation: rotate-circle 4s linear infinite;
         position: absolute;
         left: 0;
@@ -65,15 +73,14 @@
       }
 
       .preloader .circle:after {
-        transition: ease-out all .6s;
         content: '';
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
         border-radius: 50%;
         background: #f6f6f6;
         position: absolute;
-        top: calc(1.5em - 10px);
-        left: calc(1.5em - 10px);
+        top: calc(4em - 14px);
+        left: calc(4em - 14px);
       }
 
       @keyframes rotate-circle {
@@ -88,19 +95,8 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="splash-container">
       <div class="preloader">
-        <div class="text">Loading Floor Gang Modmail</div>
+        <div class="text">Loading Modmail</div>
         <span class="circle circle-white"></span>
-      </div>
-      <div class="splash d-none">
-            <span class="letters-container">
-                <span class="letters letters-left">Welcome</span>
-                <span class="letters bang">!</span>
-            </span>
-        <span class="circle circle-white"></span>
-        <span class="circle circle-dark"></span>
-        <span class="circle circle-container">
-                <span class="circle circle-dark-dashed"></span>
-            </span>
       </div>
     </div>
     <div id="root"></div>

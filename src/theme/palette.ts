@@ -1,58 +1,63 @@
-import { colors, lighten } from '@material-ui/core';
+import { colors, darken } from '@material-ui/core';
+import { CustomPalette } from './index';
 
-const white = '#FFFFFF';
-const black = '#000000';
-const darkBackground = '#191919';
-const pdpReddish = '#bc0707';
+const darkBackground = darken('#191919', 0.3);
+const pdpRedLight = '#e93030';
+const pdpRedMain = '#bc0707';
+const pdpRedDark = '#750202';
 
-export default {
-    black,
-    white,
+const secondaryLight = '#7289da';
+const secondaryMain = '#3358d7';
+const secondaryDark = '#162a6e';
+
+const palette: CustomPalette = {
     primary: {
-        contrastText: white,
-        dark: pdpReddish,
-        main: pdpReddish,
-        light: pdpReddish,
+        contrastText: colors.common.white,
+        dark: pdpRedDark,
+        main: pdpRedMain,
+        light: pdpRedLight,
     },
     secondary: {
-        contrastText: white,
-        dark: colors.blue[900],
-        main: colors.blue.A400,
-        light: colors.blue.A400,
+        contrastText: colors.common.white,
+        light: secondaryLight,
+        main: secondaryMain,
+        dark: secondaryDark,
     },
     success: {
-        contrastText: white,
+        contrastText: colors.common.white,
         dark: colors.green[900],
         main: colors.green[600],
         light: colors.green[400],
     },
     info: {
-        contrastText: white,
+        contrastText: colors.common.white,
         dark: colors.blue[900],
         main: colors.blue[600],
         light: colors.blue[400],
     },
     warning: {
-        contrastText: white,
+        contrastText: colors.common.white,
         dark: colors.orange[900],
         main: colors.orange[600],
         light: colors.orange[400],
     },
     error: {
-        contrastText: white,
+        contrastText: colors.common.white,
         dark: colors.red[900],
         main: colors.red[600],
         light: colors.red[400],
     },
     text: {
-        primary: white, // colors.blueGrey[900],
-        secondary: colors.blueGrey[600],
+        primary: colors.grey[300],
+        secondary: colors.grey[600],
         link: colors.blue[600],
     },
     background: {
-        default: darkBackground, // '#F4F6F8',
-        paper: lighten(darkBackground, 0.1),
+        default: darkBackground,
+        paper: darken(darkBackground, 0.1),
     },
     icon: colors.blueGrey[600],
-    divider: colors.grey[200],
-};
+    divider: colors.grey[800],
+} as never;
+
+export default palette;

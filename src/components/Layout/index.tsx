@@ -1,30 +1,18 @@
-import React, { RefObject, useEffect, useState } from 'react';
-import {
-    AppBar,
-    Button,
-    IconButton,
-    makeStyles,
-    Theme,
-    Toolbar,
-    Typography,
-    useMediaQuery,
-    useTheme,
-    withStyles,
-} from '@material-ui/core';
-import { Menu as MenuIcon } from '@material-ui/icons';
+import React, { ForwardedRef, RefObject } from 'react';
+import { makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
 import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
-import { Route, Switch } from 'react-router-dom';
+import { FG } from 'types';
 import Drawer from './Drawer';
 import CommonDrawerItems from './CommonDrawerItems';
 import { UserState } from '../../state';
+import { APPBAR_HEIGHT, DRAWER_WIDTH, Theme } from '../../theme';
+import PrimaryAppBar from './PrimaryAppBar';
+import GlobalFooter from './GlobalFooter';
 
 type Props = {
-    ref?: RefObject<Layout>;
-    i18n: TFunction;
+    ref: ForwardedRef<Layout>;
     classes: { [s: string]: string };
-    theme: any;
+    theme: Theme;
     isDesktop: boolean;
     user: FG.State.UserState;
     children: React.ReactNode;
@@ -34,42 +22,45 @@ type State = {
     drawerOpen: boolean;
 };
 
-const toolbarHeight = 64;
-const drawerWidth = 240;
-const drawerWidthDesktop = 300;
+const toolbarHeight = APPBAR_HEIGHT;
+const drawerWidth = DRAWER_WIDTH.mobile;
+const drawerWidthDesktop = DRAWER_WIDTH.desktop;
 
 const useStyles = makeStyles((theme) => ({
-    title: {
-        fontSize: '2em',
-        color: theme.palette.primary.contrastText,
-        marginLeft: '.5rem',
-    },
     toolbar: {
-        height: toolbarHeight,
-    },
-    icon: {
-        fontSize: '2em',
+        height: APPBAR_HEIGHT,
     },
     drawerPaper: {
         width: drawerWidth,
     },
     heading: {
+        minHeight: toolbarHeight,
         height: toolbarHeight,
     },
     drawer: {
         // paddingTop: toolbarHeight,
         width: drawerWidth,
+        overflowX: 'hidden',
         [theme.breakpoints.up('sm')]: {
+            height: `calc(100% - ${toolbarHeight}px)`,
             marginTop: toolbarHeight,
             paddingTop: 0,
             width: drawerWidthDesktop,
         },
     },
-    container: {
-        transition: 'ease margin-left .225s',
+    wrapper: {
+        transition: 'ease margin-left .5s',
         marginLeft: 0,
-        marginTop: toolbarHeight,
-        height: `calc(100vh - ${toolbarHeight}px)`,
+        height: `100vh`,
+        position: 'relative',
+        overflow: 'hidden',
+    },
+    container: {
+        position: 'relative',
+        height: `calc(100% - ${toolbarHeight}px)`,
+        overflowY: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
     },
     open: {
         marginLeft: drawerWidthDesktop,
@@ -107,33 +98,12 @@ export class Layout extends React.Component<Props, State> {
 
     render() {
         const { onHandleMenuClick } = this;
-        const { classes, isDesktop, children, i18n: t, user } = this.props;
+        const { classes, isDesktop, children, user } = this.props;
         const { drawerOpen } = this.state;
+
         return (
             <>
-                <AppBar>
-                    <Toolbar className={classes.toolbar}>
-                        <IconButton
-                            onClick={user.authenticated ? onHandleMenuClick : undefined}
-                            className={classes.icon}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography className={classes.title} variant={'h6'} noWrap>
-                            {t('title')}
-                        </Typography>
-                        <div style={{ marginLeft: 'auto' }}>
-                            <Button
-                                onClick={
-                                    () => this.props.user.authenticate()
-                                    // this.setState({ authenticated: !authenticated })
-                                }
-                            >
-                                Toggle Authenticated
-                            </Button>
-                        </div>
-                    </Toolbar>
-                </AppBar>
+                <PrimaryAppBar onHandleMenuClick={onHandleMenuClick} user={user} />
                 {user.authenticated && (
                     <Drawer
                         classes={{
@@ -143,43 +113,45 @@ export class Layout extends React.Component<Props, State> {
                         open={typeof drawerOpen === 'undefined' ? false : drawerOpen}
                         toggle={onHandleMenuClick}
                     >
-                        <Switch>
-                            <Route path={'/'} component={CommonDrawerItems} />
-                        </Switch>
+                        <CommonDrawerItems />
                     </Drawer>
                 )}
                 <div
-                    className={clsx(classes.container, {
+                    className={clsx(classes.wrapper, {
                         [classes.open]: drawerOpen && isDesktop && user.authenticated,
                     })}
                 >
-                    {children}
+                    <div className={classes.toolbar} />
+                    <div id={'main-container'} className={classes.container}>
+                        {children}
+                        <GlobalFooter />
+                    </div>
                 </div>
             </>
         );
     }
 }
 
-type Props2 = {
+type LayoutHOCProps = {
     layoutRef?: RefObject<Layout>;
     children: React.ReactChild;
 };
-export default function LayoutHOC(props: Props2) {
-    const theme = useTheme();
+export default function LayoutHOC(props: LayoutHOCProps) {
+    const theme = useTheme<Theme>();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
     const classes = useStyles();
     const userState = UserState.useContainer();
-    const { t } = useTranslation(['layout', 'errors']);
-    const ForwardedLayout = React.forwardRef((p: Props2, ref: any) => (
-        <Layout
-            ref={ref}
-            {...p}
-            i18n={t}
-            user={userState}
-            classes={classes}
-            theme={theme}
-            isDesktop={isDesktop}
-        />
-    ));
+    const ForwardedLayout = React.forwardRef(
+        (forwardedProps: LayoutHOCProps, ref: ForwardedRef<Layout>) => (
+            <Layout
+                ref={ref}
+                {...forwardedProps}
+                user={userState}
+                classes={classes}
+                theme={theme}
+                isDesktop={isDesktop}
+            />
+        )
+    );
     return <ForwardedLayout ref={props.layoutRef} {...props} />;
 }

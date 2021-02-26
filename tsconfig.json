@@ -1,5 +1,9 @@
 {
-  "exclude": ["build", "lib", "node_modules"],
+  "exclude": [
+    "build",
+    "lib",
+    "node_modules"
+  ],
   "compilerOptions": {
     "target": "es5",
     "lib": [
@@ -19,7 +23,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "noImplicitAny": false,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "baseUrl": "./src",
     "noFallthroughCasesInSwitch": true
   },

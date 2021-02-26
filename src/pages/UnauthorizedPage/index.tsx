@@ -1,21 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Container,
     Icon,
     makeStyles,
     Paper,
-    lighten,
     Typography,
     Button,
 } from '@material-ui/core';
 import MoodBadIcon from '@material-ui/icons/MoodBad';
-import { useHistory } from 'react-router-dom';
-import { UserState } from '../../state';
+import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
+import { Theme, APPBAR_HEIGHT } from '../../theme';
+import { handleQuerystring, Logger } from '../../util';
 
-const useStyles = makeStyles((theme) => ({
+const logger = Logger.getLogger('UnauthorizedPage');
+
+const useStyles = makeStyles((theme: Theme) => ({
     root: {
+        // transition: 'ease all 1s',
         display: 'flex',
-        height: '100%',
+        height: `calc(100% - ${APPBAR_HEIGHT}px)`,
         alignItems: 'start',
         [theme.breakpoints.up('sm')]: {
             display: 'flex',
@@ -50,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
         '& p, & h6': {
             color: theme.palette.getContrastText(theme.palette.background.paper),
         },
+        padding: '0 1.5rem',
         margin: '0 auto 2rem',
     },
     btn: {
@@ -57,15 +62,21 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-type Props = any;
-export default function UnauthorizedPage(props: Props) {
+export default function UnauthorizedPage() {
     const classes = useStyles();
-    const { authenticate } = UserState.useContainer();
-    const history = useHistory();
-    const onAuthorize = (evt: React.SyntheticEvent) => {
-        authenticate();
-        history.push('/');
-    };
+    const location = useLocation();
+    const { t } = useTranslation();
+    const [redirect, setRedirect] = useState('');
+
+    useEffect(() => {
+        if (location.search) {
+            const { r } = handleQuerystring(location.search);
+            if (r) {
+                logger.verbose(`setting redirect path to '${r}'`);
+                setRedirect(r);
+            }
+        }
+    }, [location]);
 
     return (
         <Container className={classes.root}>
@@ -77,20 +88,24 @@ export default function UnauthorizedPage(props: Props) {
                 </div>
                 <div className={classes.content}>
                     <Typography className={classes.title} variant={'h3'}>
-                        Discord Authenticated Required
+                        {t('unauthorized.title')}
                     </Typography>
                     <Typography variant={'body1'}>
-                        In order to use this web app, you must first login with Discord
-                        and authorize access to your account.
+                        {t('unauthorized.description')}
                     </Typography>
 
                     <Button
-                        onClick={onAuthorize}
+                        href={t('urls.oauth', {
+                            ns: 'translation',
+                            redirect: redirect
+                                ? `?redirect=${encodeURIComponent(redirect)}`
+                                : '',
+                        })}
                         variant={'contained'}
                         className={classes.btn}
                         color={'primary'}
                     >
-                        Authorize Account
+                        {t('unauthorized.button')}
                     </Button>
                 </div>
             </Paper>

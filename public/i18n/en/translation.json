@@ -1,0 +1,123 @@
+{
+  "guildName": "Floor-Gang",
+  "appName": "$t(guildName) Modmail",
+  "viewGithub": "View this projects Github repository!",
+  "maxConcurrentRequests": 2,
+  "urls": {
+    "base": "/api",
+    "discordBase": "https://discord.com/api",
+    "oauth": "$t(urls.base)/oauth{{redirect}}",
+    "logout": "$t(urls.base)/logout",
+    "authenticate": "$t(urls.base)/self",
+    "categories": "$t(urls.base)/categories",
+    "categoriesOne": "$t(urls.base)/categories/{{category}}",
+    "threads": "$t(urls.base)/categories/{{category}}/threads",
+    "threadsOne": "$t(urls.base)/categories/{{category}}/threads/{{thread}}",
+    "fetchThreadsByUser": "$t(urls.base)/categories/{{category}}/users/{{user}}/history",
+    "fetchMember": "$t(urls.base)/categories/{{category}}/users/{{member}}",
+    "fetchMembers": "$t(urls.base)/categories/{{category}}/members",
+    "fetchDiscordMember": "$t(urls.discordBase)/users/@me",
+    "fetchRole": "$t(urls.base)/categories/{{category}}/roles/{{role}}",
+    "fetchChannel": "$t(urls.base)/categories/{{category}}/channels/{{channel}}"
+  },
+  "chips": {
+    "internal": "Internal",
+    "creator": "Creator",
+    "deleted": "Removed",
+    "active": "Active",
+    "inactive": "Inactive",
+    "public": "Shared Access",
+    "private": "Admin Only Access"
+  },
+  "tooltips": {
+    "category": {
+      "status": "{{category}} is currently {{status}}",
+      "public": "{{category}} is viewable by all mods",
+      "private": "{{category}} is viewable by admins only"
+    },
+    "message": {
+      "name": "Click to view <b>{{user}}</b>'s history"
+    },
+    "discord": {
+      "emptyChannel": "Channel '{{id}}' could not be found",
+      "foundChannel": "Channel ID: {{id}}",
+      "emptyRole": "Role '{{id}}' could not be found",
+      "foundRole": "Role ID: {{id}}",
+      "emptyUser": "User '{{id}}' could not be found",
+      "foundUser": "User ID: {{id}}"
+    },
+    "thread": {
+      "active": "This thread is currently active",
+      "inactive": "This thread is currently inactive",
+      "locked": "This thread is Admin Only",
+      "unlocked": "This thread is available to all mods"
+    }
+  },
+  "drawer": {
+    "tabs": {
+      "categories": "Categories",
+      "threads": "Threads"
+    }
+  },
+  "dialogs": {
+    "userLookup": {
+      "title": "User History Lookup",
+      "description": "Search for a specific user by entering the user's ID and pressing pressing Go!",
+      "label": "User ID",
+      "placeholder": "Enter a user ID and press Enter",
+      "helperText": "",
+      "cancel": "Cancel",
+      "go": "Go",
+      "validation": "User IDs must be numeric and cannot be blank."
+    }
+  },
+  "threadListItem": {
+    "respondedByLabel": "Last Response By",
+    "createdDateLabel": "Thread Created At"
+  },
+  "message": {
+    "unknownRole": "&lt;Unknown Role: '{{role}}'&gt;",
+    "unknownChannel": "&lt;Unknown Channel: '{{channel}}'&gt;"
+  },
+  "unauthorized": {
+    "title": "Discord Authenticated Required",
+    "description": "In order to use this web app, you must first login with Discord and authorize access to your account.",
+    "button": "Authorize Account"
+  },
+  "dashboard": {
+    "category": {
+      "title": "Select a Category",
+      "noItemsTitle": "No Categories",
+      "noItemsDesc": "There are currently no categories available. Please make them through the Modmail bot and then refresh this page."
+    }
+  },
+  "category": {
+    "title": "Select a Thread",
+    "title2": "List of all threads in the <b><u>{{category}}</u></b> category.",
+    "noThreadsTitle": "No threads",
+    "noThreadsDesc": "There are currently no threads in the {{category, emphasis}} category."
+  },
+  "thread": {
+    "eof": "<b>Ouh!</b><br />You've reached the end of the thread!"
+  },
+  "userHistory": {
+    "profile": {
+      "title": "Thread History",
+      "historyFor": "Viewing history for: <b>{{user}}</b>",
+      "categoryName": "Current Category: <b>{{category}}</b>",
+      "total": "Total Threads: <b>{{total}}</b>",
+      "unknownUser": "Unknown User",
+      "unknownCategory": "Unknown Category"
+    },
+    "actions": {
+      "title": "Actions",
+      "archive": "View Complete Archive",
+      "lookup": "Lookup User History"
+    }
+  },
+  "serviceworker": {
+    "title": "An update is available!",
+    "description": "There has been an update to Modmail! If you wish to use to to date version, click the button below, otherwise we automatically send you the update later.",
+    "button": "Update Now!"
+  }
+}

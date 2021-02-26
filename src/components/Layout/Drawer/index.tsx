@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     Drawer,
     IconButton,
+    lighten,
     makeStyles,
     Toolbar,
     Typography,
@@ -25,10 +26,18 @@ type Props = {
 const useStyles = makeStyles((theme) => ({
     drawer: {},
     heading: {
+        backgroundColor: theme.palette.primary.main,
         borderBottom: `1px solid ${theme.palette.divider}`,
     },
     paper: {
         // width: 300,
+    },
+    modal: {
+        background: lighten(theme.palette.background.paper, 0.05),
+    },
+    anchorLeft: {
+        boxShadow: `0px 0px 5px rgb(0 0 0 / 40%)`,
+        borderRight: 'none', // `1px solid ${theme.palette.primary.main}`,
     },
 }));
 
@@ -36,9 +45,9 @@ export default function LayoutDrawer(props: Props) {
     const { open, toggle, className, classes } = props;
     const theme = useTheme();
     const defaultClasses = useStyles();
-    const { t } = useTranslation('layout');
+    const { t } = useTranslation();
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
-    const onClose = (evt: React.SyntheticEvent) => {
+    const onClose = () => {
         if (toggle) toggle();
     };
 
@@ -46,7 +55,10 @@ export default function LayoutDrawer(props: Props) {
         <Drawer
             open={open}
             classes={{
-                paper: clsx(classes?.paper, defaultClasses.paper),
+                paper: clsx(classes?.paper, defaultClasses.paper, {
+                    [defaultClasses.modal]: !isDesktop,
+                }),
+                paperAnchorDockedLeft: defaultClasses.anchorLeft,
             }}
             className={clsx(className, defaultClasses.drawer)}
             variant={isDesktop ? 'persistent' : 'temporary'}
@@ -61,7 +73,7 @@ export default function LayoutDrawer(props: Props) {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant={'h6'} noWrap>
-                        {t('title')}
+                        {t('appName')}
                     </Typography>
                 </Toolbar>
             )}

@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { init as initTextHandler } from './i18n';
-import * as serviceWorker from './serviceWorker';
-import executeSplash from './components/Splash';
+import reportWebVitals from './reportWebVitals';
 
 function destroyPreloader() {
     const preloader = document.getElementById('splash-container');
@@ -19,17 +18,10 @@ function onReady(): void {
 }
 
 (async function launch() {
-    await initTextHandler();
-    serviceWorker.unregister();
+    initTextHandler();
     const target = document.getElementById('root');
     if (target) {
-        const splashed = await executeSplash({
-            selector: '#splash-container',
-            isReturning: sessionStorage.getItem('returning') !== null,
-        }).catch(alert);
-        if (splashed) {
-            sessionStorage.setItem('returning', '1');
-            ReactDOM.render(<App onReady={onReady} />, target);
-        }
+        ReactDOM.render(<App onReady={onReady} />, target);
     }
+    reportWebVitals();
 })();

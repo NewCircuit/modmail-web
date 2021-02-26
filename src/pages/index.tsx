@@ -1,27 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, Redirect, Switch, Route, useHistory } from 'react-router-dom';
+import React from 'react';
+import { Switch, Route } from 'react-router-dom';
+import { CircularProgress } from '@material-ui/core';
 import { UserState } from '../state';
-import { unauthorizedRoutes } from './routes';
-import UnauthorizedPage from './UnauthorizedPage';
+import LocalizedBackdrop from '../components/LocalizedBackdrop';
 
-export default function Pages() {
+const DashboardPage = React.lazy(() => import('./DashboardPage'));
+const UnauthorizedPage = React.lazy(() => import('./UnauthorizedPage'));
+const ThreadsPage = React.lazy(() => import('./ThreadsPage'));
+const ThreadPage = React.lazy(() => import('./ThreadPage'));
+const UserHistoryPage = React.lazy(() => import('./UserHistoryPage'));
+
+export default function Pages(): JSX.Element {
     const { authenticated } = UserState.useContainer();
-    const location = useLocation();
-    const history = useHistory();
-    useEffect(() => {
-        console.log('Path Changed! ', location.pathname);
-        if (authenticated) {
-            // TODO
-        } else if (
-            unauthorizedRoutes.findIndex((k) => location.pathname?.indexOf(k) >= 0) === -1
-        ) {
-            history.push('/unauthorized');
-        }
-    }, [location.pathname]);
+
+    const fallback = (
+        <LocalizedBackdrop open>
+            <CircularProgress variant={'indeterminate'} />
+        </LocalizedBackdrop>
+    );
 
     return (
         <Switch>
-            <Route exact path={'/unauthorized'} component={UnauthorizedPage} />
+            <React.Suspense fallback={fallback}>
+                <Route path={'/unauthorized'} component={UnauthorizedPage} />
+                {authenticated && (
+                    <React.Fragment>
+                        <Route exact path={'/'} component={DashboardPage} />
+                        <Route
+                            exact
+                            path={`/category/:categoryId/threads`}
+                            component={ThreadsPage}
+                        />
+                        <Route
+                            exact
+                            path={`/category/:categoryId/threads/:threadId`}
+                            component={ThreadPage}
+                        />
+                        <Route
+                            exact
+                            path={`/category/:categoryId/users/:userId/history`}
+                            component={UserHistoryPage}
+                        />
+                    </React.Fragment>
+                )}
+            </React.Suspense>
         </Switch>
     );
 }
