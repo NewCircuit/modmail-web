@@ -12,12 +12,12 @@ import LayoutHOC, { Layout } from './components/Layout';
 import Pages from './pages';
 import { UserState, ModmailState } from './state';
 import LocalizedBackdrop from './components/LocalizedBackdrop';
-import { FG } from './types';
+import { NC } from './types';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 
 const browserHistory = createBrowserHistory();
 
-function App(props: FG.AppProps): JSX.Element {
+function App(props: NC.AppProps): JSX.Element {
     const { t } = useTranslation(undefined, { useSuspense: false });
     const [ready, _setReady] = useState(false);
     const { onReady } = props;

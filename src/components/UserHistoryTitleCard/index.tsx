@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, List, ListItem, Paper, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import { Category } from '@Floor-Gang/modmail-types';
+import { Category } from '@NewCircuit/modmail-types';
 import { useTranslation, Trans } from 'react-i18next';
 import UnescapedTrans from 'components/UnescapedTrans';
 import { MemberState, Nullable } from '../../types';

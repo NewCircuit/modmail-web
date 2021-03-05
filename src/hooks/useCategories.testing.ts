@@ -1,17 +1,17 @@
 /* eslint-disable */
 import { useEffect, useState } from 'react';
-import { Category } from '@Floor-Gang/modmail-types';
+import { Category } from '@NewCircuit/modmail-types';
 import { AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useAxios } from './index';
-import { FG, Nullable, Optional } from '../types';
+import { NC, Nullable, Optional } from '../types';
 import { Logger } from '../util';
 
 const logger = Logger.getLogger('useCategories.testing');
 
 type Props = any;
 
-const TEST_CATEGORIES: FG.Api.CategoriesResponse = JSON.parse(
+const TEST_CATEGORIES: NC.Api.CategoriesResponse = JSON.parse(
     `[{"isPrivate":false,"channelID":"806363000357257276","emojiID":"🍆","description":"bruuuuuuuh","guildID":"806083557352144916","id":"809687214488420352","isActive":true,"name":"test"}]`
 );
 

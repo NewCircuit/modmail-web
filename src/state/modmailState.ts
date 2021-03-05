@@ -1,8 +1,8 @@
 import { createContainer } from 'unstated-next';
-import { FG } from '../types';
+import { NC } from '../types';
 import { useMembers, useCategories, useThreads, useRoles, useChannels } from '../hooks';
 
-type State = FG.State.ModmailState;
+type State = NC.State.ModmailState;
 
 function modmailState(): State {
     const members = useMembers();

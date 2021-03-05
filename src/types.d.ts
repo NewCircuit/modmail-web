@@ -5,7 +5,7 @@ import {
     Message,
     RoleState,
     ChannelState,
-} from '@Floor-Gang/modmail-types';
+} from '@NewCircuit/modmail-types';
 
 type Role = 'admin' | 'mod' | '';
 
@@ -59,7 +59,7 @@ export type UserMap = {
     [s: string]: MemberState;
 };
 
-declare namespace FG {
+declare namespace NC {
     type AppProps = {
         onReady?: () => void;
     };
@@ -70,7 +70,7 @@ declare namespace FG {
     };
 }
 
-declare namespace FG.Api {
+declare namespace NC.Api {
     type SelfResponse = MemberState & {
         token: string;
     };
@@ -94,7 +94,7 @@ declare namespace FG.Api {
     type ChannelResponse = Nullable<ChannelState>;
 }
 
-declare namespace FG.State {
+declare namespace NC.State {
     type MemberMap = {
         [s: string]: {
             index: number;

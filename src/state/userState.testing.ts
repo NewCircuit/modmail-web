@@ -1,13 +1,13 @@
 /* eslint-disable */
 import { useState } from 'react';
-import { FG } from 'types';
+import { NC } from 'types';
 import { createContainer } from 'unstated-next';
 import { useTranslation } from 'react-i18next';
 import { Logger } from '../util';
 
 const logger = Logger.getLogger('userState.testing');
 
-type State = FG.State.UserState;
+type State = NC.State.UserState;
 
 const TEST_USER_DATA = JSON.parse(`{
   "id": "194024167052410880",
@@ -25,7 +25,7 @@ function userState(): State {
     const { t } = useTranslation();
     const [authenticated, setAuthenticated] = useState<boolean | undefined>(undefined);
     const [processing, setProcessing] = useState(false);
-    const [userData, setUserData] = useState<FG.Api.SelfResponse | undefined>();
+    const [userData, setUserData] = useState<NC.Api.SelfResponse | undefined>();
 
     function logout() {
         setAuthenticated(false);

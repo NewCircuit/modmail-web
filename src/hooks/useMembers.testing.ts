@@ -1,12 +1,12 @@
 /* eslint-disable */
 import { useRef } from 'react';
 import { Semaphore } from 'async-mutex';
-import { FG, MemberState, Nullable, UserMap } from '../types';
+import { NC, MemberState, Nullable, UserMap } from '../types';
 import { Logger } from '../util';
 const logger = Logger.getLogger('useMembers.Testing');
 
 type Props = any;
-type Members = FG.State.MemberMap;
+type Members = NC.State.MemberMap;
 
 const TEST_MEMBERS: MemberState[] = JSON.parse(`{
     "default": {
@@ -62,7 +62,7 @@ const TEST_MEMBERS: MemberState[] = JSON.parse(`{
     }
   }`);
 
-export default function useMembers(props?: Props): FG.State.MembersState {
+export default function useMembers(props?: Props): NC.State.MembersState {
     const userIndex = useRef(0);
     const { current: semaphore } = useRef<Semaphore>(new Semaphore(1));
     const { current: members } = useRef<Members>({});

@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { AxiosError, AxiosResponse } from 'axios';
-import { Thread } from '@Floor-Gang/modmail-types';
+import { Thread } from '@NewCircuit/modmail-types';
 import { useTranslation } from 'react-i18next';
 import { useAxios } from './index';
-import { FG, MutatedThread, Nullable, Optional } from '../types';
+import { NC, MutatedThread, Nullable, Optional } from '../types';
 import { Logger } from '../util';
 import { UserState } from '../state';
 
 const logger = Logger.getLogger('useThreads');
 
-type MembersState = FG.State.MembersState;
+type MembersState = NC.State.MembersState;
 
 type Props = {
     members: MembersState;
 };
-export default function useThreads(props?: Props): FG.State.ThreadsState {
+export default function useThreads(props?: Props): NC.State.ThreadsState {
     const { members } = props || {};
     const { t } = useTranslation();
     const { logout } = UserState.useContainer();
@@ -61,7 +61,7 @@ export default function useThreads(props?: Props): FG.State.ThreadsState {
     function fetchThreads(category: string): Promise<MutatedThread[]> {
         return axios
             .get(t('urls.threads', { category }))
-            .then((response: AxiosResponse<FG.Api.ThreadsResponse>) => {
+            .then((response: AxiosResponse<NC.Api.ThreadsResponse>) => {
                 if (response.status === 200) {
                     const mutated = parseThreads(response.data.threads);
                     if (members) members.cache(response.data.users);
@@ -87,7 +87,7 @@ export default function useThreads(props?: Props): FG.State.ThreadsState {
     ): Promise<Nullable<MutatedThread>> {
         return axios
             .get(t('urls.threadsOne', { category, thread }))
-            .then((response: AxiosResponse<FG.Api.ThreadsOneResponse>) => {
+            .then((response: AxiosResponse<NC.Api.ThreadsOneResponse>) => {
                 if (response.status === 200) {
                     if (members) members.cache(response.data.users);
                     return parseThread(response.data);
@@ -110,7 +110,7 @@ export default function useThreads(props?: Props): FG.State.ThreadsState {
     ): Promise<MutatedThread[]> {
         logger.verbose(`fetch threads for user ${user}`);
         return axios
-            .get<FG.Api.UserHistoryResponse>(
+            .get<NC.Api.UserHistoryResponse>(
                 t('urls.fetchThreadsByUser', { category, user })
             )
             .then((response) => {

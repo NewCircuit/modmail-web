@@ -1,7 +1,7 @@
 import React, { ForwardedRef, RefObject } from 'react';
 import { makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
 import clsx from 'clsx';
-import { FG } from 'types';
+import { NC } from 'types';
 import Drawer from './Drawer';
 import CommonDrawerItems from './CommonDrawerItems';
 import { UserState } from '../../state';
@@ -14,7 +14,7 @@ type Props = {
     classes: { [s: string]: string };
     theme: Theme;
     isDesktop: boolean;
-    user: FG.State.UserState;
+    user: NC.State.UserState;
     children: React.ReactNode;
 };
 

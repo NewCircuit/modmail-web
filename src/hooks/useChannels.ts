@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChannelTag, DiscordTagMap, FG } from '../types';
+import { ChannelTag, DiscordTagMap, NC } from '../types';
 import { useAxios } from './index';
 import { Logger } from '../util';
 import { UserState } from '../state';
@@ -15,7 +15,7 @@ const defaultProps = {
     cache: true,
 };
 
-export default function useChannels(props: Props = defaultProps): FG.State.ChannelsState {
+export default function useChannels(props: Props = defaultProps): NC.State.ChannelsState {
     const { cache: universalCache } = props;
     const { t } = useTranslation();
     const { logout } = UserState.useContainer();
@@ -29,7 +29,7 @@ export default function useChannels(props: Props = defaultProps): FG.State.Chann
     ): Promise<ChannelTag> {
         logger.verbose(`fetch channel ${channel}`);
         const promise = axios
-            .get<FG.Api.ChannelResponse>(t('urls.fetchChannel', { category, channel }))
+            .get<NC.Api.ChannelResponse>(t('urls.fetchChannel', { category, channel }))
             .then((response) => {
                 if (response.status === 200 && response.data) {
                     return {

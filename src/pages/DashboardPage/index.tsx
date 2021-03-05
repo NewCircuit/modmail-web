@@ -8,7 +8,7 @@ import {
     Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Category } from '@Floor-Gang/modmail-types';
+import { Category } from '@NewCircuit/modmail-types';
 import { useTranslation } from 'react-i18next';
 import { ModmailState } from '../../state';
 import PaperCategory from '../../components/PaperCategory';

@@ -2,16 +2,16 @@ import { useRef } from 'react';
 import { Semaphore } from 'async-mutex';
 import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
-import { FG, MemberState, Nullable, UserMap } from '../types';
+import { NC, MemberState, Nullable, UserMap } from '../types';
 import { Logger } from '../util';
 import { useAxios } from './index';
 import { UserState } from '../state';
 
 const logger = Logger.getLogger('useMembers');
 
-type Members = FG.State.MemberMap;
+type Members = NC.State.MemberMap;
 
-export default function useMembers(): FG.State.MembersState {
+export default function useMembers(): NC.State.MembersState {
     const { t } = useTranslation();
     const { logout } = UserState.useContainer();
     const { axios } = useAxios();
@@ -39,7 +39,7 @@ export default function useMembers(): FG.State.MembersState {
 
                 semaphore
                     .runExclusive(() => {
-                        return axios.get<FG.Api.MemberResponse>(
+                        return axios.get<NC.Api.MemberResponse>(
                             t('urls.fetchMember', { member: id, category })
                         );
                     })
