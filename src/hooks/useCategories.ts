@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { Category } from '@Floor-Gang/modmail-types';
+import { Category } from '@NewCircuit/modmail-types';
 import { AxiosError, AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useAxios } from './index';
-import { FG, Nullable, Optional } from '../types';
+import { NC, Nullable, Optional } from '../types';
 import { Logger } from '../util';
 import { UserState } from '../state';
 
 const logger = Logger.getLogger('useCategories');
 
-export default function useCategories(): FG.State.CategoriesState {
+export default function useCategories(): NC.State.CategoriesState {
     const { t } = useTranslation();
     const { logout } = UserState.useContainer();
     const [categories, setCategories] = useState<Optional<Category[]>>(undefined);
@@ -19,7 +19,7 @@ export default function useCategories(): FG.State.CategoriesState {
         logger.verbose(`fetch categories`);
         return axios
             .get(t('urls.categories'))
-            .then((response: AxiosResponse<FG.Api.CategoriesResponse>) => {
+            .then((response: AxiosResponse<NC.Api.CategoriesResponse>) => {
                 if (response.status === 200) {
                     setCategories(response.data);
                     return response.data;
@@ -41,7 +41,7 @@ export default function useCategories(): FG.State.CategoriesState {
         logger.verbose(`fetch category ${category}`);
         return axios
             .get(t('urls.categoriesOne', { category }))
-            .then((response: AxiosResponse<FG.Api.CategoryOneResponse>) => {
+            .then((response: AxiosResponse<NC.Api.CategoryOneResponse>) => {
                 if (response.status === 200) {
                     return response.data;
                 }

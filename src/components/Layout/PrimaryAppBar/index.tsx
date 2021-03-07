@@ -5,11 +5,11 @@ import ExitToApp from '@material-ui/icons/ExitToApp';
 import { Link, useLocation } from 'react-router-dom';
 import UrlPattern from 'url-pattern';
 import { useTranslation } from 'react-i18next';
-import { FG } from '../../../types';
+import { NC } from '../../../types';
 import { APPBAR_HEIGHT } from '../../../theme';
 
 type Props = {
-    user: FG.State.UserState;
+    user: NC.State.UserState;
     onHandleMenuClick?: (evt: React.SyntheticEvent<HTMLButtonElement>) => unknown;
 };
 

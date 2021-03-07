@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useRef } from 'react';
 import { AxiosError } from 'axios';
 import { useAxios } from './index';
-import { DiscordTagMap, FG, RoleTag } from '../types';
+import { DiscordTagMap, NC, RoleTag } from '../types';
 import { Logger } from '../util';
 import { UserState } from '../state';
 
@@ -16,7 +16,7 @@ const defaultProps = {
     cache: true,
 };
 
-export default function useRoles(props: Props = defaultProps): FG.State.RolesState {
+export default function useRoles(props: Props = defaultProps): NC.State.RolesState {
     const { cache: universalCache } = props;
     const { t } = useTranslation();
     const { logout } = UserState.useContainer();
@@ -30,7 +30,7 @@ export default function useRoles(props: Props = defaultProps): FG.State.RolesSta
     ): Promise<RoleTag> {
         logger.verbose(`fetch role ${role}`);
         const promise = axios
-            .get<FG.Api.RoleResponse>(t('urls.fetchRole', { category, role }))
+            .get<NC.Api.RoleResponse>(t('urls.fetchRole', { category, role }))
             .then((response) => {
                 if (response.status === 200 && response.data) {
                     return {

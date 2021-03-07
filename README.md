@@ -1,6 +1,6 @@
 # Modmail Web App
 
-[![Version][version-image]](/) [![Lines][lines-image]](/) [![Come Chat][chat-image]][discord-link]
+[![Version][version-image]](/) [![Lines][lines-image]](/)
 
 ![Logo](./public/icon/96.png)
 
@@ -12,7 +12,7 @@ ___
 #### `yarn create react-app modmail-web-ui --template typescript-eslint-prettier`
 
 
-#### [Modmail](https://github.com/Floor-Gang/modmail)
+#### [Modmail](https://github.com/NewCircuit/modmail)
 #### [Used endpoints provided by the Modmail Server](./resources/Endpoints.md)
 
 ___
@@ -28,7 +28,7 @@ or run `yarn install` again.
 
 #### These are required to be present in `.npmrc`
 ```npm
-@Floor-Gang:registry=https://npm.pkg.github.com
+@NewCircuit:registry=https://npm.pkg.github.com
 @demitchell14:registry=https://npm.pkg.github.com
 ```
 ___
@@ -44,11 +44,9 @@ ___
 |`yarn run prettier`|Executes Prettier on all `.tsx?` files in `src`|
 |`yarn run profile`|Generates a visual diagram of what is inside a production build|
 
-## Floor-Gang
 
-[discord-link]: https://discord.gg/pewdiepie
 [chat-image]: https://img.shields.io/discord/718433475828645928
-[lines-image]: https://img.shields.io/tokei/lines/github/Floor-Gang/modmail-web
-[version-image]: https://img.shields.io/github/package-json/v/Floor-Gang/modmail-web
-[modmail-web]: https://github.com/Floor-Gang/modmail-web
+[lines-image]: https://img.shields.io/tokei/lines/github/NewCircuit/modmail-web
+[version-image]: https://img.shields.io/github/package-json/v/NewCircuit/modmail-web
+[modmail-web]: https://github.com/NewCircuit/modmail-web
 [icon]: ./public/icon/96.png

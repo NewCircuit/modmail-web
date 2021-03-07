@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FG } from 'types';
+import { NC } from 'types';
 import { createContainer } from 'unstated-next';
 import { useTranslation } from 'react-i18next';
 import { Logger } from '../util';
@@ -7,14 +7,14 @@ import { useAxios } from '../hooks';
 
 const logger = Logger.getLogger('userState');
 
-type State = FG.State.UserState;
+type State = NC.State.UserState;
 
 function userState(): State {
     const { t } = useTranslation();
     const { axios } = useAxios();
     const [authenticated, setAuthenticated] = useState<boolean | undefined>(undefined);
     const [processing, setProcessing] = useState(false);
-    const [userData, setUserData] = useState<FG.Api.SelfResponse | undefined>();
+    const [userData, setUserData] = useState<NC.Api.SelfResponse | undefined>();
 
     function logout() {
         logger.verbose(`logging user out`);

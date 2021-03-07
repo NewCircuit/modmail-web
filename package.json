@@ -1,20 +1,19 @@
 {
   "name": "modmail-web",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "description": "Modmail Web interface",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Floor-Gang/modmail-web"
+    "url": "https://github.com/NewCircuit/modmail-web"
   },
-  "homepage": "https://modmail.pewdiemc.com/",
-  "author": "Floor Gang <https://github.com/Floor-Gang>",
+  "homepage": "https://newcircuit.io/",
+  "author": "NewCircuit <https://github.com/NewCircuit>",
   "license": "GPL-3.0",
   "keywords": [
     "typescript",
     "react",
     "modmail",
-    "floor-gang",
-    "pewdiepie"
+    "newcircuit"
   ],
   "scripts": {
     "start": "react-scripts start",
@@ -69,7 +68,7 @@
   },
   "dependencies": {
     "@demitchell14/react-showdown": "2.2.1",
-    "@Floor-Gang/modmail-types": "^1.15.0",
+    "@NewCircuit/modmail-types": "^1.15.0",
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",

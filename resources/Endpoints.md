@@ -1,5 +1,4 @@
 ## Endpoints used by the web server
-**All endpoints are located at https://api.pewdiemc.com/api for the Floor Gang server**
 
 ## Endpoint Requests
 |Method|Name|Description|Request Type|Response Body Type|Authenticated|Version|
