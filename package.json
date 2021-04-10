@@ -1,6 +1,6 @@
 {
   "name": "modmail-web",
-  "version": "1.5.7",
+  "version": "1.5.8",
   "description": "Modmail Web interface",
   "repository": {
     "type": "git",
@@ -8,6 +8,10 @@
   },
   "homepage": "https://newcircuit.io/",
   "author": "NewCircuit <https://github.com/NewCircuit>",
+  "contributors": [
+    "demitchell14 <https://github.com/demitchell14>",
+    "dylhack <https://github.com/dylhack>"
+  ],
   "license": "GPL-3.0",
   "keywords": [
     "typescript",
@@ -24,7 +28,6 @@
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src/ --fix",
     "prettier": "prettier --write \"./src/**/*.{ts,tsx}\"",
     "profile": "npx cra-bundle-analyzer",
-    "preinstall": "node ./scripts/preinstall.js",
     "postinstall": "node ./scripts/postinstall.js"
   },
   "browserslist": {
@@ -67,8 +70,8 @@
     "typescript": "^4.1.3"
   },
   "dependencies": {
-    "@demitchell14/react-showdown": "2.2.1",
-    "@NewCircuit/modmail-types": "^1.15.0",
+    "@demitchell14/react-showdown": "demitchell14/react-showdown#982a2284a9175136dfd8311a0438dcb44d5f4a05",
+    "@NewCircuit/modmail-types": "NewCircuit/modmail-types#edd04e4553087b882a4498ff1553f5560d029ac5",
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",

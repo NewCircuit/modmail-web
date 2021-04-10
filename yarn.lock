@@ -2,10 +2,9 @@
 # yarn lockfile v1
 
 
-"@Floor-Gang/modmail-types@^1.15.0":
-  version "1.15.0"
-  resolved "https://npm.pkg.github.com/download/@Floor-Gang/modmail-types/1.15.0/95f2cf270643bb97325fed656912cc371e1a069634c58fe97d420733035b1a7c#e38173aed443f11a8dc3be396ae527c2b83e818d"
-  integrity sha512-eIKuOFinEBm8AQc1CJpKlo0PCHVP2bffZ5zm86+Agq7rylWABLJ/sGcOH/Z90o2LFsIxY0E2PzuuJLKYQFkVvw==
+"@NewCircuit/modmail-types@NewCircuit/modmail-types#edd04e4553087b882a4498ff1553f5560d029ac5":
+  version "2.0.0"
+  resolved "https://codeload.github.com/NewCircuit/modmail-types/tar.gz/edd04e4553087b882a4498ff1553f5560d029ac5"
 
 "@babel/code-frame@7.10.4":
   version "7.10.4"
@@ -1159,10 +1158,9 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
-"@demitchell14/react-showdown@2.2.1":
+"@demitchell14/react-showdown@demitchell14/react-showdown#982a2284a9175136dfd8311a0438dcb44d5f4a05":
   version "2.2.1"
-  resolved "https://npm.pkg.github.com/download/@demitchell14/react-showdown/2.2.1/25348fff53da1035c731862d4ff167a9e67c923ef60d10db613584b3858e6795#16c0242aeec070b2ecb0afaed30d95b157be491d"
-  integrity sha512-n7SI/VUFDxkrJHj8uZSY2OUoCp6fOuc84NntlxJz5mAFk7bKhnp84fyI92gWMVxQZNX3Nr+Ea3mMnH5L0r2wCQ==
+  resolved "https://codeload.github.com/demitchell14/react-showdown/tar.gz/982a2284a9175136dfd8311a0438dcb44d5f4a05"
   dependencies:
     htmlparser2 "^6.0.0"
     showdown "^1.9.1"
