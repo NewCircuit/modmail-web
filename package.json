@@ -6,8 +6,8 @@
     "type": "git",
     "url": "https://github.com/NewCircuit/modmail-web"
   },
-  "homepage": "https://newcircuit.io/",
-  "author": "NewCircuit <https://github.com/NewCircuit>",
+  "homepage": "https://github.com/fg-devs",
+  "author": "Floor Gang Devs <https://github.com/fg-devs>",
   "license": "GPL-3.0",
   "keywords": [
     "typescript",

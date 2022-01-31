@@ -48,9 +48,9 @@ function GlobalFooter() {
                         target={'_blank'}
                         href={'https://github.com/NewCircuit'}
                     >
-                        NewCircuit.io
+                        Floor Gang Devs
                     </Link>
-                    &copy; 2020-2021
+                    &copy; 2020-2022
                 </Typography>
                 <Tooltip title={t('viewGithub') as string}>
                     <Link
