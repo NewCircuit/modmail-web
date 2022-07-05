@@ -5,7 +5,7 @@ import {
     Message,
     RoleState,
     ChannelState,
-} from '@NewCircuit/modmail-types';
+} from '@fg-devs/modmail-types';
 
 type Role = 'admin' | 'mod' | '';
 

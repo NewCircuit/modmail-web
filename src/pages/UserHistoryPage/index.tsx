@@ -7,7 +7,7 @@ import UserHistoryTitleCard from 'components/UserHistoryTitleCard';
 import UserSearchDialog, {
     UserSearchDialog as UserSearchDialogClass,
 } from 'components/UserSearchDialog';
-import { Category } from '@NewCircuit/modmail-types';
+import { Category } from '@fg-devs/modmail-types';
 import { Helmet } from 'react-helmet';
 import { FetchState, ModmailState, UserState } from '../../state';
 import ThreadsContainer from '../../components/ThreadsContainer';

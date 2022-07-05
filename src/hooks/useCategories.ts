@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Category } from '@NewCircuit/modmail-types';
+import { Category } from '@fg-devs/modmail-types';
 import { AxiosError, AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useAxios } from './index';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Chip, lighten, Paper, Tooltip, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Category } from '@NewCircuit/modmail-types';
+import { Category } from '@fg-devs/modmail-types';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';

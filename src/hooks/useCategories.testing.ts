@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { useEffect, useState } from 'react';
-import { Category } from '@NewCircuit/modmail-types';
+import { Category } from '@fg-devs/modmail-types';
 import { AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useAxios } from './index';

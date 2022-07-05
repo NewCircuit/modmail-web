@@ -12,7 +12,7 @@ ___
 #### `yarn create react-app modmail-web-ui --template typescript-eslint-prettier`
 
 
-#### [Modmail](https://github.com/NewCircuit/modmail)
+#### [Modmail](https://github.com/fg-devs/modmail)
 #### [Used endpoints provided by the Modmail Server](./resources/Endpoints.md)
 
 ___
@@ -28,7 +28,7 @@ or run `yarn install` again.
 
 #### These are required to be present in `.npmrc`
 ```npm
-@NewCircuit:registry=https://npm.pkg.github.com
+@fg-devs:registry=https://npm.pkg.github.com
 @demitchell14:registry=https://npm.pkg.github.com
 ```
 ___
@@ -46,7 +46,7 @@ ___
 
 
 [chat-image]: https://img.shields.io/discord/718433475828645928
-[lines-image]: https://img.shields.io/tokei/lines/github/NewCircuit/modmail-web
-[version-image]: https://img.shields.io/github/package-json/v/NewCircuit/modmail-web
-[modmail-web]: https://github.com/NewCircuit/modmail-web
+[lines-image]: https://img.shields.io/tokei/lines/github/fg-devs/modmail-web
+[version-image]: https://img.shields.io/github/package-json/v/fg-devs/modmail-web
+[modmail-web]: https://github.com/fg-devs/modmail-web
 [icon]: ./public/icon/96.png

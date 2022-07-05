@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
 import { CircularProgress, Container, Paper, Typography } from '@material-ui/core';
 import { useTranslation, Trans } from 'react-i18next';
-import { Category } from '@NewCircuit/modmail-types';
+import { Category } from '@fg-devs/modmail-types';
 import { Helmet } from 'react-helmet';
 import { ModmailState, FetchState } from '../../state';
 import LocalizedBackdrop from '../../components/LocalizedBackdrop';

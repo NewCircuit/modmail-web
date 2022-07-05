@@ -46,7 +46,7 @@ function GlobalFooter() {
                     <Link
                         className={classes.link}
                         target={'_blank'}
-                        href={'https://github.com/NewCircuit'}
+                        href={'https://github.com/fg-devs'}
                     >
                         Floor Gang Devs
                     </Link>
@@ -55,7 +55,7 @@ function GlobalFooter() {
                 <Tooltip title={t('viewGithub') as string}>
                     <Link
                         className={classes.github}
-                        href={'https://github.com/NewCircuit/modmail-web'}
+                        href={'https://github.com/fg-devs/modmail-web'}
                         target={'_blank'}
                     >
                         <GitHub />

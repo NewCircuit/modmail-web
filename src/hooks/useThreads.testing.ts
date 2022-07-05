@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useState } from 'react';
 import { AxiosResponse } from 'axios';
-import { Thread } from '@NewCircuit/modmail-types';
+import { Thread } from '@fg-devs/modmail-types';
 import { useTranslation } from 'react-i18next';
 import { useAxios } from './index';
 import { NC, MutatedThread, Nullable, Optional } from '../types';
